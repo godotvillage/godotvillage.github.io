@@ -115,11 +115,11 @@ const MyComponent = defineComponent({
 - 文字结尾应该有深蓝色的 徽章文字 徽章。 <Badge text="徽章文字" color="#242378" />
 
 - 一个卡片:
-
+<!-- 
   ```component VPCard
   title: Mr.Hope
   desc: Where there is light, there is hope
   logo: https://mister-hope.com/logo.svg
   link: https://mister-hope.com
   background: rgba(253, 230, 138, 0.15)
-  ```
+  ``` -->

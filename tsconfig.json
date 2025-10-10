@@ -7,7 +7,7 @@
   "include": [
     "src/.vuepress/**/*.ts",
     "src/.vuepress/**/*.vue"
-  ],
+, "src/.vuepress/client.ts"  ],
   "exclude": [
     "node_modules"
   ]
