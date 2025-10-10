@@ -15,12 +15,11 @@ pageInfo: false
 toc: false
 ---
 <style>
-    body {
+    /* body {
         font-family: Arial, sans-serif;
-        max-width: 600px;
         margin: 50px auto;
         padding: 20px;
-    }
+    } */
     .upload-area {
         border: 2px dashed #ccc;
         border-radius: 10px;
