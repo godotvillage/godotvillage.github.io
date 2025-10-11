@@ -52,7 +52,7 @@ export const projectApi = {
   // 获取项目统计信息
   async getProjectStats() {
     try {
-      const response = await fetch(`${baseUrl}/projects/cstats`);
+      const response = await fetch(`${baseUrl}/projects/stats`);
       const data = await response.json();
       return data;
     } catch (error) {
