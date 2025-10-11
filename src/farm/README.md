@@ -345,40 +345,44 @@ toc: false
 </style>
 
 <script>
-// 实时更新统计数据
-function updateStats() {
-  const projects = JSON.parse(localStorage.getItem('farmProjects') || '[]');
-  const totalElement = document.getElementById('total-projects');
-  const activeElement = document.getElementById('active-projects');
-  const completedElement = document.getElementById('completed-projects');
-  
-  if (totalElement) {
-    totalElement.textContent = projects.length;
-    totalElement.classList.add('updating');
-    setTimeout(() => totalElement.classList.remove('updating'), 300);
-  }
-  
-  if (activeElement) {
-    const activeCount = projects.filter(p => p.status === '进行中').length;
-    activeElement.textContent = activeCount;
-    activeElement.classList.add('updating');
-    setTimeout(() => activeElement.classList.remove('updating'), 300);
-  }
-  
-  if (completedElement) {
-    const completedCount = projects.filter(p => p.status === '已完成').length;
-    completedElement.textContent = completedCount;
-    completedElement.classList.add('updating');
-    setTimeout(() => completedElement.classList.remove('updating'), 300);
+export default {
+  mounted () {
+    // 实时更新统计数据
+    function updateStats() {
+      const projects = JSON.parse(localStorage.getItem('farmProjects') || '[]');
+      const totalElement = document.getElementById('total-projects');
+      const activeElement = document.getElementById('active-projects');
+      const completedElement = document.getElementById('completed-projects');
+      
+      if (totalElement) {
+        totalElement.textContent = projects.length;
+        totalElement.classList.add('updating');
+        setTimeout(() => totalElement.classList.remove('updating'), 300);
+      }
+      
+      if (activeElement) {
+        const activeCount = projects.filter(p => p.status === '进行中').length;
+        activeElement.textContent = activeCount;
+        activeElement.classList.add('updating');
+        setTimeout(() => activeElement.classList.remove('updating'), 300);
+      }
+      
+      if (completedElement) {
+        const completedCount = projects.filter(p => p.status === '已完成').length;
+        completedElement.textContent = completedCount;
+        completedElement.classList.add('updating');
+        setTimeout(() => completedElement.classList.remove('updating'), 300);
+      }
+    }
+
+    // 页面加载时更新统计
+    document.addEventListener('DOMContentLoaded', updateStats);
+
+    // 监听项目添加事件
+    window.addEventListener('projectAdded', updateStats);
+
+    // 定期更新统计（以防其他地方修改了数据）
+    setInterval(updateStats, 5000);
   }
 }
-
-// 页面加载时更新统计
-document.addEventListener('DOMContentLoaded', updateStats);
-
-// 监听项目添加事件
-window.addEventListener('projectAdded', updateStats);
-
-// 定期更新统计（以防其他地方修改了数据）
-setInterval(updateStats, 5000);
 </script>
