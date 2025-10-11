@@ -3,7 +3,7 @@ title: 落叶轻羽B站视频列表
 description: 展示落叶轻羽的Godot教程视频
 sticky: true
 star: true
-cover: /assets/images/cover3.jpg
+cover: https://images.unsplash.com/photo-1585829365343-ea8ed0b1cb5b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1740
 category:
   - 教程
 ---

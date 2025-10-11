@@ -21,6 +21,11 @@ export default navbar([
         text: "其他B站UP主视频列表",
         icon: "video",
         link: "otherbilibili",
+      },
+      {
+        text: "收集的资源网站",
+        icon: "compass",
+        link: "assetweb",
       }
     ]
   },
