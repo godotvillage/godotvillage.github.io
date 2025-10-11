@@ -81,14 +81,14 @@
 </template>
 
 <script>
-import { baseUrl, gameApi } from '../utils/request.js'
+import { gameApi, imageBaseUrl, gameBaseUrl } from '../utils/request.js'
 
 export default {
   name: 'GamePlayer',
   data() {
     return {
-      baseUrl,
-      imageBaseUrl: baseUrl.replace(':31024', ':31025'),
+      imageBaseUrl: imageBaseUrl,
+      gameBaseUrl: gameBaseUrl,
       gameId: null,
       gameInfo: null,
       loading: false,
@@ -144,7 +144,7 @@ export default {
       
       try {
         // 构建游戏URL - 假设游戏文件在特定路径下
-        this.gameUrl = `http://117.72.182.158:31025/games/${this.gameId}/index.html`
+        this.gameUrl = `${gameBaseUrl}/${this.gameId}/index.html`
         this.showGameFrame = true
       } catch (error) {
         this.error = `启动游戏失败: ${error.message}`

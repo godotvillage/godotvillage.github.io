@@ -1,6 +1,6 @@
 export const baseUrl = 'https://village.moshangzhu.com.cn';
 // export const baseUrl = 'http://localhost:31024'; // 本地调试使用
-export const imageBaseUrl = 'https://games.moshangzhu.com.cn/uploads/cover';
+export const imageBaseUrl = 'https://games.moshangzhu.com.cn/';
 export const gameBaseUrl = 'https://games.moshangzhu.com.cn/games';
 
 // 游戏相关 API 函数
@@ -19,7 +19,7 @@ export const gameApi = {
   // 上传游戏
   async uploadGame(formData) {
     try {
-      const response = await fetch(`${baseUrl}/upload`, {
+      const response = await fetch(`${baseUrl}/games/upload`, {
         method: 'POST',
         body: formData
       });
@@ -32,7 +32,7 @@ export const gameApi = {
 
   // 下载游戏
   getDownloadUrl(gameId) {
-    return `${baseUrl}/download/${gameId}`;
+    return `${baseUrl}/games/download/${gameId}`;
   }
 };
 
@@ -52,7 +52,7 @@ export const projectApi = {
   // 获取项目统计信息
   async getProjectStats() {
     try {
-      const response = await fetch(`${baseUrl}/projects/-stats`);
+      const response = await fetch(`${baseUrl}/projects/cstats`);
       const data = await response.json();
       return data;
     } catch (error) {

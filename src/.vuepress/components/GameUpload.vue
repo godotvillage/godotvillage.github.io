@@ -173,14 +173,13 @@
 </template>
 
 <script>
-import { baseUrl, gameApi } from '../utils/request.js'
+import { gameApi, imageBaseUrl } from '../utils/request.js'
 
 export default {
   name: 'GameUpload',
   data() {
     return {
-      baseUrl,
-      imageBaseUrl: baseUrl.replace(':31024', ':31025'),
+      imageBaseUrl: imageBaseUrl,
       gameInfo: {
         author: '',
         game_name: '',
