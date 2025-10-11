@@ -1,7 +1,7 @@
-export const baseUrl = 'http://117.72.182.158:31024';
+export const baseUrl = 'https://village.moshangzhu.com.cn';
 // export const baseUrl = 'http://localhost:31024'; // 本地调试使用
-export const imageBaseUrl = 'http://117.72.182.158:31025/uploads/cover';
-
+export const imageBaseUrl = 'https://games.moshangzhu.com.cn/uploads/cover';
+export const gameBaseUrl = 'https://games.moshangzhu.com.cn/games';
 
 // 游戏相关 API 函数
 export const gameApi = {
