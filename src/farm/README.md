@@ -2,6 +2,8 @@
 title: 填坑农场
 icon: seedling
 index: false
+sidebar: false
+toc: false
 ---
 
 <div class="farm-container">
