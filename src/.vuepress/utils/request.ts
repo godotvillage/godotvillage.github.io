@@ -1,4 +1,5 @@
 export const baseUrl = 'http://117.72.182.158:31024';
+// export const baseUrl = 'http://localhost:31024'; // 本地调试使用
 export const imageBaseUrl = 'http://117.72.182.158:31025/uploads/cover';
 
 
@@ -32,5 +33,88 @@ export const gameApi = {
   // 下载游戏
   getDownloadUrl(gameId) {
     return `${baseUrl}/download/${gameId}`;
+  }
+};
+
+// 项目相关 API 函数
+export const projectApi = {
+  // 获取项目列表
+  async getProjects() {
+    try {
+      const response = await fetch(`${baseUrl}/projects`);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw new Error(`获取项目列表失败: ${error.message}`);
+    }
+  },
+
+  // 获取项目统计信息
+  async getProjectStats() {
+    try {
+      const response = await fetch(`${baseUrl}/projects/-stats`);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw new Error(`获取项目统计失败: ${error.message}`);
+    }
+  },
+
+  // 根据ID获取项目详情
+  async getProjectById(projectId) {
+    try {
+      const response = await fetch(`${baseUrl}/projects/${projectId}`);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw new Error(`获取项目详情失败: ${error.message}`);
+    }
+  },
+
+  // 创建新项目
+  async createProject(projectData) {
+    try {
+      const response = await fetch(`${baseUrl}/projects`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(projectData)
+      });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw new Error(`创建项目失败: ${error.message}`);
+    }
+  },
+
+  // 更新项目信息
+  async updateProject(projectId, updateData) {
+    try {
+      const response = await fetch(`${baseUrl}/projects/${projectId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updateData)
+      });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw new Error(`更新项目失败: ${error.message}`);
+    }
+  },
+
+  // 删除项目
+  async deleteProject(projectId) {
+    try {
+      const response = await fetch(`${baseUrl}/projects/${projectId}`, {
+        method: 'DELETE'
+      });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw new Error(`删除项目失败: ${error.message}`);
+    }
   }
 };

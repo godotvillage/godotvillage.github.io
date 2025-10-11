@@ -93,8 +93,8 @@
         <button type="button" @click="resetForm" class="btn-secondary">
           🔄 重置表单
         </button>
-        <button type="submit" class="btn-primary" :disabled="!isFormValid">
-          🌱 种下种子
+        <button type="submit" class="btn-primary" :disabled="!isFormValid || isSubmitting">
+          {{ isSubmitting ? '🌱 正在种植...' : '🌱 种下种子' }}
         </button>
       </div>
     </form>
@@ -108,6 +108,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { projectApi } from '../utils/request.ts'
 
 const form = ref({
   submitter: '',
@@ -120,6 +121,7 @@ const form = ref({
 
 const tagInput = ref('')
 const showSuccess = ref(false)
+const isSubmitting = ref(false)
 
 const isFormValid = computed(() => {
   return form.value.submitter.trim() && form.value.name.trim() && form.value.description.trim()
@@ -150,29 +152,82 @@ const resetForm = () => {
   showSuccess.value = false
 }
 
-const submitProject = () => {
-  if (!isFormValid.value) return
+const submitProject = async () => {
+  if (!isFormValid.value || isSubmitting.value) return
 
-  const project = {
-    id: Date.now().toString(),
-    ...form.value,
-    status: '进行中',
-    createdAt: new Date().toISOString(),
-    author: form.value.submitter // 使用填写人作为作者
+  isSubmitting.value = true
+
+  try {
+    const projectData = {
+      title: form.value.name,
+      description: form.value.description,
+      author: form.value.submitter,
+      category: form.value.category,
+      priority: '中等',
+      status: '计划中',
+      progress: 0,
+      tags: form.value.tags,
+      expected_end_date: form.value.expectedTime ? getExpectedEndDate(form.value.expectedTime) : null
+    }
+
+    const response = await projectApi.createProject(projectData)
+    
+    if (response.success) {
+      // 触发自定义事件通知其他组件更新
+      window.dispatchEvent(new CustomEvent('projectAdded', { detail: response.data }))
+      
+      showSuccess.value = true
+      setTimeout(() => {
+        resetForm()
+      }, 2000)
+    } else {
+      throw new Error(response.error || '创建项目失败')
+    }
+  } catch (error) {
+    console.error('提交项目失败:', error)
+    alert('提交失败，请稍后重试：' + error.message)
+    
+    // 如果API调用失败，回退到localStorage方式
+    const project = {
+      id: Date.now().toString(),
+      ...form.value,
+      status: '进行中',
+      createdAt: new Date().toISOString(),
+      author: form.value.submitter
+    }
+
+    const projects = JSON.parse(localStorage.getItem('farmProjects') || '[]')
+    projects.unshift(project)
+    localStorage.setItem('farmProjects', JSON.stringify(projects))
+
+    window.dispatchEvent(new CustomEvent('projectAdded', { detail: project }))
+    
+    showSuccess.value = true
+    setTimeout(() => {
+      resetForm()
+    }, 2000)
+  } finally {
+    isSubmitting.value = false
   }
+}
 
-  // 保存到localStorage（实际项目中应该发送到后端API）
-  const projects = JSON.parse(localStorage.getItem('farmProjects') || '[]')
-  projects.unshift(project)
-  localStorage.setItem('farmProjects', JSON.stringify(projects))
-
-  // 触发自定义事件通知其他组件更新
-  window.dispatchEvent(new CustomEvent('projectAdded', { detail: project }))
-
-  showSuccess.value = true
-  setTimeout(() => {
-    resetForm()
-  }, 2000)
+// 根据预期完成时间计算结束日期
+const getExpectedEndDate = (timeStr) => {
+  const now = new Date()
+  switch (timeStr) {
+    case '1周内':
+      return new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+    case '1个月内':
+      return new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+    case '3个月内':
+      return new Date(now.getTime() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+    case '半年内':
+      return new Date(now.getTime() + 180 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+    case '长期项目':
+      return new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+    default:
+      return null
+  }
 }
 </script>
 

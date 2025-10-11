@@ -4,35 +4,14 @@ icon: seedling
 index: false
 sidebar: false
 toc: false
+article: false
 ---
 
 <div class="farm-container">
   <div class="farm-header">
     <h1>🌱 填坑农场</h1>
     <p class="farm-subtitle">种下创意的种子，收获完成的果实</p>
-    <div class="farm-stats">
-      <div class="stat-card">
-        <div class="stat-icon">🌱</div>
-        <div class="stat-info">
-          <div class="stat-number" id="total-projects">0</div>
-          <div class="stat-label">总项目数</div>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">🚀</div>
-        <div class="stat-info">
-          <div class="stat-number" id="active-projects">0</div>
-          <div class="stat-label">进行中</div>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">✅</div>
-        <div class="stat-info">
-          <div class="stat-number" id="completed-projects">0</div>
-          <div class="stat-label">已完成</div>
-        </div>
-      </div>
-    </div>
+    <FarmStats />
   </div>
 
   <div class="farm-intro">
@@ -107,52 +86,6 @@ toc: false
   z-index: 1;
 }
 
-.farm-stats {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  flex-wrap: wrap;
-  position: relative;
-  z-index: 1;
-}
-
-.stat-card {
-  background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 15px;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  min-width: 150px;
-  transition: all 0.3s ease;
-}
-
-.stat-card:hover {
-  background: rgba(255,255,255,0.25);
-  transform: translateY(-5px);
-}
-
-.stat-icon {
-  font-size: 2em;
-}
-
-.stat-info {
-  text-align: left;
-}
-
-.stat-number {
-  font-size: 1.8em;
-  font-weight: bold;
-  line-height: 1;
-}
-
-.stat-label {
-  font-size: 0.9em;
-  opacity: 0.8;
-  margin-top: 5px;
-}
 
 .farm-intro {
   margin-bottom: 50px;
@@ -305,18 +238,6 @@ toc: false
     font-size: 1.1em;
   }
   
-  .farm-stats {
-    gap: 15px;
-  }
-  
-  .stat-card {
-    min-width: 120px;
-    padding: 15px;
-  }
-  
-  .stat-number {
-    font-size: 1.5em;
-  }
   
   .features-grid {
     grid-template-columns: 1fr;
@@ -333,56 +254,4 @@ toc: false
   }
 }
 
-/* 添加实时统计更新功能 */
-.stat-number {
-  transition: all 0.3s ease;
-}
-
-.stat-number.updating {
-  transform: scale(1.2);
-  color: #27ae60;
-}
 </style>
-
-<script>
-export default {
-  mounted () {
-    // 实时更新统计数据
-    function updateStats() {
-      const projects = JSON.parse(localStorage.getItem('farmProjects') || '[]');
-      const totalElement = document.getElementById('total-projects');
-      const activeElement = document.getElementById('active-projects');
-      const completedElement = document.getElementById('completed-projects');
-      
-      if (totalElement) {
-        totalElement.textContent = projects.length;
-        totalElement.classList.add('updating');
-        setTimeout(() => totalElement.classList.remove('updating'), 300);
-      }
-      
-      if (activeElement) {
-        const activeCount = projects.filter(p => p.status === '进行中').length;
-        activeElement.textContent = activeCount;
-        activeElement.classList.add('updating');
-        setTimeout(() => activeElement.classList.remove('updating'), 300);
-      }
-      
-      if (completedElement) {
-        const completedCount = projects.filter(p => p.status === '已完成').length;
-        completedElement.textContent = completedCount;
-        completedElement.classList.add('updating');
-        setTimeout(() => completedElement.classList.remove('updating'), 300);
-      }
-    }
-
-    // 页面加载时更新统计
-    document.addEventListener('DOMContentLoaded', updateStats);
-
-    // 监听项目添加事件
-    window.addEventListener('projectAdded', updateStats);
-
-    // 定期更新统计（以防其他地方修改了数据）
-    setInterval(updateStats, 5000);
-  }
-}
-</script>
