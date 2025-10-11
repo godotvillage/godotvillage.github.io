@@ -4,6 +4,7 @@ export default navbar([
   "/",
   "/discussionList/",
   "/game/",
+  "/farm/",
   // {
   //   text: "博文",
   //   icon: "pen-to-square",
