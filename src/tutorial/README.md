@@ -42,7 +42,7 @@ cover: https://plus.unsplash.com/premium_photo-1664297854029-21ebd7e03b24?ixlib=
 #### 功能教程
 - [ ] 3D变换
 - [x] [有限状态机](/tutorial/fsm)
-- [ ] 组件开发
+- [x] [组件开发](/tutorial/component)
 - [ ] 资源系统开发
 - [ ] 动画播放器和动画树
 - [ ] 存档以及文件操作
