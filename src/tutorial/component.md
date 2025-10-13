@@ -6,6 +6,11 @@ category:
   - 教程
 ---
 
+:::details 教程使用环境
+- Godot v4.5.stable 
+- Windows 10 (build 19045)
+:::
+
 ## 继承模式 vs 组件模式
 
 在游戏开发中，有两种主要的架构模式：**继承模式**和**组件模式**。
@@ -137,6 +142,58 @@ class TrapEnemy extends Node2D:
 ```
 :::
 
-## 实现方式
+## 案例学习
 以上代码中已经讲解了组件模式的开发思路，也展示了部分代码。接下来则会使用一个案例来说明在项目中，如何使用组件模式。
 
+### 操控组件
+首先按照常见的方式来创建一个游戏项目。
+#### 非组件模式
+创建了一个玩家(`player_extends.tscn`)场景，并为玩家添加了根据鼠标输入移动。则可以有以下代码：
+```gdscript
+# player_extends.gd
+extends CharacterBody2D
+
+const SPEED = 300.0
+
+func _physics_process(_delta: float) -> void:
+	var direction := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	velocity = direction * SPEED
+	move_and_slide()
+```
+玩家可以根据鼠标的输入（上下左右方向键）移动。
+
+如果将以上代码改为组件式应该如何编写代码呢？
+
+#### 组件模式
+首先我们应先创建一个`input_component`作为接收输入和控制移动的脚本，并带有一个direction变量供玩家场景读取。组件可以是脚本，也可以是场景。为了方便演示，此处新建一个脚本。
+```gdscript
+# input_component.gd
+class_name InputComponent
+extends Node
+
+var direction: Vector2 = Vector2.ZERO
+
+func _physics_process(_delta: float) -> void:
+	direction = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+
+```
+然后新建一个玩家场景(`player_use_component.tscn`)，在其中添加必要元素后，新增加一个`InputComponent`节点，然后编写玩家场景脚本(`player_use_component.gd`)。代码如下：
+```gdscript
+extends CharacterBody2D
+# 引用输入组件
+@onready var input_component: InputComponent = $InputComponent
+
+const SPEED = 300.0
+
+func _physics_process(_delta: float) -> void:
+	# 获取输入组件中的方向
+	velocity = input_component.direction * SPEED
+	move_and_slide()
+```
+目前场景节点树如下：
+![](/assets/images/tutorial/component/input_component_node_tree.png)
+
+至此我们完成了对普通的处理输入到使用组件处理输入的转变。可能这看起来有些麻烦，因为我们并没有从案例中看到任何好处。那么我们可以继续学习一个案例，来体会组件式的结构带来的封装的便利。
+
+### 再来一个案例
+暂时没想好做啥，先空着
