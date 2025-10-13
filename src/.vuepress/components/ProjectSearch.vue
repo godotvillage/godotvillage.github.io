@@ -897,4 +897,122 @@ onMounted(() => {
     min-width: auto;
   }
 }
+
+/* 暗色模式样式 */
+[data-theme='dark'] {
+  .search-container {
+    background: var(--vp-c-bg);
+    color: var(--vp-c-text);
+  }
+
+  .search-header {
+    background: linear-gradient(135deg, #3dd68c 0%, #349469 100%);
+    color: var(--vp-c-text);
+  }
+
+  .search-header h2 {
+    color: var(--vp-c-text);
+  }
+
+  .search-header p {
+    color: var(--vp-c-text-mute);
+  }
+
+  .search-form {
+    background: var(--vp-c-bg-elv);
+  }
+
+  .search-input-group {
+    background: var(--vp-c-bg);
+    border: 2px solid var(--vp-c-border);
+  }
+
+  .search-input-group:focus-within {
+    border-color: var(--vp-c-accent);
+  }
+
+  .search-input {
+    background: transparent;
+    color: var(--vp-c-text);
+  }
+
+  .search-input::placeholder {
+    color: var(--vp-c-text-subtle);
+  }
+
+  .clear-btn {
+    color: var(--vp-c-text-mute);
+  }
+
+  .clear-btn:hover {
+    color: var(--vp-c-accent);
+  }
+
+  .quick-filters {
+    background: var(--vp-c-bg-elv);
+  }
+
+  .quick-filter-btn {
+    background: var(--vp-c-control);
+    color: var(--vp-c-text);
+    border: 1px solid var(--vp-c-border);
+  }
+
+  .quick-filter-btn:hover {
+    background: var(--vp-c-control-hover);
+    border-color: var(--vp-c-accent);
+  }
+
+  .quick-filter-btn.active {
+    background: var(--vp-c-accent);
+    color: white;
+    border-color: var(--vp-c-accent);
+  }
+
+  .search-results {
+    background: var(--vp-c-bg);
+  }
+
+  .results-header {
+    color: var(--vp-c-text);
+  }
+
+  .result-item {
+    background: var(--vp-c-bg-elv);
+    border: 1px solid var(--vp-c-border);
+    color: var(--vp-c-text);
+  }
+
+  .result-item:hover {
+    border-color: var(--vp-c-accent);
+    box-shadow: 0 4px 12px var(--vp-c-shadow);
+  }
+
+  .result-title {
+    color: var(--vp-c-text);
+  }
+
+  .result-meta {
+    color: var(--vp-c-text-mute);
+  }
+
+  .result-description {
+    color: var(--vp-c-text-mute);
+  }
+
+  .result-tags .tag {
+    background: var(--vp-c-control);
+    color: var(--vp-c-text);
+  }
+
+  .no-results {
+    color: var(--vp-c-text-mute);
+  }
+
+  .status-progress { background: #3dd68c; color: white; }
+  .status-completed { background: #3aa675; color: white; }
+  .status-paused { background: #f39c12; color: white; }
+  .status-planned { background: #9b59b6; color: white; }
+  .status-default { background: var(--vp-c-control); color: var(--vp-c-text); }
+}
 </style>
