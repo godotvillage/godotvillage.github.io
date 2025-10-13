@@ -59,7 +59,7 @@
           @click="selectProject(project)"
         >
           <div class="result-header">
-            <h5 class="result-title" v-html="highlightText(project.name)"></h5>
+            <h5 class="result-title" v-html="highlightText(project.title)"></h5>
             <span class="result-status" :class="getStatusClass(project.status)">
               {{ getStatusIcon(project.status) }} {{ project.status }}
             </span>
@@ -69,10 +69,10 @@
             <span v-if="project.category" class="result-category">
               {{ getCategoryIcon(project.category) }} {{ project.category }}
             </span>
-            <span class="result-date">{{ formatDate(project.createdAt) }}</span>
+            <span class="result-date">{{ formatDate(project.created_time) }}</span>
           </div>
 
-          <p class="result-description" v-html="highlightText(truncateText(project.description, 100))"></p>
+          <p class="result-description" v-html="highlightText(truncateText(project.description || '', 100))"></p>
 
           <div v-if="project.tags && project.tags.length > 0" class="result-tags">
             <span
@@ -103,7 +103,7 @@
     <div v-if="selectedProject" class="modal-overlay" @click="closeModal">
       <div class="modal-content" @click.stop>
         <div class="modal-header">
-          <h3>{{ selectedProject.name }}</h3>
+          <h3>{{ selectedProject.title }}</h3>
           <button @click="closeModal" class="close-btn">×</button>
         </div>
         
@@ -129,7 +129,7 @@
             </div>
             <div class="detail-item">
               <strong>创建时间：</strong>
-              {{ formatDate(selectedProject.createdAt) }}
+              {{ formatDate(selectedProject.created_time) }}
             </div>
           </div>
 
@@ -158,6 +158,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { projectApi } from '../utils/request.ts'
 
 const searchQuery = ref('')
 const activeQuickFilter = ref('')
@@ -181,7 +182,7 @@ const searchResults = computed(() => {
       case 'recent':
         const oneWeekAgo = new Date()
         oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
-        results = results.filter(p => new Date(p.createdAt) > oneWeekAgo)
+        results = results.filter(p => new Date(p.created_time) > oneWeekAgo)
         break
       case 'inProgress':
         results = results.filter(p => p.status === '进行中')
@@ -190,7 +191,7 @@ const searchResults = computed(() => {
         results = results.filter(p => p.status === '已完成')
         break
       case 'gamedev':
-        results = results.filter(p => p.category === '游戏开发')
+        results = results.filter(p => p.category === '游戏开发' || p.category === '2D' || p.category === '3D')
         break
       case 'webapp':
         results = results.filter(p => p.category === '网站应用')
@@ -202,12 +203,13 @@ const searchResults = computed(() => {
   if (searchQuery.value.trim()) {
     const query = searchQuery.value.toLowerCase().trim()
     results = results.filter(project => {
+      const projectName = project.title || ''
       return (
-        project.name.toLowerCase().includes(query) ||
-        project.description.toLowerCase().includes(query) ||
+        projectName.toLowerCase().includes(query) ||
+        (project.description && project.description.toLowerCase().includes(query)) ||
         (project.tags && project.tags.some(tag => tag.toLowerCase().includes(query))) ||
         (project.category && project.category.toLowerCase().includes(query)) ||
-        project.author.toLowerCase().includes(query)
+        (project.author && project.author.toLowerCase().includes(query))
       )
     })
   }
@@ -225,10 +227,24 @@ const searchResults = computed(() => {
   return results
 })
 
-const loadProjects = () => {
-  const stored = localStorage.getItem('farmProjects')
-  if (stored) {
-    projects.value = JSON.parse(stored)
+const loadProjects = async () => {
+  try {
+    const response = await projectApi.getProjects()
+    if (response.success) {
+      // 处理API返回的数据格式，统一字段名
+      projects.value = response.data.map(project => ({
+        ...project,
+        name: project.title,
+        createdAt: project.created_time
+      }))
+    }
+  } catch (error) {
+    console.error('获取项目列表失败:', error)
+    // 如果API调用失败，回退到localStorage方式
+    const stored = localStorage.getItem('farmProjects')
+    if (stored) {
+      projects.value = JSON.parse(stored)
+    }
   }
 }
 
@@ -270,25 +286,37 @@ const closeModal = () => {
   selectedProject.value = null
 }
 
-const toggleFavorite = (project) => {
+const toggleFavorite = async (project) => {
   project.isFavorite = !project.isFavorite
-  // 保存到localStorage
-  localStorage.setItem('farmProjects', JSON.stringify(projects.value))
+  
+  try {
+    // 这里可以调用API更新收藏状态，如果后端支持的话
+    // await projectApi.updateProject(project.project_id || project.id, { isFavorite: project.isFavorite })
+    
+    // 暂时保存到localStorage作为本地状态
+    localStorage.setItem('farmProjects', JSON.stringify(projects.value))
+  } catch (error) {
+    console.error('更新收藏状态失败:', error)
+    // 恢复状态
+    project.isFavorite = !project.isFavorite
+  }
 }
 
 const getRelevanceScore = (project, query) => {
   let score = 0
   
+  const projectName = project.title || ''
+  
   // 项目名称匹配权重最高
-  if (project.name.toLowerCase().includes(query)) {
+  if (projectName.toLowerCase().includes(query)) {
     score += 10
-    if (project.name.toLowerCase().startsWith(query)) {
+    if (projectName.toLowerCase().startsWith(query)) {
       score += 5
     }
   }
   
   // 描述匹配
-  if (project.description.toLowerCase().includes(query)) {
+  if (project.description && project.description.toLowerCase().includes(query)) {
     score += 5
   }
   

@@ -64,7 +64,7 @@
       >
         <div class="project-content">
           <div class="project-header">
-            <h4 class="project-title">{{ project.name }}</h4>
+            <h4 class="project-title">{{ project.title }}</h4>
             <div class="project-status" :class="getStatusClass(project.status)">
               {{ getStatusIcon(project.status) }} {{ project.status }}
             </div>
@@ -96,7 +96,7 @@
 
           <div class="project-footer">
             <span class="project-author">👤 {{ project.author }}</span>
-            <span class="project-date">{{ formatDate(project.createdAt) }}</span>
+            <span class="project-date">{{ formatDate(project.create_time) }}</span>
           </div>
         </div>
 
@@ -112,7 +112,7 @@
     <div v-if="selectedProject" class="modal-overlay" @click="closeModal">
       <div class="modal-content" @click.stop>
         <div class="modal-header">
-          <h3>{{ selectedProject.name }}</h3>
+          <h3>{{ selectedProject.title }}</h3>
           <button @click="closeModal" class="close-btn">×</button>
         </div>
         
@@ -138,7 +138,7 @@
             </div>
             <div class="detail-item">
               <strong>创建时间：</strong>
-              {{ formatDate(selectedProject.createdAt) }}
+              {{ formatDate(selectedProject.create_time) }}
             </div>
           </div>
 
@@ -167,6 +167,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { projectApi } from '../utils/request.ts'
 
 const projects = ref([])
 const selectedProject = ref(null)
@@ -197,27 +198,49 @@ const filteredProjects = computed(() => {
   filtered.sort((a, b) => {
     switch (sortBy.value) {
       case 'oldest':
-        return new Date(a.createdAt) - new Date(b.createdAt)
+        return new Date(a.create_time) - new Date(b.create_time)
       case 'name':
-        return a.name.localeCompare(b.name)
+        return (a.title).localeCompare(b.title)
       case 'newest':
       default:
-        return new Date(b.createdAt) - new Date(a.createdAt)
+        return new Date(b.create_time) - new Date(a.create_time)
     }
   })
 
   return filtered
 })
 
-const loadProjects = () => {
-  const stored = localStorage.getItem('farmProjects')
-  if (stored) {
-    projects.value = JSON.parse(stored)
+const loadProjects = async () => {
+  try {
+    const response = await projectApi.getProjects()
+    if (response.success) {
+      // 处理API返回的数据格式，统一字段名
+      projects.value = response.data.map(project => ({
+        ...project,
+        name: project.title,
+        createdAt: project.create_time
+      }))
+    }
+  } catch (error) {
+    console.error('获取项目列表失败:', error)
+    // 如果API调用失败，回退到localStorage方式
+    const stored = localStorage.getItem('farmProjects')
+    if (stored) {
+      projects.value = JSON.parse(stored)
+    }
   }
 }
 
-const saveProjects = () => {
-  localStorage.setItem('farmProjects', JSON.stringify(projects.value))
+const saveProject = async (project) => {
+  try {
+    await projectApi.updateProject(project.project_id, {
+      status: project.status
+    })
+  } catch (error) {
+    console.error('更新项目失败:', error)
+    // 如果API调用失败，回退到localStorage方式
+    localStorage.setItem('farmProjects', JSON.stringify(projects.value))
+  }
 }
 
 const selectProject = (project) => {
@@ -232,12 +255,12 @@ const closeModal = () => {
   document.body.style.overflow = ''
 }
 
-const toggleStatus = (project) => {
+const toggleStatus = async (project) => {
   const statusCycle = ['计划中', '进行中', '暂停', '已完成']
   const currentIndex = statusCycle.indexOf(project.status)
   const nextIndex = (currentIndex + 1) % statusCycle.length
   project.status = statusCycle[nextIndex]
-  saveProjects()
+  await saveProject(project)
 }
 
 

@@ -2,8 +2,56 @@ import { navbar } from "vuepress-theme-hope";
 
 export default navbar([
   "/",
+  {
+    text: "教程",
+    prefix: "/tutorial/",
+    icon: "book",
+    children: [
+      {
+        text: "教程列表",
+        icon: "list",
+        link: "index",
+      },
+      {
+        text: "落叶轻羽B站教程",
+        icon: "video",
+        link: "luoye",
+      },
+      {
+        text: "其他B站UP主视频列表",
+        icon: "video",
+        link: "otherbilibili",
+      },
+      {
+        text: "收集的资源网站",
+        icon: "compass",
+        link: "assetweb",
+      }
+    ]
+  },
   "/discussionList/",
-  "/game/",
+  {
+    text: "游戏",
+    icon: "gamepad",
+    prefix: "/game/",
+    children: [
+      {
+        text: "在线游戏说明",
+        icon: "pen-to-square",
+        link: "index",
+      },
+      {
+        text: "游戏列表",
+        icon: "list",
+        link: "list",
+      },
+      {
+        text: "游戏上传",
+        icon: "upload",
+        link: "upload",
+      }
+    ]
+  },
   "/farm/",
   // {
   //   text: "博文",
