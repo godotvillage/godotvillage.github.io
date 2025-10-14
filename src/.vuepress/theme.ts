@@ -175,9 +175,10 @@ export default hopeTheme({
       // 服务商特定选项
       repo: "godotvillage/godotvillage.github.io",
       repoId: "R_kgDOP-_yiQ",
-      category: "General",
-      categoryId: "DIC_kwDOP-_yic4CwbD6",
+      category: "WEB",
+      categoryId: "DIC_kwDOP-_yic4CwnQg",
       lazyLoading: true,
+      mapping: "title",
     },
 
     components: {

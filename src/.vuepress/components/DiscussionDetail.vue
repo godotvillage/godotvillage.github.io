@@ -54,11 +54,11 @@
         <h3>评论</h3>
         <GiscusComponent 
           :key="discussionNumber"
-          :repo="repo"
-          :repo-id="repoId"
-          :category="category"
-          :category-id="categoryId"
-          :mapping="mapping"
+          :repo="giscusConfig.repo"
+          :repo-id="giscusConfig.repoId"
+          :category="giscusConfig.category"
+          :category-id="giscusConfig.categoryId"
+          :mapping="giscusConfig.mapping"
           :term="discussionNumber.toString()"
         />
       </div>
@@ -77,25 +77,24 @@ export default {
       loading: true,
       error: null,
       // Giscus配置
-      repo: 'godotvillage/godotvillage.github.io',
-      repoId: 'R_kgDOP-_yiQ',
-      category: 'General',
-      categoryId: 'DIC_kwDOP-_yic4CwbD6',
-      mapping: 'specific',
+      giscusConfig: {
+        repo: '',
+        repoId: '',
+        category: '',
+        categoryId: '',
+        mapping: ''
+      },
     }
   },
   computed: {
     discussionNumber() {
       // 从路由参数或frontmatter获取讨论编号
       return this.$route.query.number
-    },
-    githubToken() {
-      // 从环境变量获取token，注意：在生产环境中需要服务端代理
-      return `github_pa`+`t_11BYPYXTY0PvuNeOQ8lSVk_MZwjq`+`se6QQdsWDFonFNDkfN8DXPMCRm`+`MjsNcytQ5jWA7EV4JGT40zhG0h5X`
     }
   },
   async mounted() {
     await this.fetchDiscussion()
+    await this.fetchGiscusConfig()
   },
   methods: {
     async fetchDiscussion() {
@@ -103,111 +102,37 @@ export default {
       this.error = null
       
       try {
-        const query = `
-          query GetDiscussion($owner: String!, $name: String!, $number: Int!) {
-            repository(owner: $owner, name: $name) {
-              discussion(number: $number) {
-                id
-                number
-                title
-                body
-                bodyHTML
-                createdAt
-                updatedAt
-                url
-                author {
-                  login
-                  avatarUrl
-                  url
-                }
-                category {
-                  name
-                  emoji
-                }
-                labels(first: 10) {
-                  nodes {
-                    id
-                    name
-                    color
-                  }
-                }
-                comments(first: 100) {
-                  totalCount
-                  nodes {
-                    id
-                    body
-                    bodyHTML
-                    createdAt
-                    author {
-                      login
-                      avatarUrl
-                    }
-                    replies(first: 10) {
-                      nodes {
-                        id
-                        body
-                        createdAt
-                        author {
-                          login
-                          avatarUrl
-                        }
-                      }
-                    }
-                  }
-                }
-                reactionGroups {
-                  content
-                  reactors(first: 10) {
-                    totalCount
-                  }
-                }
-              }
-            }
-          }
-        `
-
-        const variables = {
-          owner: 'godotvillage',
-          name: 'godotvillage.github.io',
-          number: parseInt(this.discussionNumber)
-        }
-
-        const response = await fetch('https://api.github.com/graphql', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${this.githubToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            query,
-            variables
-          }),
-        })
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
-        }
-
+        const response = await fetch(`/discussion/detail/${this.discussionNumber}`)
         const result = await response.json()
 
-        if (result.errors) {
-          throw new Error(result.errors[0].message)
+        if (result.success) {
+          this.discussion = result.data
+          // 设置页面标题
+          document.title = `${this.discussion.title} - 论坛`
+        } else {
+          throw new Error(result.error)
         }
-
-        if (!result.data.repository.discussion) {
-          throw new Error('讨论不存在')
-        }
-
-        this.discussion = result.data.repository.discussion
-        
-        // 设置页面标题
-        document.title = `${this.discussion.title} - 论坛`
         
       } catch (error) {
         console.error('获取讨论详情失败:', error)
         this.error = error.message
       } finally {
         this.loading = false
+      }
+    },
+
+    async fetchGiscusConfig() {
+      try {
+        const response = await fetch('/discussion/giscus-config')
+        const result = await response.json()
+
+        if (result.success) {
+          this.giscusConfig = result.data
+        } else {
+          console.warn('获取Giscus配置失败:', result.error)
+        }
+      } catch (error) {
+        console.warn('获取Giscus配置失败:', error)
       }
     },
 

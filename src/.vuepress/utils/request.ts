@@ -1,5 +1,5 @@
-export const baseUrl = 'https://village.moshangzhu.com.cn';
-// export const baseUrl = 'http://localhost:31024'; // 本地调试使用
+// export const baseUrl = 'https://village.moshangzhu.com.cn';
+export const baseUrl = 'http://localhost:31024'; // 本地调试使用
 export const imageBaseUrl = 'https://games.moshangzhu.com.cn/';
 export const gameBaseUrl = 'https://games.moshangzhu.com.cn/games';
 
