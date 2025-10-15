@@ -29,7 +29,11 @@ export default navbar([
       }
     ]
   },
-  "/discussion/list",
+  {
+    text: "论坛",
+    icon: "comment",
+    link: "/discussion/list",
+  },
   {
     text: "游戏",
     icon: "gamepad",

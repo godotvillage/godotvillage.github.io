@@ -46,7 +46,16 @@ export default {
             return this.$route.query.number
         },
         discussionCategory() {
-            return JSON.parse(decodeURIComponent(this.$route.query.category))
+            let category = this.$route.query.category
+            if (category === undefined) {
+                return {
+                    name: 'general',
+                    id: 'R_kgDOP-_yiQ'
+                }
+            }
+            let categoryStr = decodeURIComponent(category)
+
+            return JSON.parse(categoryStr)
         },
         category() {
             return this.discussionCategory.name
