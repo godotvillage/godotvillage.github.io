@@ -142,10 +142,21 @@ export default {
       const date = new Date(dateString)
       const now = new Date()
       const diffTime = Math.abs(now - date)
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-      
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
       if (diffDays === 1) {
         return '昨天'
+      } else if (diffDays === 0) {
+        const diffHours = Math.floor(diffTime / (1000 * 60 * 60))
+        if (diffHours === 0) {
+          const diffMinutes = Math.floor(diffTime / (1000 * 60))
+          if (diffMinutes === 0) {
+            return '刚刚'
+          } else {
+            return `${diffMinutes}分钟前`
+          }
+        } else {
+          return `${diffHours}小时前`
+        }
       } else if (diffDays < 7) {
         return `${diffDays}天前`
       } else {

@@ -118,7 +118,6 @@ export default {
         if (this.selectedCategoryId) {
           params.append('categoryId', this.selectedCategoryId)
         }
-        console.log(this.endCursor)
         if (loadMore && this.endCursor) {
           params.append('after', this.endCursor)
         }
