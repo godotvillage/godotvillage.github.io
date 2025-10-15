@@ -38,14 +38,7 @@ tagline: 帮助新人更快的掌握Godot并能成功孵化游戏项目
 #     desc: 自定义详细介绍
 #     link: https://你的自定义链接
 
-footer: 自定义你的页脚文字
 ---
-
-这是一个博客主页的案例。
-
-要使用此布局，你应该在页面前端设置 `layout: Blog` 和 `home: true`。
-
-相关配置文档请见 [博客主页](https://theme-hope.vuejs.press/zh/guide/blog/home.html)。
 
 <style>
 .vp-blog-hero.hero-fullscreen .vp-blog-mask {

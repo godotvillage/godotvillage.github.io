@@ -24,8 +24,8 @@ export default hopeTheme({
   sidebar,
 
   // 页脚
-  footer: "",
-  displayFooter: false,
+  footer: "山高万仞，只登一步。日拱一卒，功不唐捐",
+  displayFooter: true,
 
   // 博客相关
   blog: {
@@ -73,10 +73,6 @@ export default hopeTheme({
   // 加密配置
   encrypt: {
     config: {
-      "/demo/encrypt.html": {
-        hint: "Password: 1234",
-        password: "1234",
-      },
       "/game/upload.html": {
         hint: "上传游戏密码请在群内获取",
         password: "G0d0tVi11ageUpl0adGam3",
