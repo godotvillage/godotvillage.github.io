@@ -2,33 +2,35 @@
 <template>
   <div class="discussions-list">
     <div class="forum-header">
-      <h2>讨论列表</h2>
+      <h2>论坛列表</h2>
       <button @click="createNewDiscussion" class="new-post-btn">新建帖子</button>
     </div>
     
     <!-- 分类选择器 -->
     <div class="category-selector">
       <div class="category-tabs">
-        <div 
-          v-for="category in categories" 
-          :key="category.id"
-          class="category-tab"
-          :class="{ active: selectedCategoryId === category.id }"
-          @click="selectCategory(category.id)"
-        >
-          <span v-html="category.emojiHTML" class="category-emoji"></span>
-          <span class="category-name">{{ category.name }}</span>
-        </div>
+        <template v-for="category in categories" :key="category.id">
+          <div 
+            v-if="!disabeledCategories.includes(category.name)"
+            class="category-tab"
+            :class="{ active: selectedCategoryId === category.id }"
+            @click="selectCategory(category.id)"
+          >
+            <span v-html="category.emojiHTML" class="category-emoji"></span>
+            <span class="category-name">{{ category.name }}</span>
+          </div>
+        </template>
       </div>
     </div>
     
     <div class="discussions-container" @scroll="handleScroll" ref="container">
       <div v-if="loading && discussions.length === 0" class="loading">加载中...</div>
+      <div v-if="!loading && discussions.length === 0" class="loading">没有找到讨论</div>
       <div 
         v-for="discussion in discussions" 
         :key="discussion.id"
         class="discussion-item"
-        @click="navigateToDiscussion(discussion.number)"
+        @click="navigateToDiscussion(discussion)"
       >
         <div class="discussion-header">
           <span v-if="discussion.category" v-html="getCategoryEmoji(discussion.category.id)" class="discussion-category-emoji"></span>
@@ -60,7 +62,21 @@ export default {
       loadingMore: false,
       hasNextPage: false,
       currentPage: 1,
-      endCursor: null
+      pageSize: 10,
+      endCursor: null,
+      categoriesSort: [
+        "公告",
+        "日常",
+        "求助",
+        "分享与讨论",
+        "想法",
+        "投票",
+        "水区",
+        "WEB",
+      ],
+      disabeledCategories: [
+        "WEB",
+      ]
     }
   },
   async mounted() {
@@ -72,9 +88,9 @@ export default {
       try {
         const response = await fetch(baseUrl + '/discussion/categories')
         const result = await response.json()
-        
+
         if (result.success) {
-          this.categories = result.data.categories
+          this.categories = result.data.categories.sort((a, b) => this.categoriesSort.indexOf(a.name) - this.categoriesSort.indexOf(b.name))
           // 设置默认分类
           this.selectedCategoryId = result.data.defaultCategoryId
         } else {
@@ -102,10 +118,12 @@ export default {
         if (this.selectedCategoryId) {
           params.append('categoryId', this.selectedCategoryId)
         }
-        
+        console.log(this.endCursor)
         if (loadMore && this.endCursor) {
           params.append('after', this.endCursor)
         }
+
+        params.append('pageSize', this.pageSize)
         
         if (params.toString()) {
           url += '?' + params.toString()
@@ -124,8 +142,7 @@ export default {
           // 更新分页信息
           if (result.pagination) {
             this.hasNextPage = result.pagination.hasNextPage
-            this.endCursor = result.pagination.endCursor
-            this.currentPage = result.pagination.currentPage
+            this.endCursor = result.pagination.pageInfo.endCursor
           }
         } else {
           throw new Error(result.error)
@@ -153,6 +170,7 @@ export default {
           this.hasNextPage && 
           !this.loadingMore && 
           !this.loading) {
+        this.currentPage++
         this.fetchDiscussions(true)
       }
     },
@@ -162,14 +180,15 @@ export default {
       return category ? category.emojiHTML : ''
     },
     
-    navigateToDiscussion(number) {
+    navigateToDiscussion(discussion) {
       // 跳转到对应的讨论页面
-      this.$router.push(`/discussion/index.html?number=${number}`)
+      this.$router.push(`/discussion/index.html?number=${discussion.number}&category=${encodeURIComponent(JSON.stringify(discussion.category))}`)
     },
     
     createNewDiscussion() {
       // 跳转到创建新讨论的页面
-      window.open(`https://github.com/godotvillage/godotvillage.github.io/discussions/new?category=general`, '_blank')
+      let categoryName = this.categories.find(cat => cat.id === this.selectedCategoryId).name
+      window.open(`https://github.com/godotvillage/godotvillage.github.io/discussions/new?category=${categoryName}`, '_blank')
     },
     
     formatDate(dateString) {
@@ -284,8 +303,8 @@ export default {
 .discussions-container {
   max-height: 600px;
   overflow-y: auto;
-  border: 1px solid var(--vp-c-border, #e1e4e8);
-  border-radius: 6px;
+  /* border: 1px solid var(--vp-c-border, #e1e4e8);
+  border-radius: 6px; */
   padding: 16px;
   background: var(--vp-c-bg, white);
 }

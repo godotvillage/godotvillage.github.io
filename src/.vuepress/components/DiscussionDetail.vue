@@ -49,25 +49,14 @@
         </span>
       </div>
 
-      <!-- Giscus评论区域 -->
-      <div class="comments-section">
-        <h3>评论</h3>
-        <GiscusComponent 
-          :key="discussionNumber"
-          :repo="giscusConfig.repo"
-          :repo-id="giscusConfig.repoId"
-          :category="giscusConfig.category"
-          :category-id="giscusConfig.categoryId"
-          :mapping="giscusConfig.mapping"
-          :term="discussionNumber.toString()"
-        />
-      </div>
+      
     </div>
   </div>
 </template>
 
 <script>
 import { marked } from 'marked'
+import { baseUrl } from '../utils/request'
 
 export default {
   name: 'DiscussionDetail',
@@ -76,14 +65,6 @@ export default {
       discussion: null,
       loading: true,
       error: null,
-      // Giscus配置
-      giscusConfig: {
-        repo: '',
-        repoId: '',
-        category: '',
-        categoryId: '',
-        mapping: ''
-      },
     }
   },
   computed: {
@@ -94,7 +75,7 @@ export default {
   },
   async mounted() {
     await this.fetchDiscussion()
-    await this.fetchGiscusConfig()
+    // await this.fetchGiscusConfig()
   },
   methods: {
     async fetchDiscussion() {
@@ -102,7 +83,7 @@ export default {
       this.error = null
       
       try {
-        const response = await fetch(`/discussion/detail/${this.discussionNumber}`)
+        const response = await fetch(baseUrl + `/discussion/detail/${this.discussionNumber}`)
         const result = await response.json()
 
         if (result.success) {
@@ -121,20 +102,20 @@ export default {
       }
     },
 
-    async fetchGiscusConfig() {
-      try {
-        const response = await fetch('/discussion/giscus-config')
-        const result = await response.json()
+    // async fetchGiscusConfig() {
+    //   try {
+    //     const response = await fetch('/discussion/giscus-config')
+    //     const result = await response.json()
 
-        if (result.success) {
-          this.giscusConfig = result.data
-        } else {
-          console.warn('获取Giscus配置失败:', result.error)
-        }
-      } catch (error) {
-        console.warn('获取Giscus配置失败:', error)
-      }
-    },
+    //     if (result.success) {
+    //       this.giscusConfig = result.data
+    //     } else {
+    //       console.warn('获取Giscus配置失败:', result.error)
+    //     }
+    //   } catch (error) {
+    //     console.warn('获取Giscus配置失败:', error)
+    //   }
+    // },
 
     renderMarkdown(content) {
       if (!content) return ''

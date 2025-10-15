@@ -1,7 +1,5 @@
 ---
-title: 论坛列表
 index: false
-icon: laptop-code
 sidebar: false
 comment: false
 lastUpdated: false

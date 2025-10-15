@@ -29,7 +29,7 @@ export default navbar([
       }
     ]
   },
-  "/discussionList/",
+  "/discussion/list",
   {
     text: "游戏",
     icon: "gamepad",
