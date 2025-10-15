@@ -11,6 +11,7 @@ category:
 author: false
 pageInfo: false
 toc: false
+article: false
 ---
 
 <DiscussionsList></DiscussionsList>

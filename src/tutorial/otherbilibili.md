@@ -1,9 +1,9 @@
 ---
 title: 其他B站UP主视频列表
 description: 展示B站优秀的Godot教程视频
-cover: https://images.unsplash.com/photo-1517673132405-a56a62b18caf?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1752
 category:
   - 教程
+date: 2025-10-11
 ---
 
 ## 说明

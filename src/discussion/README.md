@@ -11,6 +11,7 @@ author: false
 toc: false
 pageInfo: false
 layout: DiscussionDetailLayout
+article: false
 ---
 
 <DiscussionDetail></DiscussionDetail>

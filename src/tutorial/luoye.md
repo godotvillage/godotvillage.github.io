@@ -3,9 +3,9 @@ title: 落叶轻羽B站视频列表
 description: 展示落叶轻羽的Godot教程视频
 sticky: true
 star: true
-cover: https://images.unsplash.com/photo-1585829365343-ea8ed0b1cb5b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1740
 category:
   - 教程
+date: 2025-10-11
 ---
 ## 关于落叶轻羽
 B站UP主 [落叶轻羽](https://space.bilibili.com/375301589) 是国内知名的Godot引擎学习资源贡献者，专注于2D游戏开发教程领域。他通过精心筛选YouTube上的优质Godot教学视频，进行专业的翻译、配音和本地化处理，为中文社区提供了大量高质量的学习资源。目前频道已积累超过350个视频，内容涵盖从零基础入门到进阶开发的完整学习路径。

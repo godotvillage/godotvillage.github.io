@@ -14,6 +14,7 @@ author: false
 pageInfo: false
 toc: false
 article: false
+date: 2025-10-10
 ---
 
 ## 🎮 欢迎来到 Godot 新手村游戏中心！

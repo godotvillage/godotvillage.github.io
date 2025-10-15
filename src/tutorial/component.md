@@ -4,6 +4,9 @@ sticky: false
 star: false
 category:
   - 教程
+tag:
+  - 设计模式
+date: 2025-10-13
 ---
 
 :::details 教程使用环境
@@ -14,7 +17,8 @@ category:
 ## 继承模式 vs 组件模式
 
 在游戏开发中，有两种主要的架构模式：**继承模式**和**组件模式**。
- 
+
+<!-- more -->
 
 ### Godot的继承模式
 

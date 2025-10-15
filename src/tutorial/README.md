@@ -16,6 +16,7 @@ author: false
 pageInfo: false
 toc: false
 cover: https://plus.unsplash.com/premium_photo-1664297854029-21ebd7e03b24?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1742
+date: 2025-10-11
 ---
 
 ## 📚 欢迎来到 Godot 新手村教程中心！
@@ -46,7 +47,8 @@ cover: https://plus.unsplash.com/premium_photo-1664297854029-21ebd7e03b24?ixlib=
 - [ ] 资源系统开发
 - [ ] 动画播放器和动画树
 - [ ] 存档以及文件操作
-- [ ] 事件系统详解
+- [ ] 输入事件系统详解
+- [ ] 信号系统
 - [ ] Tilemap详解
 - [ ] 粒子系统
 - [ ] UI系统和主题开发
@@ -58,13 +60,14 @@ cover: https://plus.unsplash.com/premium_photo-1664297854029-21ebd7e03b24?ixlib=
 - [ ] 物理系统 
 
 #### 着色器教程
-- [ ] 着色器原理
+- [x] [着色器简介](/tutorial/shader/intro)
 - [ ] 2D顶点着色器
 - [ ] 2D片段着色器
 - [ ] 2D灯光着色器
 - [ ] 3D顶点着色器
 - [ ] 3D片段着色器
 - [ ] 3D灯光着色器
+- [ ] 粒子着色器
 - [ ] 雾着色器
 - [ ] 天空着色器
 

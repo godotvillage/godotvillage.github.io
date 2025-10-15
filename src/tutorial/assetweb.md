@@ -1,10 +1,10 @@
 ---
 title: 收集的资源网站
-cover: https://images.unsplash.com/photo-1463171379579-3fdfb86d6285?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1740
 star: true
 category:
   - 教程
   - 资源
+date: 2025-10-11
 ---
 
 ## 说明
