@@ -111,7 +111,7 @@
           <div class="project-detail-meta">
             <div class="detail-item">
               <strong>状态：</strong>
-              <span :class="getStatusClass(selectedProject.status)">
+              <span class="project-status" :class="getStatusClass(selectedProject.status)">
                 {{ getStatusIcon(selectedProject.status) }} {{ selectedProject.status }}
               </span>
             </div>
@@ -804,6 +804,14 @@ onMounted(() => {
   padding: 25px;
 }
 
+.project-status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85em;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
 .project-detail-meta {
   display: grid;
   gap: 15px;
@@ -1002,18 +1010,37 @@ onMounted(() => {
   }
 
   .results-header {
-    color: var(--vp-c-text);
-  }
-
-  .result-item {
     background: var(--vp-c-bg-elv);
     border: 1px solid var(--vp-c-border);
     color: var(--vp-c-text);
   }
 
-  .result-item:hover {
+  .results-header h4 {
+    color: var(--vp-c-text);
+  }
+
+  .results-count {
+    color: var(--vp-c-text-mute);
+  }
+
+  .clear-all-btn {
+    background: var(--vp-c-accent);
+    color: white;
+  }
+
+  .clear-all-btn:hover {
+    background: var(--vp-c-accent-hover);
+  }
+
+  .result-card {
+    background: var(--vp-c-bg-elv);
+    border: 2px solid var(--vp-c-border);
+    color: var(--vp-c-text);
+  }
+
+  .result-card:hover {
     border-color: var(--vp-c-accent);
-    box-shadow: 0 4px 12px var(--vp-c-shadow);
+    box-shadow: 0 8px 25px var(--vp-c-shadow);
   }
 
   .result-title {
@@ -1028,13 +1055,81 @@ onMounted(() => {
     color: var(--vp-c-text-mute);
   }
 
-  .result-tags .tag {
+  .result-tag {
     background: var(--vp-c-control);
     color: var(--vp-c-text);
   }
 
+  .more-tags {
+    background: var(--vp-c-control-hover);
+    color: var(--vp-c-text);
+  }
+
+  .result-footer {
+    color: var(--vp-c-text-subtle);
+    border-top: 1px solid var(--vp-c-divider);
+  }
+
+  .result-author {
+    color: var(--vp-c-text-subtle);
+  }
+
   .no-results {
     color: var(--vp-c-text-mute);
+  }
+
+  .modal-overlay {
+    background: rgba(0, 0, 0, 0.7);
+  }
+
+  .modal-content {
+    background: var(--vp-c-bg-elv);
+    color: var(--vp-c-text);
+  }
+
+  .modal-header {
+    border-bottom: 1px solid var(--vp-c-divider);
+  }
+
+  .modal-header h3 {
+    color: var(--vp-c-text);
+  }
+
+  .close-btn {
+    color: var(--vp-c-text-mute);
+  }
+
+  .close-btn:hover {
+    color: var(--vp-c-accent);
+  }
+
+  .project-status {
+    border-radius: 20px;
+  }
+
+  .project-detail-meta {
+    color: var(--vp-c-text);
+  }
+
+  .detail-item strong {
+    color: var(--vp-c-text);
+  }
+
+  .detail-description strong {
+    color: var(--vp-c-text);
+  }
+
+  .detail-description p {
+    color: var(--vp-c-text-mute);
+  }
+
+  .detail-tags strong {
+    color: var(--vp-c-text);
+  }
+
+  .detail-tag {
+    background: var(--vp-c-accent);
+    color: white;
   }
 
   .status-progress { background: #3dd68c; color: white; }

@@ -120,7 +120,7 @@
           <div class="project-detail-meta">
             <div class="detail-item">
               <strong>状态：</strong>
-              <span :class="getStatusClass(selectedProject.status)">
+              <span class="project-status" :class="getStatusClass(selectedProject.status)">
                 {{ getStatusIcon(selectedProject.status) }} {{ selectedProject.status }}
               </span>
             </div>
@@ -887,6 +887,14 @@ onUnmounted(() => {
 
   .detail-item strong {
     color: var(--vp-c-text);
+  }
+
+  .detail-description strong {
+    color: var(--vp-c-text);
+  }
+
+  .detail-description p {
+    color: var(--vp-c-text-mute);
   }
 
   .detail-tag {
