@@ -79,15 +79,14 @@ export default {
       
       // 如果URL中有code和state参数，说明是OAuth回调
       if (code && state) {
+        // 清理URL参数，避免刷新页面时重复处理
+        const newUrl = window.location.pathname + window.location.hash
+        window.history.replaceState({}, document.title, newUrl)
         try {
           // 调用githubAuth.handleCallback处理回调
           const user = await githubAuth.handleCallback(code, state)
           this.currentUser = user
           this.$emit('login', user)
-          
-          // 清理URL参数，避免刷新页面时重复处理
-          const newUrl = window.location.pathname + window.location.hash
-          window.history.replaceState({}, document.title, newUrl)
         } catch (error) {
           console.error('OAuth回调处理失败:', error)
           this.$emit('error', 'GitHub登录失败，请重试')
