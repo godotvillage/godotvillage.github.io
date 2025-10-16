@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { projectApi } from '../utils/request.ts';
+import { farmApi } from '../utils/request.ts';
 
 export default {
   name: 'FarmStats',
@@ -60,7 +60,7 @@ export default {
     async updateStats() {
       try {
         // 使用API获取统计数据
-        const statsResponse = await projectApi.getProjectStats();
+        const statsResponse = await farmApi.getFarmListStats();
         if (statsResponse.success) {
           const newStats = statsResponse.data;
           

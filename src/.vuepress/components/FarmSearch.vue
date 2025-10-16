@@ -158,7 +158,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { projectApi } from '../utils/request.ts'
+import { farmApi } from '../utils/request.ts'
 
 const searchQuery = ref('')
 const activeQuickFilter = ref('')
@@ -227,7 +227,7 @@ const searchResults = computed(() => {
 
 const loadProjects = async () => {
   try {
-    const response = await projectApi.getProjects()
+    const response = await farmApi.getFarmList()
     if (response.success) {
       // 处理API返回的数据格式，统一字段名
       projects.value = response.data.map(project => ({
@@ -289,7 +289,7 @@ const toggleFavorite = async (project) => {
   
   try {
     // 这里可以调用API更新收藏状态，如果后端支持的话
-    // await projectApi.updateProject(project.farm_id, { isFavorite: project.isFavorite })
+    // await farmApi.updateFarmProject(project.farm_id, { isFavorite: project.isFavorite })
     
     // 暂时保存到localStorage作为本地状态
     localStorage.setItem('farmProjects', JSON.stringify(projects.value))

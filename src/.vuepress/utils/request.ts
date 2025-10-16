@@ -37,9 +37,9 @@ export const gameApi = {
 };
 
 // 项目相关 API 函数（使用 farm 端点）
-export const projectApi = {
+export const farmApi = {
   // 获取项目列表
-  async getProjects() {
+  async getFarmList() {
     try {
       const response = await fetch(`${baseUrl}/farms`);
       const result = await response.json();
@@ -55,7 +55,7 @@ export const projectApi = {
   },
 
   // 获取项目统计信息
-  async getProjectStats() {
+  async getFarmListStats() {
     try {
       const response = await fetch(`${baseUrl}/farms/stats`);
       const result = await response.json();
@@ -71,7 +71,7 @@ export const projectApi = {
   },
 
   // 根据ID获取项目详情
-  async getProjectById(farmId) {
+  async getFarmProjectById(farmId) {
     try {
       const response = await fetch(`${baseUrl}/farms/${farmId}`);
       const result = await response.json();
@@ -87,7 +87,7 @@ export const projectApi = {
   },
 
   // 创建新项目
-  async createProject(projectData) {
+  async createFarmProject(projectData) {
     try {
       const response = await fetch(`${baseUrl}/farms`, {
         method: 'POST',
@@ -109,7 +109,7 @@ export const projectApi = {
   },
 
   // 更新项目信息
-  async updateProject(farmId, updateData) {
+  async updateFarmProject(farmId, updateData) {
     try {
       const response = await fetch(`${baseUrl}/farms/${farmId}`, {
         method: 'PUT',
@@ -131,7 +131,7 @@ export const projectApi = {
   },
 
   // 删除项目
-  async deleteProject(farmId) {
+  async deleteFarmProject(farmId) {
     try {
       const response = await fetch(`${baseUrl}/farms/${farmId}`, {
         method: 'DELETE'

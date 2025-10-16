@@ -749,13 +749,13 @@ export default {
     // 项目操作
     submitProjectForm() {
       if (this.projectModalMode === 'create') {
-        this.createProject();
+        this.createFarmProject();
       } else {
-        this.updateProject();
+        this.updateFarmProject();
       }
     },
 
-    async createProject() {
+    async createFarmProject() {
       // 清除之前的错误
       this.createError = '';
       this.createLoading = true;
@@ -798,8 +798,8 @@ export default {
 
         // 尝试通过API创建项目
         try {
-          const { projectApi } = await import('../utils/request.ts');
-          const createdProject = await projectApi.createProject(project);
+          const { farmApi } = await import('../utils/request.ts');
+          const createdProject = await farmApi.createFarmProject(project);
           // 如果API成功，使用返回的项目数据
           this.projects.unshift(createdProject);
         } catch (apiError) {
@@ -822,7 +822,7 @@ export default {
       this.selectedProject = null;
     },
     
-    updateProject() {
+    updateFarmProject() {
       const index = this.projects.findIndex(p => p.id === this.projectForm.id);
       if (index !== -1) {
         const updatedProject = {

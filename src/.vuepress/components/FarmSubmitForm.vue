@@ -108,7 +108,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { projectApi } from '../utils/request.ts'
+import { farmApi } from '../utils/request.ts'
 
 const form = ref({
   submitter: '',
@@ -172,7 +172,7 @@ const submitProject = async () => {
       demo_url: ''
     }
 
-    const response = await projectApi.createProject(projectData)
+    const response = await farmApi.createFarmProject(projectData)
     
     if (response.success) {
       // 触发自定义事件通知其他组件更新
