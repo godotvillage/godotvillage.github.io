@@ -25,9 +25,10 @@
           @logout="handleUserLogout"
           @error="handleAuthError"
         />
+        <br />
         <button 
           class="btn-primary" 
-          @click="showCreateModal = true"
+          @click="openCreateModal"
           :disabled="!isLoggedIn"
           :title="isLoggedIn ? '创建新项目' : '请先登录GitHub'"
         >
@@ -172,39 +173,21 @@
       </div>
     </div>
 
-    <!-- 创建项目弹窗 -->
-    <div v-if="showCreateModal" class="modal-overlay" @click="closeCreateModal">
+    <!-- 项目编辑弹窗（创建/编辑统一） -->
+    <div v-if="showProjectModal" class="modal-overlay" @click="closeProjectModal">
       <div class="modal-content modal-large" @click.stop>
         <div class="modal-header">
-          <h3>🚀 创建新项目</h3>
-          <button class="modal-close" @click="closeCreateModal">✕</button>
+          <h3>{{ projectModalMode === 'create' ? '🚀 创建新项目' : '✏️ 编辑项目' }}</h3>
+          <button class="modal-close" @click="closeProjectModal">✕</button>
         </div>
         
-        <!-- 分类选择器（参考论坛实现） -->
-        <div class="category-selector">
-          <div class="category-tabs">
-            <div 
-              v-for="category in projectCategories" 
-              :key="category.id"
-              class="category-tab"
-              :class="{ active: newProject.categoryId === category.id }"
-              @click="selectProjectCategory(category.id)"
-            >
-              <span v-html="category.emojiHTML" class="category-emoji"></span>
-              <span class="category-name">{{ category.name }}</span>
-            </div>
-          </div>
-          <div v-if="!newProject.categoryId" class="category-hint">
-            💡 请先选择项目分类
-          </div>
-        </div>
 
-        <form @submit.prevent="createProject" class="project-form">
+        <form @submit.prevent="submitProjectForm" class="project-form">
           <div class="form-group">
             <label for="title">项目名称 <span class="required-asterisk">*</span></label>
             <input 
               id="title"
-              v-model="newProject.title" 
+              v-model="projectForm.title" 
               type="text" 
               required 
               placeholder="输入项目名称..."
@@ -216,10 +199,11 @@
               <label for="author">作者 <span class="required-asterisk">*</span></label>
               <input 
                 id="author"
-                v-model="newProject.author" 
+                v-model="projectForm.author" 
                 type="text" 
                 required 
                 placeholder="输入你的昵称..."
+                :disabled="projectModalMode === 'edit'"
               />
             </div>
 
@@ -227,7 +211,7 @@
               <label for="contact">联系方式</label>
               <input 
                 id="contact"
-                v-model="newProject.contact" 
+                v-model="projectForm.contact" 
                 type="text" 
                 placeholder="QQ、微信、邮箱等..."
               />
@@ -237,7 +221,7 @@
           <div class="form-row">
             <div class="form-group">
               <label for="type">项目类型 <span class="required-asterisk">*</span></label>
-              <select id="type" v-model="newProject.type" required>
+              <select id="type" v-model="projectForm.type" required>
                 <option value="">选择类型</option>
                 <option value="2D">🎨 2D游戏</option>
                 <option value="3D">🎯 3D游戏</option>
@@ -250,7 +234,7 @@
 
             <div class="form-group">
               <label for="status">当前状态 <span class="required-asterisk">*</span></label>
-              <select id="status" v-model="newProject.status" required>
+              <select id="status" v-model="projectForm.status" required>
                 <option value="">选择状态</option>
                 <option value="planning">📋 计划中</option>
                 <option value="development">🚀 开发中</option>
@@ -265,7 +249,7 @@
             <label for="description">项目描述 <span class="required-asterisk">*</span></label>
             <textarea 
               id="description"
-              v-model="newProject.description" 
+              v-model="projectForm.description" 
               required 
               placeholder="详细描述你的项目，包括玩法、特色、目标等..."
               rows="4"
@@ -277,7 +261,7 @@
               <label for="progress">完成度 (%)</label>
               <input 
                 id="progress"
-                v-model.number="newProject.progress" 
+                v-model.number="projectForm.progress" 
                 type="number" 
                 min="0" 
                 max="100" 
@@ -289,7 +273,7 @@
               <label for="expectedTime">预计完成时间</label>
               <input 
                 id="expectedTime"
-                v-model="newProject.expectedTime" 
+                v-model="projectForm.expectedTime" 
                 type="date"
               />
             </div>
@@ -299,7 +283,7 @@
             <label for="tags">标签 (用逗号分隔)</label>
             <input 
               id="tags"
-              v-model="newProject.tagsInput" 
+              v-model="projectForm.tagsInput" 
               type="text" 
               placeholder="例如: RPG, 像素风, 单人, 开源..."
             />
@@ -321,7 +305,7 @@
               <label for="repository">代码仓库</label>
               <input 
                 id="repository"
-                v-model="newProject.repository" 
+                v-model="projectForm.repository" 
                 type="url" 
                 placeholder="https://github.com/..."
               />
@@ -331,7 +315,7 @@
               <label for="demoUrl">演示链接</label>
               <input 
                 id="demoUrl"
-                v-model="newProject.demoUrl" 
+                v-model="projectForm.demoUrl" 
                 type="url" 
                 placeholder="https://..."
               />
@@ -342,7 +326,7 @@
             <label for="teamMembers">团队成员 (可选)</label>
             <textarea 
               id="teamMembers"
-              v-model="newProject.teamMembers" 
+              v-model="projectForm.teamMembers" 
               placeholder="列出团队成员及其分工，例如：张三(程序)、李四(美术)..."
               rows="2"
             ></textarea>
@@ -352,7 +336,7 @@
             <label for="recruitmentInfo">招募信息 (可选)</label>
             <textarea 
               id="recruitmentInfo"
-              v-model="newProject.recruitmentInfo" 
+              v-model="projectForm.recruitmentInfo" 
               placeholder="如果需要招募成员，请描述需要的技能和联系方式..."
               rows="2"
             ></textarea>
@@ -363,7 +347,7 @@
               <label class="checkbox-label">
                 <input 
                   type="checkbox" 
-                  v-model="newProject.isOpenSource"
+                  v-model="projectForm.isOpenSource"
                 />
                 <span class="checkmark"></span>
                 开源项目
@@ -371,7 +355,7 @@
               <label class="checkbox-label">
                 <input 
                   type="checkbox" 
-                  v-model="newProject.needHelp"
+                  v-model="projectForm.needHelp"
                 />
                 <span class="checkmark"></span>
                 寻求帮助
@@ -379,7 +363,7 @@
               <label class="checkbox-label">
                 <input 
                   type="checkbox" 
-                  v-model="newProject.allowCollaboration"
+                  v-model="projectForm.allowCollaboration"
                 />
                 <span class="checkmark"></span>
                 欢迎协作
@@ -392,15 +376,15 @@
           </div>
 
           <div class="form-actions">
-            <button type="button" class="btn-secondary" @click="closeCreateModal">
+            <button type="button" class="btn-secondary" @click="closeProjectModal">
               取消
             </button>
             <button 
               type="submit" 
               class="btn-primary" 
-              :disabled="!newProject.categoryId || createLoading"
+              :disabled="createLoading"
             >
-              {{ createLoading ? '创建中...' : '创建项目' }}
+              {{ createLoading ? (projectModalMode === 'create' ? '创建中...' : '更新中...') : (projectModalMode === 'create' ? '创建项目' : '保存更改') }}
             </button>
           </div>
         </form>
@@ -508,97 +492,6 @@
       </div>
     </div>
 
-    <!-- 编辑项目弹窗 -->
-    <div v-if="showEditModal" class="modal-overlay" @click="closeEditModal">
-      <div class="modal-content" @click.stop>
-        <div class="modal-header">
-          <h3>✏️ 编辑项目</h3>
-          <button class="modal-close" @click="closeEditModal">✕</button>
-        </div>
-        <form @submit.prevent="updateProject" class="project-form">
-          <div class="form-group">
-            <label for="edit-title">项目名称 <span class="required-asterisk">*</span></label>
-            <input 
-              id="edit-title"
-              v-model="editingProject.title" 
-              type="text" 
-              required 
-            />
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="edit-type">项目类型 <span class="required-asterisk">*</span></label>
-              <select id="edit-type" v-model="editingProject.type" required>
-                <option value="2D">🎨 2D游戏</option>
-                <option value="3D">🎯 3D游戏</option>
-                <option value="tool">🔧 工具/插件</option>
-                <option value="demo">🎮 演示项目</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="edit-status">当前状态 <span class="required-asterisk">*</span></label>
-              <select id="edit-status" v-model="editingProject.status" required>
-                <option value="planning">📋 计划中</option>
-                <option value="development">🚀 开发中</option>
-                <option value="testing">🧪 测试中</option>
-                <option value="completed">✅ 已完成</option>
-                <option value="paused">⏸️ 暂停</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="edit-description">项目描述 <span class="required-asterisk">*</span></label>
-            <textarea 
-              id="edit-description"
-              v-model="editingProject.description" 
-              required 
-              rows="4"
-            ></textarea>
-          </div>
-
-          <div class="form-group">
-            <label for="edit-progress">完成度 (%)</label>
-            <input 
-              id="edit-progress"
-              v-model.number="editingProject.progress" 
-              type="number" 
-              min="0" 
-              max="100" 
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="edit-tags">标签 (用逗号分隔)</label>
-            <input 
-              id="edit-tags"
-              v-model="editingProject.tagsInput" 
-              type="text" 
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="edit-repository">代码仓库</label>
-            <input 
-              id="edit-repository"
-              v-model="editingProject.repository" 
-              type="url" 
-            />
-          </div>
-
-          <div class="form-actions">
-            <button type="button" class="btn-secondary" @click="closeEditModal">
-              取消
-            </button>
-            <button type="submit" class="btn-primary">
-              保存更改
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
 
     <!-- 添加更新弹窗 -->
     <div v-if="showUpdateModal" class="modal-overlay" @click="closeUpdateModal">
@@ -655,7 +548,6 @@ export default {
     return {
       // 项目数据
       projects: [],
-      projectCategories: [],
       
       // 筛选和搜索
       searchQuery: '',
@@ -664,8 +556,8 @@ export default {
       sortBy: 'newest',
       
       // 弹窗状态
-      showCreateModal: false,
-      showEditModal: false,
+      showProjectModal: false,
+      projectModalMode: 'create', // 'create' 或 'edit'
       showUpdateModal: false,
       selectedProject: null,
       
@@ -681,11 +573,11 @@ export default {
       ],
       
       // 表单数据
-      newProject: {
+      projectForm: {
+        id: '',
         title: '',
         author: '',
         contact: '',
-        categoryId: '',
         type: '',
         status: '',
         description: '',
@@ -700,8 +592,6 @@ export default {
         needHelp: false,
         allowCollaboration: false
       },
-      
-      editingProject: {},
       updatingProject: null,
       newUpdate: {
         content: '',
@@ -780,60 +670,10 @@ export default {
   
   mounted() {
     this.loadProjects();
-    this.loadProjectCategories();
   },
   
   methods: {
     // 数据加载和保存
-    async loadProjectCategories() {
-      try {
-        // 从API加载项目分类（参考论坛实现）
-        const { projectApi } = await import('../utils/request.ts');
-        const categories = await projectApi.getProjectCategories();
-        this.projectCategories = categories;
-      } catch (error) {
-        console.error('加载项目分类失败:', error);
-        // 使用默认分类
-        this.projectCategories = [
-          {
-            id: 'game-2d',
-            name: '2D游戏',
-            emojiHTML: '🎨',
-            description: '2D游戏项目'
-          },
-          {
-            id: 'game-3d',
-            name: '3D游戏',
-            emojiHTML: '🎯',
-            description: '3D游戏项目'
-          },
-          {
-            id: 'tool',
-            name: '工具/插件',
-            emojiHTML: '🔧',
-            description: '开发工具和插件'
-          },
-          {
-            id: 'tutorial',
-            name: '教程项目',
-            emojiHTML: '📚',
-            description: '教学和演示项目'
-          },
-          {
-            id: 'asset',
-            name: '资源包',
-            emojiHTML: '🎭',
-            description: '游戏资源和素材'
-          },
-          {
-            id: 'other',
-            name: '其他',
-            emojiHTML: '📦',
-            description: '其他类型项目'
-          }
-        ];
-      }
-    },
 
     loadProjects() {
       const saved = localStorage.getItem('godot-village-projects');
@@ -907,6 +747,14 @@ export default {
     },
     
     // 项目操作
+    submitProjectForm() {
+      if (this.projectModalMode === 'create') {
+        this.createProject();
+      } else {
+        this.updateProject();
+      }
+    },
+
     async createProject() {
       // 清除之前的错误
       this.createError = '';
@@ -914,40 +762,36 @@ export default {
 
       try {
         // 表单验证
-        if (!this.newProject.categoryId) {
-          throw new Error('请选择项目分类');
-        }
-        if (!this.newProject.title.trim()) {
+        if (!this.projectForm.title.trim()) {
           throw new Error('请输入项目名称');
         }
-        if (!this.newProject.author.trim()) {
+        if (!this.projectForm.author.trim()) {
           throw new Error('请输入作者名称');
         }
-        if (!this.newProject.description.trim()) {
+        if (!this.projectForm.description.trim()) {
           throw new Error('请输入项目描述');
         }
 
         const project = {
           id: Date.now().toString(),
-          title: this.newProject.title.trim(),
-          author: this.newProject.author.trim(),
+          title: this.projectForm.title.trim(),
+          author: this.projectForm.author.trim(),
           githubUser: githubAuth.getCurrentUser().name,
-          contact: this.newProject.contact.trim(),
-          categoryId: this.newProject.categoryId,
-          type: this.newProject.type,
-          status: this.newProject.status,
-          description: this.newProject.description.trim(),
-          progress: this.newProject.progress || 0,
-          expectedTime: this.newProject.expectedTime || null,
-          tags: this.newProject.tagsInput ? 
-            this.newProject.tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag) : [],
-          repository: this.newProject.repository.trim() || null,
-          demoUrl: this.newProject.demoUrl.trim() || null,
-          teamMembers: this.newProject.teamMembers.trim() || null,
-          recruitmentInfo: this.newProject.recruitmentInfo.trim() || null,
-          isOpenSource: this.newProject.isOpenSource,
-          needHelp: this.newProject.needHelp,
-          allowCollaboration: this.newProject.allowCollaboration,
+          contact: this.projectForm.contact.trim(),
+          type: this.projectForm.type,
+          status: this.projectForm.status,
+          description: this.projectForm.description.trim(),
+          progress: this.projectForm.progress || 0,
+          expectedTime: this.projectForm.expectedTime || null,
+          tags: this.projectForm.tagsInput ? 
+            this.projectForm.tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag) : [],
+          repository: this.projectForm.repository.trim() || null,
+          demoUrl: this.projectForm.demoUrl.trim() || null,
+          teamMembers: this.projectForm.teamMembers.trim() || null,
+          recruitmentInfo: this.projectForm.recruitmentInfo.trim() || null,
+          isOpenSource: this.projectForm.isOpenSource,
+          needHelp: this.projectForm.needHelp,
+          allowCollaboration: this.projectForm.allowCollaboration,
           createdAt: new Date().toISOString().split('T')[0],
           updates: []
         };
@@ -965,8 +809,7 @@ export default {
         }
         
         this.saveProjects();
-        this.closeCreateModal();
-        this.resetNewProject();
+        this.closeProjectModal();
       } catch (error) {
         this.createError = error.message;
       } finally {
@@ -975,28 +818,37 @@ export default {
     },
     
     editProject(project) {
-      this.editingProject = {
-        ...project,
-        tagsInput: project.tags ? project.tags.join(', ') : ''
-      };
-      this.showEditModal = true;
+      this.openEditModal(project);
       this.selectedProject = null;
     },
     
     updateProject() {
-      const index = this.projects.findIndex(p => p.id === this.editingProject.id);
+      const index = this.projects.findIndex(p => p.id === this.projectForm.id);
       if (index !== -1) {
         const updatedProject = {
-          ...this.editingProject,
-          tags: this.editingProject.tagsInput ? 
-            this.editingProject.tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag) : []
+          ...this.projects[index],
+          title: this.projectForm.title.trim(),
+          contact: this.projectForm.contact.trim(),
+          type: this.projectForm.type,
+          status: this.projectForm.status,
+          description: this.projectForm.description.trim(),
+          progress: this.projectForm.progress || 0,
+          expectedTime: this.projectForm.expectedTime || null,
+          tags: this.projectForm.tagsInput ? 
+            this.projectForm.tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag) : [],
+          repository: this.projectForm.repository.trim() || null,
+          demoUrl: this.projectForm.demoUrl.trim() || null,
+          teamMembers: this.projectForm.teamMembers.trim() || null,
+          recruitmentInfo: this.projectForm.recruitmentInfo.trim() || null,
+          isOpenSource: this.projectForm.isOpenSource,
+          needHelp: this.projectForm.needHelp,
+          allowCollaboration: this.projectForm.allowCollaboration
         };
-        delete updatedProject.tagsInput;
         
         this.projects[index] = updatedProject;
         this.saveProjects();
       }
-      this.closeEditModal();
+      this.closeProjectModal();
     },
     
     addUpdate(project) {
@@ -1043,14 +895,21 @@ export default {
     },
     
     // 弹窗控制
-    closeCreateModal() {
-      this.showCreateModal = false;
-      this.resetNewProject();
+    openCreateModal() {
+      this.projectModalMode = 'create';
+      this.resetProjectForm();
+      this.showProjectModal = true;
     },
-    
-    closeEditModal() {
-      this.showEditModal = false;
-      this.editingProject = {};
+
+    openEditModal(project) {
+      this.projectModalMode = 'edit';
+      this.populateProjectForm(project);
+      this.showProjectModal = true;
+    },
+
+    closeProjectModal() {
+      this.showProjectModal = false;
+      this.resetProjectForm();
     },
     
     closeUpdateModal() {
@@ -1063,12 +922,12 @@ export default {
       this.selectedProject = null;
     },
     
-    resetNewProject() {
-      this.newProject = {
+    resetProjectForm() {
+      this.projectForm = {
+        id: '',
         title: '',
         author: '',
         contact: '',
-        categoryId: '',
         type: '',
         status: '',
         description: '',
@@ -1087,19 +946,39 @@ export default {
       this.createLoading = false;
     },
 
-    // 分类和标签处理
-    selectProjectCategory(categoryId) {
-      this.newProject.categoryId = categoryId;
+    populateProjectForm(project) {
+      this.projectForm = {
+        id: project.id,
+        title: project.title,
+        author: project.author,
+        contact: project.contact || '',
+        type: project.type,
+        status: project.status,
+        description: project.description,
+        progress: project.progress || 0,
+        expectedTime: project.expectedTime || '',
+        tagsInput: project.tags ? project.tags.join(', ') : '',
+        repository: project.repository || '',
+        demoUrl: project.demoUrl || '',
+        teamMembers: project.teamMembers || '',
+        recruitmentInfo: project.recruitmentInfo || '',
+        isOpenSource: project.isOpenSource || false,
+        needHelp: project.needHelp || false,
+        allowCollaboration: project.allowCollaboration || false
+      };
       this.createError = '';
+      this.createLoading = false;
     },
 
+    // 标签处理
+
     addTag(tag) {
-      const currentTags = this.newProject.tagsInput ? 
-        this.newProject.tagsInput.split(',').map(t => t.trim()) : [];
+      const currentTags = this.projectForm.tagsInput ? 
+        this.projectForm.tagsInput.split(',').map(t => t.trim()) : [];
       
       if (!currentTags.includes(tag)) {
         currentTags.push(tag);
-        this.newProject.tagsInput = currentTags.join(', ');
+        this.projectForm.tagsInput = currentTags.join(', ');
       }
     },
     
@@ -1681,62 +1560,6 @@ export default {
   font-weight: 500;
 }
 
-/* 分类选择器样式 */
-.category-selector {
-  margin-bottom: 25px;
-  padding: 20px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  border: 1px solid #e9ecef;
-}
-
-.category-tabs {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-.category-tab {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 16px;
-  background: white;
-  border: 2px solid #e9ecef;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-align: center;
-  justify-content: center;
-}
-
-.category-tab:hover {
-  border-color: #667eea;
-  background: #f8f9ff;
-}
-
-.category-tab.active {
-  border-color: #667eea;
-  background: #667eea;
-  color: white;
-}
-
-.category-emoji {
-  font-size: 1.2em;
-}
-
-.category-name {
-  font-weight: 500;
-  font-size: 0.9em;
-}
-
-.category-hint {
-  text-align: center;
-  color: #6c757d;
-  font-style: italic;
-  padding: 10px;
-}
 
 /* 标签建议样式 */
 .tag-suggestions {
@@ -1875,9 +1698,6 @@ export default {
     gap: 10px;
   }
 
-  .category-tabs {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  }
 
   .checkbox-group {
     flex-direction: column;
@@ -2057,31 +1877,6 @@ export default {
   color: var(--vp-c-accent);
 }
 
-[data-theme='dark'] .category-selector {
-  background: var(--vp-c-bg-soft);
-  border: 1px solid var(--vp-c-border);
-}
-
-[data-theme='dark'] .category-tab {
-  background: var(--vp-c-bg);
-  border: 2px solid var(--vp-c-border);
-  color: var(--vp-c-text);
-}
-
-[data-theme='dark'] .category-tab:hover {
-  border-color: var(--vp-c-accent);
-  background: var(--vp-c-bg-elv);
-}
-
-[data-theme='dark'] .category-tab.active {
-  border-color: var(--vp-c-accent);
-  background: var(--vp-c-accent);
-  color: var(--vp-c-bg);
-}
-
-[data-theme='dark'] .category-hint {
-  color: var(--vp-c-text-mute);
-}
 
 [data-theme='dark'] .tag-suggestion {
   background: var(--vp-c-bg-soft);
