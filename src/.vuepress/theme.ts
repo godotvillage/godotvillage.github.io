@@ -184,7 +184,12 @@ export default hopeTheme({
     icon: {
       prefix: "fa6-solid:",
     },
-
+    
+    docsearch: {
+      appId: 'Y6KOT1SK9K',
+      apiKey: '7bd70c4826eb20eefe2fc66e51254e54',
+      indexName: "godotvillage_pages"
+    }
     // 如果你需要 PWA。安装 @vuepress/plugin-pwa 并取消下方注释
     // pwa: {
     //   favicon: "/favicon.ico",
