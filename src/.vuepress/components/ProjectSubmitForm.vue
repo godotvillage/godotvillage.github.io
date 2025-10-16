@@ -167,7 +167,9 @@ const submitProject = async () => {
       status: '计划中',
       progress: 0,
       tags: form.value.tags,
-      expected_end_date: form.value.expectedTime ? getExpectedEndDate(form.value.expectedTime) : null
+      expected_end_date: form.value.expectedTime ? getExpectedEndDate(form.value.expectedTime) : null,
+      github_url: '',
+      demo_url: ''
     }
 
     const response = await projectApi.createProject(projectData)
@@ -190,9 +192,10 @@ const submitProject = async () => {
     // 如果API调用失败，回退到localStorage方式
     const project = {
       id: Date.now().toString(),
+      title: form.value.name,
       ...form.value,
-      status: '进行中',
-      createdAt: new Date().toISOString(),
+      status: '计划中',
+      create_time: new Date().toISOString(),
       author: form.value.submitter
     }
 

@@ -233,7 +233,7 @@ const loadProjects = async () => {
 
 const saveProject = async (project) => {
   try {
-    await projectApi.updateProject(project.project_id, {
+    await projectApi.updateProject(project.farm_id, {
       status: project.status
     })
   } catch (error) {

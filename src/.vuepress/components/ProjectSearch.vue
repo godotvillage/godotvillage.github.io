@@ -69,7 +69,7 @@
             <span v-if="project.category" class="result-category">
               {{ getCategoryIcon(project.category) }} {{ project.category }}
             </span>
-            <span class="result-date">{{ formatDate(project.created_time) }}</span>
+            <span class="result-date">{{ formatDate(project.create_time) }}</span>
           </div>
 
           <p class="result-description" v-html="highlightText(truncateText(project.description || '', 100))"></p>
@@ -129,7 +129,7 @@
             </div>
             <div class="detail-item">
               <strong>创建时间：</strong>
-              {{ formatDate(selectedProject.created_time) }}
+              {{ formatDate(selectedProject.create_time) }}
             </div>
           </div>
 
@@ -180,7 +180,7 @@ const searchResults = computed(() => {
       case 'recent':
         const oneWeekAgo = new Date()
         oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
-        results = results.filter(p => new Date(p.created_time) > oneWeekAgo)
+        results = results.filter(p => new Date(p.create_time) > oneWeekAgo)
         break
       case 'inProgress':
         results = results.filter(p => p.status === '进行中')
@@ -233,7 +233,7 @@ const loadProjects = async () => {
       projects.value = response.data.map(project => ({
         ...project,
         name: project.title,
-        createdAt: project.created_time
+        createdAt: project.create_time
       }))
     }
   } catch (error) {
@@ -289,7 +289,7 @@ const toggleFavorite = async (project) => {
   
   try {
     // 这里可以调用API更新收藏状态，如果后端支持的话
-    // await projectApi.updateProject(project.project_id || project.id, { isFavorite: project.isFavorite })
+    // await projectApi.updateProject(project.farm_id, { isFavorite: project.isFavorite })
     
     // 暂时保存到localStorage作为本地状态
     localStorage.setItem('farmProjects', JSON.stringify(projects.value))

@@ -36,50 +36,16 @@ export const gameApi = {
   }
 };
 
-// 项目相关 API 函数
+// 项目相关 API 函数（使用 farm 端点）
 export const projectApi = {
-  // 获取项目分类列表（参考论坛分类实现）
-  async getProjectCategories() {
+  // 获取项目列表
+  async getProjects() {
     try {
-      const response = await fetch(`${baseUrl}/projects/categories`);
+      const response = await fetch(`${baseUrl}/farms`);
       const result = await response.json();
       
       if (result.success) {
-        return result.data;
-      } else {
-        throw new Error(result.error);
-      }
-    } catch (error) {
-      throw new Error(`获取项目分类失败: ${error.message}`);
-    }
-  },
-
-  // 获取项目列表（支持分类筛选）
-  async getProjects(categoryId = null, status = null, pageSize = 20, after = null) {
-    try {
-      let url = `${baseUrl}/projects/list`;
-      const params = new URLSearchParams();
-      
-      if (categoryId) {
-        params.append('categoryId', categoryId);
-      }
-      if (status) {
-        params.append('status', status);
-      }
-      if (after) {
-        params.append('after', after);
-      }
-      params.append('pageSize', pageSize.toString());
-      
-      if (params.toString()) {
-        url += '?' + params.toString();
-      }
-      
-      const response = await fetch(url);
-      const result = await response.json();
-      
-      if (result.success) {
-        return result.data;
+        return result;
       } else {
         throw new Error(result.error);
       }
@@ -91,7 +57,7 @@ export const projectApi = {
   // 获取项目统计信息
   async getProjectStats() {
     try {
-      const response = await fetch(`${baseUrl}/projects/stats`);
+      const response = await fetch(`${baseUrl}/farms/stats`);
       const result = await response.json();
       
       if (result.success) {
@@ -105,9 +71,9 @@ export const projectApi = {
   },
 
   // 根据ID获取项目详情
-  async getProjectById(projectId) {
+  async getProjectById(farmId) {
     try {
-      const response = await fetch(`${baseUrl}/projects/detail/${projectId}`);
+      const response = await fetch(`${baseUrl}/farms/${farmId}`);
       const result = await response.json();
       
       if (result.success) {
@@ -120,10 +86,10 @@ export const projectApi = {
     }
   },
 
-  // 创建新项目（参考论坛创建逻辑）
+  // 创建新项目
   async createProject(projectData) {
     try {
-      const response = await fetch(`${baseUrl}/projects/create`, {
+      const response = await fetch(`${baseUrl}/farms`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -133,7 +99,7 @@ export const projectApi = {
       const result = await response.json();
       
       if (result.success) {
-        return result.data;
+        return result;
       } else {
         throw new Error(result.error);
       }
@@ -143,9 +109,9 @@ export const projectApi = {
   },
 
   // 更新项目信息
-  async updateProject(projectId, updateData) {
+  async updateProject(farmId, updateData) {
     try {
-      const response = await fetch(`${baseUrl}/projects/${projectId}/update`, {
+      const response = await fetch(`${baseUrl}/farms/${farmId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -155,7 +121,7 @@ export const projectApi = {
       const result = await response.json();
       
       if (result.success) {
-        return result.data;
+        return result;
       } else {
         throw new Error(result.error);
       }
@@ -164,38 +130,16 @@ export const projectApi = {
     }
   },
 
-  // 添加项目更新记录
-  async addProjectUpdate(projectId, updateData) {
-    try {
-      const response = await fetch(`${baseUrl}/projects/${projectId}/updates`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(updateData)
-      });
-      const result = await response.json();
-      
-      if (result.success) {
-        return result.data;
-      } else {
-        throw new Error(result.error);
-      }
-    } catch (error) {
-      throw new Error(`添加项目更新失败: ${error.message}`);
-    }
-  },
-
   // 删除项目
-  async deleteProject(projectId) {
+  async deleteProject(farmId) {
     try {
-      const response = await fetch(`${baseUrl}/projects/${projectId}/delete`, {
+      const response = await fetch(`${baseUrl}/farms/${farmId}`, {
         method: 'DELETE'
       });
       const result = await response.json();
       
       if (result.success) {
-        return result.data;
+        return result;
       } else {
         throw new Error(result.error);
       }
