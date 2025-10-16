@@ -1,2 +1,2 @@
-# Algolia-Crawler-Verif: DEF8056FAA0918F6
+# Algolia-Crawler-Verif: DEF8056FAA0918F6npm i -D @vuepress/plugin-docsearch@next
 Sitemap: https://godotvillage.github.io/sitemap.xml
