@@ -224,6 +224,52 @@ date: 2025-10-10
 .feature-card:nth-child(3) { animation-delay: 0.3s; }
 .feature-card:nth-child(4) { animation-delay: 0.4s; }
 
+/* 暗色模式样式 */
+[data-theme='dark'] .farm-container {
+  color: var(--vp-c-text);
+}
+
+[data-theme='dark'] .farm-header {
+  background: linear-gradient(135deg, var(--vp-c-accent) 0%, var(--vp-c-accent-bg) 100%);
+  color: var(--vp-c-text);
+}
+
+[data-theme='dark'] .farm-intro h2 {
+  color: var(--vp-c-text);
+}
+
+[data-theme='dark'] .farm-intro p {
+  color: var(--vp-c-text-mute);
+}
+
+[data-theme='dark'] .feature-card {
+  background: var(--vp-c-bg-elv) !important;
+  border: 2px solid var(--vp-c-border) !important;
+  color: var(--vp-c-text) !important;
+}
+
+[data-theme='dark'] .feature-card:hover {
+  border-color: var(--vp-c-accent) !important;
+  box-shadow: 0 10px 30px var(--vp-c-shadow) !important;
+}
+
+[data-theme='dark'] .feature-card h3 {
+  color: var(--vp-c-text) !important;
+}
+
+[data-theme='dark'] .feature-card p {
+  color: var(--vp-c-text-mute) !important;
+}
+
+[data-theme='dark'] .section {
+  background: var(--vp-c-bg-elv);
+  border: 1px solid var(--vp-c-border);
+}
+
+[data-theme='dark'] .section h2 {
+  color: var(--vp-c-text);
+}
+
 @media (max-width: 768px) {
   .farm-container {
     padding: 10px;

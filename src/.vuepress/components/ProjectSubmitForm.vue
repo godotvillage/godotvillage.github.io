@@ -427,6 +427,75 @@ const getExpectedEndDate = (timeStr) => {
   }
 }
 
+/* 暗色模式样式 */
+[data-theme='dark'] .project-submit-form {
+  background: var(--vp-c-bg-elv);
+  border: 1px solid var(--vp-c-border);
+  color: var(--vp-c-text);
+}
+
+[data-theme='dark'] .form-header h3 {
+  color: var(--vp-c-text);
+}
+
+[data-theme='dark'] .form-header p {
+  color: var(--vp-c-text-mute);
+}
+
+[data-theme='dark'] .form-group label {
+  color: var(--vp-c-text);
+}
+
+[data-theme='dark'] .form-group input,
+[data-theme='dark'] .form-group textarea,
+[data-theme='dark'] .form-group select {
+  background: var(--vp-c-bg);
+  border: 2px solid var(--vp-c-border);
+  color: var(--vp-c-text);
+}
+
+[data-theme='dark'] .form-group input::placeholder,
+[data-theme='dark'] .form-group textarea::placeholder {
+  color: var(--vp-c-text-subtle);
+}
+
+[data-theme='dark'] .form-group input:focus,
+[data-theme='dark'] .form-group textarea:focus,
+[data-theme='dark'] .form-group select:focus {
+  border-color: var(--vp-c-accent);
+  box-shadow: 0 0 0 3px var(--vp-c-accent-soft);
+}
+
+[data-theme='dark'] .char-count {
+  background: var(--vp-c-bg-alt);
+  color: var(--vp-c-text-subtle);
+}
+
+[data-theme='dark'] .tag {
+  background: var(--vp-c-accent);
+  color: white;
+}
+
+[data-theme='dark'] .tag-remove:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+[data-theme='dark'] .btn-secondary {
+  background: var(--vp-c-control);
+  color: var(--vp-c-text);
+  border: 2px solid var(--vp-c-border);
+}
+
+[data-theme='dark'] .btn-secondary:hover {
+  background: var(--vp-c-control-hover);
+  border-color: var(--vp-c-accent);
+}
+
+[data-theme='dark'] .success-message {
+  background: linear-gradient(135deg, var(--vp-c-accent), var(--vp-c-accent-bg));
+  color: white;
+}
+
 @media (max-width: 768px) {
   .project-submit-form {
     padding: 20px;

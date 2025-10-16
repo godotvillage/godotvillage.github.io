@@ -934,11 +934,11 @@ onMounted(() => {
   }
 
   .search-header {
-    background: linear-gradient(135deg, #3dd68c 0%, #349469 100%);
+    background: none;
     color: var(--vp-c-text);
   }
 
-  .search-header h2 {
+  .search-header h3 {
     color: var(--vp-c-text);
   }
 
