@@ -1,8 +1,11 @@
+import { baseUrl } from './request'
+
 // GitHub身份验证服务
 class GitHubAuthService {
   constructor() {
-    this.clientId = 'Ov23liJJhJJJJJJJJJJJ' // 这里需要替换为实际的GitHub OAuth App Client ID
-    this.redirectUri = window.location.origin + '/auth/callback'
+    this.clientId = 'Ov23lijKGj89a9GItFXq' // 这里需要替换为实际的GitHub OAuth App Client ID
+    // this.redirectUri = window.location.origin + '/auth/callback'
+    this.redirectUri = window.location.href
     this.storageKey = 'github_user'
     this.tokenKey = 'github_token'
   }
@@ -56,7 +59,7 @@ class GitHubAuthService {
 
       // 这里需要通过后端服务来交换访问令牌
       // 由于GitHub OAuth需要client_secret，不能在前端直接处理
-      const response = await fetch('/api/auth/github/callback', {
+      const response = await fetch(baseUrl + '/auth/github/callback', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -68,8 +71,8 @@ class GitHubAuthService {
         throw new Error('Failed to exchange code for token')
       }
 
-      const { access_token } = await response.json()
-      
+      const data = await response.json()
+      const { access_token } = data.data
       // 获取用户信息
       const userInfo = await this.fetchUserInfo(access_token)
       
@@ -78,6 +81,7 @@ class GitHubAuthService {
       localStorage.setItem(this.storageKey, JSON.stringify(userInfo))
       
       return userInfo
+      // return {}
     } catch (error) {
       console.error('GitHub登录失败:', error)
       throw error
@@ -125,15 +129,11 @@ class GitHubAuthService {
     if (!user) {
       user = this.getCurrentUser()
     }
-    
     if (!user || !project) {
       return false
     }
-
     // 检查作者字段是否匹配GitHub用户名
-    return project.author === user.login || 
-           project.author === user.name ||
-           (project.githubUser && project.githubUser === user.login)
+    return project.githubUser === user.name
   }
 
   // 生成随机state参数

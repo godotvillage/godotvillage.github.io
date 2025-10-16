@@ -107,7 +107,7 @@
           </div>
           <div class="project-actions">
             <button 
-              v-if="canEditProject(project)"
+              v-if="editableProjects.includes(project.id)"
               class="btn-icon" 
               @click.stop="editProject(project)"
               title="编辑项目"
@@ -115,7 +115,7 @@
               ✏️
             </button>
             <button 
-              v-if="canEditProject(project)"
+              v-if="editableProjects.includes(project.id)"
               class="btn-icon" 
               @click.stop="addUpdate(project)"
               title="添加更新"
@@ -201,7 +201,7 @@
 
         <form @submit.prevent="createProject" class="project-form">
           <div class="form-group">
-            <label for="title">项目名称 *</label>
+            <label for="title">项目名称 <span class="required-asterisk">*</span></label>
             <input 
               id="title"
               v-model="newProject.title" 
@@ -213,7 +213,7 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label for="author">作者 *</label>
+              <label for="author">作者 <span class="required-asterisk">*</span></label>
               <input 
                 id="author"
                 v-model="newProject.author" 
@@ -236,7 +236,7 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label for="type">项目类型 *</label>
+              <label for="type">项目类型 <span class="required-asterisk">*</span></label>
               <select id="type" v-model="newProject.type" required>
                 <option value="">选择类型</option>
                 <option value="2D">🎨 2D游戏</option>
@@ -249,7 +249,7 @@
             </div>
 
             <div class="form-group">
-              <label for="status">当前状态 *</label>
+              <label for="status">当前状态 <span class="required-asterisk">*</span></label>
               <select id="status" v-model="newProject.status" required>
                 <option value="">选择状态</option>
                 <option value="planning">📋 计划中</option>
@@ -262,7 +262,7 @@
           </div>
 
           <div class="form-group">
-            <label for="description">项目描述 *</label>
+            <label for="description">项目描述 <span class="required-asterisk">*</span></label>
             <textarea 
               id="description"
               v-model="newProject.description" 
@@ -414,7 +414,7 @@
           <h3>{{ selectedProject.title }}</h3>
           <div class="modal-actions">
             <button 
-              v-if="canEditProject(selectedProject)"
+              v-if="editableProjects.includes(selectedProject.id)"
               class="btn-icon" 
               @click="editProject(selectedProject)" 
               title="编辑项目"
@@ -422,7 +422,7 @@
               ✏️
             </button>
             <button 
-              v-if="canEditProject(selectedProject)"
+              v-if="editableProjects.includes(selectedProject.id)"
               class="btn-icon" 
               @click="addUpdate(selectedProject)" 
               title="添加更新"
@@ -517,7 +517,7 @@
         </div>
         <form @submit.prevent="updateProject" class="project-form">
           <div class="form-group">
-            <label for="edit-title">项目名称 *</label>
+            <label for="edit-title">项目名称 <span class="required-asterisk">*</span></label>
             <input 
               id="edit-title"
               v-model="editingProject.title" 
@@ -528,7 +528,7 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label for="edit-type">项目类型 *</label>
+              <label for="edit-type">项目类型 <span class="required-asterisk">*</span></label>
               <select id="edit-type" v-model="editingProject.type" required>
                 <option value="2D">🎨 2D游戏</option>
                 <option value="3D">🎯 3D游戏</option>
@@ -538,7 +538,7 @@
             </div>
 
             <div class="form-group">
-              <label for="edit-status">当前状态 *</label>
+              <label for="edit-status">当前状态 <span class="required-asterisk">*</span></label>
               <select id="edit-status" v-model="editingProject.status" required>
                 <option value="planning">📋 计划中</option>
                 <option value="development">🚀 开发中</option>
@@ -550,7 +550,7 @@
           </div>
 
           <div class="form-group">
-            <label for="edit-description">项目描述 *</label>
+            <label for="edit-description">项目描述 <span class="required-asterisk">*</span></label>
             <textarea 
               id="edit-description"
               v-model="editingProject.description" 
@@ -609,7 +609,7 @@
         </div>
         <form @submit.prevent="submitUpdate" class="project-form">
           <div class="form-group">
-            <label for="update-content">更新内容 *</label>
+            <label for="update-content">更新内容 <span class="required-asterisk">*</span></label>
             <textarea 
               id="update-content"
               v-model="newUpdate.content" 
@@ -767,6 +767,14 @@ export default {
       });
       
       return filtered;
+    },
+    
+    // 可编辑的项目列表
+    editableProjects() {
+      let list = this.projects.filter(project => {
+        return this.canEditProject(project)
+      })
+      return list.map(project => project.id);
     }
   },
   
@@ -923,6 +931,7 @@ export default {
           id: Date.now().toString(),
           title: this.newProject.title.trim(),
           author: this.newProject.author.trim(),
+          githubUser: githubAuth.getCurrentUser().name,
           contact: this.newProject.contact.trim(),
           categoryId: this.newProject.categoryId,
           type: this.newProject.type,
@@ -1552,6 +1561,12 @@ export default {
   padding: 20px;
 }
 
+/* 必填字段星号样式 */
+.required-asterisk {
+  color: #dc3545;
+  font-weight: bold;
+}
+
 .form-group {
   margin-bottom: 20px;
 }
@@ -1639,10 +1654,7 @@ export default {
   text-decoration: underline;
 }
 
-/* 更新时间线 */
-.updates-timeline {
-  space-y: 15px;
-}
+/* 更新时间线 - spacing handled by individual update-item margins */
 
 .update-item {
   padding: 15px;
@@ -2117,5 +2129,11 @@ export default {
 
 [data-theme='dark'] .suggestion-label {
   color: var(--vp-c-text-mute);
+}
+
+/* 暗黑模式下的必填字段星号样式 */
+[data-theme='dark'] .required-asterisk {
+  color: #ff6b6b;
+  font-weight: bold;
 }
 </style>

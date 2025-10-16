@@ -24,7 +24,7 @@
       </button>
       
       <!-- 开发模式下的模拟登录 -->
-      <div v-if="isDevelopment" class="dev-login">
+      <!-- <div v-if="isDevelopment" class="dev-login">
         <hr class="divider" />
         <p class="dev-note">开发模式 - 模拟登录</p>
         <div class="mock-login-form">
@@ -36,7 +36,7 @@
           />
           <button @click="mockLogin" class="mock-login-btn">模拟登录</button>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -59,6 +59,9 @@ export default {
     }
   },
   mounted() {
+    // 检查URL中是否有OAuth回调参数
+    this.handleOAuthCallback()
+    
     this.loadUserInfo()
     
     // 监听存储变化，以便在其他标签页登录时同步状态
@@ -68,6 +71,34 @@ export default {
     window.removeEventListener('storage', this.handleStorageChange)
   },
   methods: {
+    async handleOAuthCallback() {
+      // 获取URL参数
+      const urlParams = new URLSearchParams(window.location.search)
+      const code = urlParams.get('code')
+      const state = urlParams.get('state')
+      
+      // 如果URL中有code和state参数，说明是OAuth回调
+      if (code && state) {
+        try {
+          // 调用githubAuth.handleCallback处理回调
+          const user = await githubAuth.handleCallback(code, state)
+          this.currentUser = user
+          this.$emit('login', user)
+          
+          // 清理URL参数，避免刷新页面时重复处理
+          const newUrl = window.location.pathname + window.location.hash
+          window.history.replaceState({}, document.title, newUrl)
+        } catch (error) {
+          console.error('OAuth回调处理失败:', error)
+          this.$emit('error', 'GitHub登录失败，请重试')
+          
+          // 清理URL参数
+          const newUrl = window.location.pathname + window.location.hash
+          window.history.replaceState({}, document.title, newUrl)
+        }
+      }
+    },
+
     loadUserInfo() {
       this.currentUser = githubAuth.getCurrentUser()
     },
