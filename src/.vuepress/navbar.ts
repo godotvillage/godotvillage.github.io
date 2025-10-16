@@ -57,6 +57,11 @@ export default navbar([
     ]
   },
   "/farm/",
+  {
+    text: "项目跟踪",
+    icon: "list",
+    link: "/projects/",
+  },
   // {
   //   text: "博文",
   //   icon: "pen-to-square",
