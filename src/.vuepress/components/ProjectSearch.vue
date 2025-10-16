@@ -169,8 +169,6 @@ const quickFilters = [
   { key: 'recent', label: '最近创建', icon: '🆕' },
   { key: 'inProgress', label: '进行中', icon: '🚀' },
   { key: 'completed', label: '已完成', icon: '✅' },
-  { key: 'gamedev', label: '游戏开发', icon: '🎮' },
-  { key: 'webapp', label: '网站应用', icon: '🌐' }
 ]
 
 const searchResults = computed(() => {
