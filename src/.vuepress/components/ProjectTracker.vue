@@ -357,7 +357,6 @@
                   type="checkbox" 
                   v-model="projectForm.isOpenSource"
                 />
-                <span class="checkmark"></span>
                 开源项目
               </label>
               <label class="checkbox-label">
@@ -365,7 +364,6 @@
                   type="checkbox" 
                   v-model="projectForm.needHelp"
                 />
-                <span class="checkmark"></span>
                 寻求帮助
               </label>
               <label class="checkbox-label">
@@ -373,7 +371,6 @@
                   type="checkbox" 
                   v-model="projectForm.allowCollaboration"
                 />
-                <span class="checkmark"></span>
                 欢迎协作
               </label>
             </div>
@@ -1590,30 +1587,6 @@ export default {
   margin: 0;
 }
 
-.checkmark {
-  width: 18px;
-  height: 18px;
-  border: 2px solid #ced4da;
-  border-radius: 3px;
-  position: relative;
-  transition: all 0.2s;
-}
-
-.checkbox-label input[type="checkbox"]:checked + .checkmark {
-  background: #667eea;
-  border-color: #667eea;
-}
-
-.checkbox-label input[type="checkbox"]:checked + .checkmark::after {
-  content: '✓';
-  position: absolute;
-  top: -2px;
-  left: 2px;
-  color: white;
-  font-size: 12px;
-  font-weight: bold;
-}
-
 /* 错误消息样式 */
 .error-message {
   background: #f8d7da;
@@ -1878,16 +1851,6 @@ export default {
 
 [data-theme='dark'] .checkbox-label {
   color: var(--vp-c-text);
-}
-
-[data-theme='dark'] .checkmark {
-  border: 2px solid var(--vp-c-border);
-  background: var(--vp-c-bg);
-}
-
-[data-theme='dark'] .checkbox-label input[type="checkbox"]:checked + .checkmark {
-  background: var(--vp-c-accent);
-  border-color: var(--vp-c-accent);
 }
 
 [data-theme='dark'] .error-message {
