@@ -189,6 +189,11 @@ export default {
   color: #666;
 }
 
+/* 暗黑模式下的加载状态 */
+[data-theme='dark'] .loading {
+  color: var(--vp-c-text-mute);
+}
+
 .error-message, .no-game-selected {
   text-align: center;
   padding: 40px;
@@ -205,6 +210,19 @@ export default {
   background-color: #f8f9fa;
   border: 1px solid #dee2e6;
   border-radius: 8px;
+}
+
+/* 暗黑模式下的错误消息和无游戏选择状态 */
+[data-theme='dark'] .error-message {
+  background-color: rgba(220, 53, 69, 0.1);
+  border: 1px solid rgba(220, 53, 69, 0.3);
+  color: #f5c6cb;
+}
+
+[data-theme='dark'] .no-game-selected {
+  background-color: var(--vp-c-bg-alt);
+  border: 1px solid var(--vp-c-border);
+  color: var(--vp-c-text);
 }
 
 .back-btn, .control-btn {
@@ -236,6 +254,32 @@ export default {
   cursor: not-allowed;
 }
 
+/* 暗黑模式下的按钮样式 */
+[data-theme='dark'] .back-btn,
+[data-theme='dark'] .control-btn {
+  background-color: var(--vp-c-accent);
+}
+
+[data-theme='dark'] .back-btn:hover,
+[data-theme='dark'] .control-btn:hover {
+  background-color: var(--vp-c-accent-hover);
+}
+
+[data-theme='dark'] .control-btn.secondary {
+  background-color: var(--vp-c-bg-elv);
+  color: var(--vp-c-text);
+  border: 1px solid var(--vp-c-border);
+}
+
+[data-theme='dark'] .control-btn.secondary:hover {
+  background-color: var(--vp-c-control-hover);
+}
+
+[data-theme='dark'] .control-btn:disabled {
+  background-color: var(--vp-c-control-disabled);
+  color: var(--vp-c-text-mute);
+}
+
 .game-container {
   margin-top: 20px;
 }
@@ -247,6 +291,12 @@ export default {
   padding: 20px;
   background-color: #f8f9fa;
   border-radius: 8px;
+}
+
+/* 暗黑模式下的游戏头部 */
+[data-theme='dark'] .game-header {
+  background-color: var(--vp-c-bg-elv);
+  border: 1px solid var(--vp-c-border);
 }
 
 .game-info {
@@ -274,6 +324,19 @@ export default {
   color: #555;
   line-height: 1.6;
   margin: 0;
+}
+
+/* 暗黑模式下的游戏信息文本 */
+[data-theme='dark'] .game-info h1 {
+  color: var(--vp-c-text);
+}
+
+[data-theme='dark'] .game-meta span {
+  color: var(--vp-c-text-mute);
+}
+
+[data-theme='dark'] .description {
+  color: var(--vp-c-text-mute);
 }
 
 .game-cover {
@@ -308,6 +371,17 @@ export default {
   border-bottom: 1px solid #ddd;
 }
 
+/* 暗黑模式下的游戏框架容器 */
+[data-theme='dark'] .game-frame-container {
+  border: 1px solid var(--vp-c-border);
+}
+
+[data-theme='dark'] .game-frame-header {
+  background-color: var(--vp-c-bg-elv);
+  border-bottom: 1px solid var(--vp-c-border);
+  color: var(--vp-c-text);
+}
+
 .close-game-btn {
   background: none;
   border: none;
@@ -326,6 +400,16 @@ export default {
   color: #333;
   background-color: #e9ecef;
   border-radius: 4px;
+}
+
+/* 暗黑模式下的关闭游戏按钮 */
+[data-theme='dark'] .close-game-btn {
+  color: var(--vp-c-text-mute);
+}
+
+[data-theme='dark'] .close-game-btn:hover {
+  color: var(--vp-c-text);
+  background-color: var(--vp-c-control-hover);
 }
 
 .game-frame {
@@ -349,6 +433,17 @@ export default {
 
 .offline-notice p {
   margin: 0;
+}
+
+/* 暗黑模式下的离线提示 */
+[data-theme='dark'] .offline-notice {
+  background-color: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  color: #ffc107;
+}
+
+[data-theme='dark'] .offline-notice h3 {
+  color: #ffc107;
 }
 
 @media (max-width: 768px) {

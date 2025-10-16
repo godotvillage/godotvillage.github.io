@@ -16,7 +16,7 @@
                 reactionsenabled="1"
                 emitmetadata="0"
                 inputposition="top"
-                theme="https://unpkg.com/vuepress-theme-hope@2.0.0-rc.94/templates/giscus/light.css"
+                :theme="giscusTheme"
                 lang="zh-CN"
                 loading="lazy"
             ></giscus-widget>
@@ -35,7 +35,31 @@ export default {
                 repo: 'godotvillage/godotvillage.github.io',
                 repoId: 'R_kgDOP-_yiQ',
                 mapping: 'number'
-            }
+            },
+            currentTheme: 'light'
+        }
+    },
+    mounted() {
+        // 初始化主题
+        this.updateTheme()
+        // 监听主题变化
+        this.themeObserver = new MutationObserver(() => {
+            this.updateTheme()
+        })
+        this.themeObserver.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        })
+    },
+    beforeUnmount() {
+        // 清理观察器
+        if (this.themeObserver) {
+            this.themeObserver.disconnect()
+        }
+    },
+    methods: {
+        updateTheme() {
+            this.currentTheme = document.documentElement.getAttribute('data-theme') || 'light'
         }
     },
     components: {
@@ -62,6 +86,12 @@ export default {
         },
         categoryId() {
             return this.discussionCategory.id
+        },
+        giscusTheme() {
+            // 根据当前主题返回相应的CSS文件
+            return this.currentTheme === 'dark'
+                ? 'https://unpkg.com/vuepress-theme-hope@2.0.0-rc.94/templates/giscus/dark.css'
+                : 'https://unpkg.com/vuepress-theme-hope@2.0.0-rc.94/templates/giscus/light.css'
         }
     }
 }

@@ -201,6 +201,10 @@ export default {
   padding: 20px;
 }
 
+.discussion-content {
+  margin-top: 60px;
+}
+
 .loading, .error {
   text-align: center;
   padding: 40px;
@@ -234,6 +238,18 @@ export default {
   color: #0366d6;
 }
 
+/* 暗黑模式下的返回按钮样式 */
+[data-theme='dark'] .back-btn {
+  background: var(--vp-c-bg-elv);
+  border: 1px solid var(--vp-c-border);
+  color: var(--vp-c-accent);
+}
+
+[data-theme='dark'] .back-btn:hover {
+  background: var(--vp-c-control-hover);
+  border-color: var(--vp-c-border-hard);
+}
+
 .discussion-header {
   border-bottom: 1px solid #e1e4e8;
   padding-bottom: 20px;
@@ -244,7 +260,7 @@ export default {
   font-size: 28px;
   font-weight: 600;
   margin-bottom: 16px;
-  color: #24292e;
+  color: var(--vp-c-text);;
 }
 
 .discussion-meta {

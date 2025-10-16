@@ -1,6 +1,5 @@
 <template>
   <div class="game-list-container">
-    <h1>游戏列表</h1>
     <p>探索由社区成员上传的精彩游戏作品</p>
 
     <div class="list-controls">
@@ -195,6 +194,18 @@ export default {
   border-color: #007bff;
 }
 
+/* 暗黑模式下的游戏卡片样式 */
+[data-theme='dark'] .game-card {
+  background-color: var(--vp-c-bg-elv);
+  border: 1px solid var(--vp-c-border);
+  box-shadow: 0 2px 4px var(--vp-c-shadow);
+}
+
+[data-theme='dark'] .game-card:hover {
+  box-shadow: 0 4px 12px var(--vp-c-shadow);
+  border-color: var(--vp-c-accent);
+}
+
 .game-card-content {
   display: flex;
   flex-direction: column;
@@ -225,6 +236,13 @@ export default {
   font-style: italic;
 }
 
+/* 暗黑模式下的无封面占位符 */
+[data-theme='dark'] .no-cover {
+  background-color: var(--vp-c-bg-alt);
+  border: 2px dashed var(--vp-c-border);
+  color: var(--vp-c-text-subtle);
+}
+
 .game-info {
   flex-grow: 1;
 }
@@ -233,6 +251,11 @@ export default {
   margin: 0 0 10px 0;
   color: #333;
   font-size: 20px;
+}
+
+/* 暗黑模式下的游戏信息文本 */
+[data-theme='dark'] .game-info h3 {
+  color: var(--vp-c-text);
 }
 
 .game-info p {
@@ -256,6 +279,16 @@ export default {
   overflow: hidden;
 }
 
+/* 暗黑模式下的作者、版本和描述文本 */
+[data-theme='dark'] .author,
+[data-theme='dark'] .version {
+  color: var(--vp-c-text-mute);
+}
+
+[data-theme='dark'] .description {
+  color: var(--vp-c-text-mute);
+}
+
 .game-meta {
   display: flex;
   flex-wrap: wrap;
@@ -274,6 +307,17 @@ export default {
 .online-status.playable {
   background-color: #d4edda;
   color: #155724;
+}
+
+/* 暗黑模式下的游戏元信息标签 */
+[data-theme='dark'] .game-meta span {
+  background-color: var(--vp-c-bg-alt);
+  color: var(--vp-c-text-subtle);
+}
+
+[data-theme='dark'] .online-status.playable {
+  background-color: var(--vp-c-accent-soft);
+  color: var(--vp-c-accent);
 }
 
 .play-button {

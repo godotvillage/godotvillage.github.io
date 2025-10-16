@@ -7,6 +7,4 @@ article: false
 date: 2025-10-11
 ---
 
-# 游戏列表
-
 <GameList />
