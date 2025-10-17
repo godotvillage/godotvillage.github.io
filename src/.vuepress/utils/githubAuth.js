@@ -133,7 +133,7 @@ class GitHubAuthService {
       return false
     }
     // 检查作者字段是否匹配GitHub用户名
-    return project.githubUser === user.name
+    return project.githubUser === user.login
   }
 
   // 生成随机state参数

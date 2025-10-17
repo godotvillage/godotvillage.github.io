@@ -741,7 +741,7 @@ export default {
         const project = {
           title: this.projectForm.title.trim(),
           author: this.projectForm.author.trim(),
-          githubUser: githubAuth.getCurrentUser().name,
+          githubUser: githubAuth.getCurrentUser().login,
           contact: this.projectForm.contact.trim(),
           type: this.projectForm.type,
           status: this.projectForm.status,
