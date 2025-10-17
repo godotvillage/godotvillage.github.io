@@ -48,7 +48,7 @@ date: 2025-10-11
 - [ ] 动画播放器和动画树
 - [ ] 存档以及文件操作
 - [ ] 输入事件系统详解
-- [ ] 信号系统 <Badge text="编写中" type="tip" vertical="middle" />
+- [x] [信号系统](/tutorial/signal)
 - [ ] Tilemap详解 <Badge text="编写中" type="tip" vertical="middle" />
 - [ ] 粒子系统
 - [ ] UI系统和主题开发
