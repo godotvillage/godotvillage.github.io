@@ -54,11 +54,13 @@
           <label>📊 状态筛选：</label>
           <select v-model="statusFilter" class="filter-select">
             <option value="">全部状态</option>
-            <option value="planning">📋 计划中</option>
-            <option value="development">🚀 开发中</option>
-            <option value="testing">🧪 测试中</option>
-            <option value="completed">✅ 已完成</option>
-            <option value="paused">⏸️ 暂停</option>
+            <option 
+              v-for="status in statusOptions" 
+              :key="status.value" 
+              :value="status.value"
+            >
+              {{ status.label }}
+            </option>
           </select>
         </div>
 
@@ -66,10 +68,13 @@
           <label>🎯 类型筛选：</label>
           <select v-model="typeFilter" class="filter-select">
             <option value="">全部类型</option>
-            <option value="2D">🎨 2D游戏</option>
-            <option value="3D">🎯 3D游戏</option>
-            <option value="tool">🔧 工具/插件</option>
-            <option value="demo">🎮 演示项目</option>
+            <option 
+              v-for="category in categoryOptions" 
+              :key="category.value" 
+              :value="category.value"
+            >
+              {{ category.label }}
+            </option>
           </select>
         </div>
 
@@ -128,7 +133,7 @@
 
         <div class="project-meta">
           <span class="project-type">
-            {{ getTypeIcon(project.type) }} {{ project.type }}
+            {{ getCategoryLabel(project.type) }}
           </span>
           <span class="project-author">👤 {{ project.author }}</span>
           <span class="project-date">📅 {{ formatDate(project.createdAt) }}</span>
@@ -223,12 +228,13 @@
               <label for="type">项目类型 <span class="required-asterisk">*</span></label>
               <select id="type" v-model="projectForm.type" required>
                 <option value="">选择类型</option>
-                <option value="2D">🎨 2D游戏</option>
-                <option value="3D">🎯 3D游戏</option>
-                <option value="tool">🔧 工具/插件</option>
-                <option value="demo">🎮 演示项目</option>
-                <option value="tutorial">📚 教程项目</option>
-                <option value="asset">🎭 资源包</option>
+                <option 
+                  v-for="category in categoryOptions" 
+                  :key="category.value" 
+                  :value="category.value"
+                >
+                  {{ category.label }}
+                </option>
               </select>
             </div>
 
@@ -236,11 +242,13 @@
               <label for="status">当前状态 <span class="required-asterisk">*</span></label>
               <select id="status" v-model="projectForm.status" required>
                 <option value="">选择状态</option>
-                <option value="planning">📋 计划中</option>
-                <option value="development">🚀 开发中</option>
-                <option value="testing">🧪 测试中</option>
-                <option value="completed">✅ 已完成</option>
-                <option value="paused">⏸️ 暂停</option>
+                <option 
+                  v-for="status in statusOptions" 
+                  :key="status.value" 
+                  :value="status.value"
+                >
+                  {{ status.label }}
+                </option>
               </select>
             </div>
           </div>
@@ -349,7 +357,6 @@
                   type="checkbox" 
                   v-model="projectForm.isOpenSource"
                 />
-                <span class="checkmark"></span>
                 开源项目
               </label>
               <label class="checkbox-label">
@@ -357,7 +364,6 @@
                   type="checkbox" 
                   v-model="projectForm.needHelp"
                 />
-                <span class="checkmark"></span>
                 寻求帮助
               </label>
               <label class="checkbox-label">
@@ -365,7 +371,6 @@
                   type="checkbox" 
                   v-model="projectForm.allowCollaboration"
                 />
-                <span class="checkmark"></span>
                 欢迎协作
               </label>
             </div>
@@ -424,7 +429,7 @@
                 {{ getStatusIcon(selectedProject.status) }} {{ getStatusText(selectedProject.status) }}
               </span>
               <span class="project-type">
-                {{ getTypeIcon(selectedProject.type) }} {{ selectedProject.type }}
+                {{ getCategoryLabel(selectedProject.type) }}
               </span>
               <span class="project-author">👤 {{ selectedProject.author }}</span>
               <span class="project-date">📅 {{ formatDate(selectedProject.createdAt) }}</span>
@@ -541,6 +546,7 @@
 
 <script>
 import { githubAuth } from '../utils/githubAuth.js'
+import { projectApi } from '../utils/request.ts'
 
 export default {
   name: 'ProjectTracker',
@@ -570,6 +576,25 @@ export default {
         'RPG', '动作', '策略', '解谜', '平台跳跃', '射击',
         '像素风', '3D', '2D', '单人', '多人', '合作',
         '开源', '商业', '教育', '实验性', 'VR', 'AR'
+      ],
+      
+      // 项目类型选项
+      categoryOptions: [
+        { value: '2D', label: '🎨 2D游戏' },
+        { value: '3D', label: '🎯 3D游戏' },
+        { value: 'tool', label: '🔧 工具/插件' },
+        { value: 'demo', label: '🎮 演示项目' },
+        { value: 'tutorial', label: '📚 教程项目' },
+        { value: 'asset', label: '🎭 资源包' }
+      ],
+      
+      // 项目状态选项
+      statusOptions: [
+        { value: 'planning', label: '📋 计划中' },
+        { value: 'development', label: '🚀 开发中' },
+        { value: 'testing', label: '🧪 测试中' },
+        { value: 'completed', label: '✅ 已完成' },
+        { value: 'paused', label: '⏸️ 暂停' }
       ],
       
       // 表单数据
@@ -675,87 +700,28 @@ export default {
   methods: {
     // 数据加载和保存
 
-    loadProjects() {
-      const saved = localStorage.getItem('godot-village-projects');
-      if (saved) {
-        this.projects = JSON.parse(saved);
-      } else {
-        // 示例数据
-        this.projects = [
-          {
-            id: '1',
-            title: '像素风RPG冒险',
-            author: '小明',
-            type: '2D',
-            status: 'development',
-            description: '一个经典的像素风RPG游戏，包含丰富的剧情和战斗系统。玩家将扮演一名年轻的冒险者，在神秘的大陆上展开冒险。',
-            progress: 65,
-            tags: ['RPG', '像素风', '单人', '剧情'],
-            repository: 'https://github.com/example/pixel-rpg',
-            createdAt: '2025-01-10',
-            lastUpdate: {
-              id: '1',
-              date: '2025-01-15',
-              content: '完成了战斗系统的基础框架，添加了技能系统'
-            },
-            updates: [
-              {
-                id: '1',
-                date: '2025-01-15',
-                content: '完成了战斗系统的基础框架，添加了技能系统',
-                progress: 65
-              },
-              {
-                id: '2',
-                date: '2025-01-12',
-                content: '设计并实现了主角的移动和动画系统',
-                progress: 45
-              }
-            ]
-          },
-          {
-            id: '2',
-            title: '3D平台跳跃游戏',
-            author: '小红',
-            type: '3D',
-            status: 'testing',
-            description: '一个充满挑战的3D平台跳跃游戏，玩家需要通过精确的跳跃和时机掌握来完成各种关卡。',
-            progress: 85,
-            tags: ['平台', '3D', '挑战'],
-            createdAt: '2025-01-05',
-            lastUpdate: {
-              id: '1',
-              date: '2025-01-14',
-              content: '完成了所有关卡的设计，正在进行最终测试'
-            },
-            updates: [
-              {
-                id: '1',
-                date: '2025-01-14',
-                content: '完成了所有关卡的设计，正在进行最终测试',
-                progress: 85
-              }
-            ]
-          }
-        ];
-        this.saveProjects();
+    async loadProjects() {
+      try {
+        // 从 API 加载项目
+        const projects = await projectApi.getProjects();
+        this.projects = projects;
+      } catch (apiError) {
+        console.error('API加载失败:', apiError);
+        // 显示空数组，不使用本地存储
+        this.projects = [];
       }
-    },
-    
-    saveProjects() {
-      localStorage.setItem('godot-village-projects', JSON.stringify(this.projects));
     },
     
     // 项目操作
     submitProjectForm() {
       if (this.projectModalMode === 'create') {
-        this.createProject();
+        this.createFarmProject();
       } else {
-        this.updateProject();
+        this.updateFarmProject();
       }
     },
 
-    async createProject() {
+    async createFarmProject() {
       // 清除之前的错误
       this.createError = '';
       this.createLoading = true;
@@ -773,7 +739,6 @@ export default {
         }
 
         const project = {
-          id: Date.now().toString(),
           title: this.projectForm.title.trim(),
           author: this.projectForm.author.trim(),
           githubUser: githubAuth.getCurrentUser().name,
@@ -792,23 +757,14 @@ export default {
           isOpenSource: this.projectForm.isOpenSource,
           needHelp: this.projectForm.needHelp,
           allowCollaboration: this.projectForm.allowCollaboration,
-          createdAt: new Date().toISOString().split('T')[0],
-          updates: []
+          createdAt: new Date().toISOString().split('T')[0]
         };
 
-        // 尝试通过API创建项目
-        try {
-          const { projectApi } = await import('../utils/request.ts');
-          const createdProject = await projectApi.createProject(project);
-          // 如果API成功，使用返回的项目数据
-          this.projects.unshift(createdProject);
-        } catch (apiError) {
-          console.warn('API创建失败，使用本地存储:', apiError);
-          // API失败时使用本地存储
-          this.projects.unshift(project);
-        }
+        // 通过API创建项目
+        const createdProject = await projectApi.createProject(project);
+        // 如果API成功，使用返回的项目数据
+        this.projects.unshift(createdProject);
         
-        this.saveProjects();
         this.closeProjectModal();
       } catch (error) {
         this.createError = error.message;
@@ -822,32 +778,42 @@ export default {
       this.selectedProject = null;
     },
     
-    updateProject() {
+    async updateFarmProject() {
       const index = this.projects.findIndex(p => p.id === this.projectForm.id);
-      if (index !== -1) {
-        const updatedProject = {
-          ...this.projects[index],
-          title: this.projectForm.title.trim(),
-          contact: this.projectForm.contact.trim(),
-          type: this.projectForm.type,
-          status: this.projectForm.status,
-          description: this.projectForm.description.trim(),
-          progress: this.projectForm.progress || 0,
-          expectedTime: this.projectForm.expectedTime || null,
-          tags: this.projectForm.tagsInput ? 
-            this.projectForm.tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag) : [],
-          repository: this.projectForm.repository.trim() || null,
-          demoUrl: this.projectForm.demoUrl.trim() || null,
-          teamMembers: this.projectForm.teamMembers.trim() || null,
-          recruitmentInfo: this.projectForm.recruitmentInfo.trim() || null,
-          isOpenSource: this.projectForm.isOpenSource,
-          needHelp: this.projectForm.needHelp,
-          allowCollaboration: this.projectForm.allowCollaboration
-        };
-        
-        this.projects[index] = updatedProject;
-        this.saveProjects();
+      if (index === -1) {
+        this.closeProjectModal();
+        return;
       }
+
+      const updateData = {
+        title: this.projectForm.title.trim(),
+        contact: this.projectForm.contact.trim(),
+        type: this.projectForm.type,
+        status: this.projectForm.status,
+        description: this.projectForm.description.trim(),
+        progress: this.projectForm.progress || 0,
+        expectedTime: this.projectForm.expectedTime || null,
+        tags: this.projectForm.tagsInput ? 
+          this.projectForm.tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag) : [],
+        repository: this.projectForm.repository.trim() || null,
+        demoUrl: this.projectForm.demoUrl.trim() || null,
+        teamMembers: this.projectForm.teamMembers.trim() || null,
+        recruitmentInfo: this.projectForm.recruitmentInfo.trim() || null,
+        isOpenSource: this.projectForm.isOpenSource,
+        needHelp: this.projectForm.needHelp,
+        allowCollaboration: this.projectForm.allowCollaboration
+      };
+
+      // 通过API更新项目
+      await projectApi.updateProject(this.projectForm.id, updateData);
+      
+      // 更新本地数据
+      const updatedProject = {
+        ...this.projects[index],
+        ...updateData
+      };
+      this.projects[index] = updatedProject;
+      
       this.closeProjectModal();
     },
     
@@ -861,30 +827,34 @@ export default {
       this.selectedProject = null;
     },
     
-    submitUpdate() {
+    async submitUpdate() {
       if (!this.updatingProject) return;
       
-      const update = {
-        id: Date.now().toString(),
-        date: new Date().toISOString().split('T')[0],
+      const updateData = {
         content: this.newUpdate.content,
-        progress: this.newUpdate.progress
+        progress: this.newUpdate.progress,
+        date: new Date().toISOString().split('T')[0]
       };
       
       const projectIndex = this.projects.findIndex(p => p.id === this.updatingProject.id);
-      if (projectIndex !== -1) {
-        if (!this.projects[projectIndex].updates) {
-          this.projects[projectIndex].updates = [];
-        }
-        this.projects[projectIndex].updates.unshift(update);
-        this.projects[projectIndex].lastUpdate = update;
-        
-        // 更新进度
-        if (this.newUpdate.progress !== null && this.newUpdate.progress !== '') {
-          this.projects[projectIndex].progress = this.newUpdate.progress;
-        }
-        
-        this.saveProjects();
+      if (projectIndex === -1) {
+        this.closeUpdateModal();
+        return;
+      }
+
+      // 通过API添加更新
+      const createdUpdate = await projectApi.addProjectUpdate(this.updatingProject.id, updateData);
+      
+      // 更新本地数据
+      if (!this.projects[projectIndex].updates) {
+        this.projects[projectIndex].updates = [];
+      }
+      this.projects[projectIndex].updates.unshift(createdUpdate);
+      this.projects[projectIndex].lastUpdate = createdUpdate;
+      
+      // 更新进度
+      if (this.newUpdate.progress !== null && this.newUpdate.progress !== '') {
+        this.projects[projectIndex].progress = this.newUpdate.progress;
       }
       
       this.closeUpdateModal();
@@ -984,25 +954,26 @@ export default {
     
     // 工具方法
     getStatusIcon(status) {
-      const icons = {
-        planning: '📋',
-        development: '🚀',
-        testing: '🧪',
-        completed: '✅',
-        paused: '⏸️'
-      };
-      return icons[status] || '❓';
+      const statusOption = this.statusOptions.find(s => s.value === status);
+      if (statusOption) {
+        // 提取label中的emoji（第一个字符通常是emoji）
+        return statusOption.label.split(' ')[0];
+      }
+      return '❓';
     },
     
     getStatusText(status) {
-      const texts = {
-        planning: '计划中',
-        development: '开发中',
-        testing: '测试中',
-        completed: '已完成',
-        paused: '暂停'
-      };
-      return texts[status] || '未知';
+      const statusOption = this.statusOptions.find(s => s.value === status);
+      if (statusOption) {
+        // 提取label中的文本部分（去掉emoji）
+        return statusOption.label.split(' ').slice(1).join(' ');
+      }
+      return '未知';
+    },
+    
+    getStatusLabel(status) {
+      const statusOption = this.statusOptions.find(s => s.value === status);
+      return statusOption ? statusOption.label : status;
     },
     
     getStatusClass(status) {
@@ -1010,13 +981,17 @@ export default {
     },
     
     getTypeIcon(type) {
-      const icons = {
-        '2D': '🎨',
-        '3D': '🎯',
-        'tool': '🔧',
-        'demo': '🎮'
-      };
-      return icons[type] || '📦';
+      const category = this.categoryOptions.find(c => c.value === type);
+      if (category) {
+        // 提取label中的emoji（第一个字符通常是emoji）
+        return category.label.split(' ')[0];
+      }
+      return '📦';
+    },
+    
+    getCategoryLabel(type) {
+      const category = this.categoryOptions.find(c => c.value === type);
+      return category ? category.label : type;
     },
     
     getProgressClass(progress) {
@@ -1612,30 +1587,6 @@ export default {
   margin: 0;
 }
 
-.checkmark {
-  width: 18px;
-  height: 18px;
-  border: 2px solid #ced4da;
-  border-radius: 3px;
-  position: relative;
-  transition: all 0.2s;
-}
-
-.checkbox-label input[type="checkbox"]:checked + .checkmark {
-  background: #667eea;
-  border-color: #667eea;
-}
-
-.checkbox-label input[type="checkbox"]:checked + .checkmark::after {
-  content: '✓';
-  position: absolute;
-  top: -2px;
-  left: 2px;
-  color: white;
-  font-size: 12px;
-  font-weight: bold;
-}
-
 /* 错误消息样式 */
 .error-message {
   background: #f8d7da;
@@ -1734,6 +1685,15 @@ export default {
   color: var(--vp-c-text-mute);
 }
 
+[data-theme='dark'] .filter-section {
+  background: var(--vp-c-bg-elv);
+  border: 1px solid var(--vp-c-border);
+}
+
+[data-theme='dark'] .filter-group label {
+  color: var(--vp-c-text);
+}
+
 [data-theme='dark'] .filter-controls input,
 [data-theme='dark'] .filter-controls select {
   background: var(--vp-c-bg-elv);
@@ -1744,7 +1704,7 @@ export default {
 [data-theme='dark'] .filter-controls input:focus,
 [data-theme='dark'] .filter-controls select:focus {
   border-color: var(--vp-c-accent);
-  box-shadow: 0 0 0 2px rgba(var(--vp-c-accent-rgb), 0.2);
+  box-shadow: 0 0 0 2px var(--vp-c-accent-soft);
 }
 
 [data-theme='dark'] .project-card {
@@ -1841,7 +1801,7 @@ export default {
 [data-theme='dark'] .form-group select:focus,
 [data-theme='dark'] .form-group textarea:focus {
   border-color: var(--vp-c-accent);
-  box-shadow: 0 0 0 2px rgba(var(--vp-c-accent-rgb), 0.2);
+  box-shadow: 0 0 0 2px var(--vp-c-accent-soft);
 }
 
 [data-theme='dark'] .form-hint {
@@ -1891,16 +1851,6 @@ export default {
 
 [data-theme='dark'] .checkbox-label {
   color: var(--vp-c-text);
-}
-
-[data-theme='dark'] .checkmark {
-  border: 2px solid var(--vp-c-border);
-  background: var(--vp-c-bg);
-}
-
-[data-theme='dark'] .checkbox-label input[type="checkbox"]:checked + .checkmark {
-  background: var(--vp-c-accent);
-  border-color: var(--vp-c-accent);
 }
 
 [data-theme='dark'] .error-message {

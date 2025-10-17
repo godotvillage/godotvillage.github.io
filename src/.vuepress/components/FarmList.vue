@@ -167,7 +167,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { projectApi } from '../utils/request.ts'
+import { farmApi } from '../utils/request.ts'
 
 const projects = ref([])
 const selectedProject = ref(null)
@@ -212,7 +212,7 @@ const filteredProjects = computed(() => {
 
 const loadProjects = async () => {
   try {
-    const response = await projectApi.getProjects()
+    const response = await farmApi.getFarmList()
     if (response.success) {
       // 处理API返回的数据格式，统一字段名
       projects.value = response.data.map(project => ({
@@ -233,7 +233,7 @@ const loadProjects = async () => {
 
 const saveProject = async (project) => {
   try {
-    await projectApi.updateProject(project.project_id, {
+    await farmApi.updateFarmProject(project.farm_id, {
       status: project.status
     })
   } catch (error) {

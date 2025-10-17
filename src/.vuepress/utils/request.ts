@@ -36,12 +36,28 @@ export const gameApi = {
   }
 };
 
-// 项目相关 API 函数
-export const projectApi = {
-  // 获取项目分类列表（参考论坛分类实现）
-  async getProjectCategories() {
+// 项目相关 API 函数（使用 farm 端点）
+export const farmApi = {
+  // 获取项目列表
+  async getFarmList() {
     try {
-      const response = await fetch(`${baseUrl}/projects/categories`);
+      const response = await fetch(`${baseUrl}/farms`);
+      const result = await response.json();
+      
+      if (result.success) {
+        return result;
+      } else {
+        throw new Error(result.error);
+      }
+    } catch (error) {
+      throw new Error(`获取项目列表失败: ${error.message}`);
+    }
+  },
+
+  // 获取项目统计信息
+  async getFarmListStats() {
+    try {
+      const response = await fetch(`${baseUrl}/farms/stats`);
       const result = await response.json();
       
       if (result.success) {
@@ -50,32 +66,95 @@ export const projectApi = {
         throw new Error(result.error);
       }
     } catch (error) {
-      throw new Error(`获取项目分类失败: ${error.message}`);
+      throw new Error(`获取项目统计失败: ${error.message}`);
     }
   },
 
-  // 获取项目列表（支持分类筛选）
-  async getProjects(categoryId = null, status = null, pageSize = 20, after = null) {
+  // 根据ID获取项目详情
+  async getFarmProjectById(farmId) {
     try {
-      let url = `${baseUrl}/projects/list`;
-      const params = new URLSearchParams();
+      const response = await fetch(`${baseUrl}/farms/${farmId}`);
+      const result = await response.json();
       
-      if (categoryId) {
-        params.append('categoryId', categoryId);
+      if (result.success) {
+        return result.data;
+      } else {
+        throw new Error(result.error);
       }
-      if (status) {
-        params.append('status', status);
-      }
-      if (after) {
-        params.append('after', after);
-      }
-      params.append('pageSize', pageSize.toString());
+    } catch (error) {
+      throw new Error(`获取项目详情失败: ${error.message}`);
+    }
+  },
+
+  // 创建新项目
+  async createFarmProject(projectData) {
+    try {
+      const response = await fetch(`${baseUrl}/farms`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(projectData)
+      });
+      const result = await response.json();
       
-      if (params.toString()) {
-        url += '?' + params.toString();
+      if (result.success) {
+        return result;
+      } else {
+        throw new Error(result.error);
       }
+    } catch (error) {
+      throw new Error(`创建项目失败: ${error.message}`);
+    }
+  },
+
+  // 更新项目信息
+  async updateFarmProject(farmId, updateData) {
+    try {
+      const response = await fetch(`${baseUrl}/farms/${farmId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updateData)
+      });
+      const result = await response.json();
       
-      const response = await fetch(url);
+      if (result.success) {
+        return result;
+      } else {
+        throw new Error(result.error);
+      }
+    } catch (error) {
+      throw new Error(`更新项目失败: ${error.message}`);
+    }
+  },
+
+  // 删除项目
+  async deleteFarmProject(farmId) {
+    try {
+      const response = await fetch(`${baseUrl}/farms/${farmId}`, {
+        method: 'DELETE'
+      });
+      const result = await response.json();
+      
+      if (result.success) {
+        return result;
+      } else {
+        throw new Error(result.error);
+      }
+    } catch (error) {
+      throw new Error(`删除项目失败: ${error.message}`);
+    }
+  }
+};
+
+// 项目追踪相关 API 函数
+export const projectApi = {
+  // 获取项目列表
+  async getProjects() {
+    try {
+      const response = await fetch(`${baseUrl}/projects`);
       const result = await response.json();
       
       if (result.success) {
@@ -107,7 +186,7 @@ export const projectApi = {
   // 根据ID获取项目详情
   async getProjectById(projectId) {
     try {
-      const response = await fetch(`${baseUrl}/projects/detail/${projectId}`);
+      const response = await fetch(`${baseUrl}/projects/${projectId}`);
       const result = await response.json();
       
       if (result.success) {
@@ -120,10 +199,10 @@ export const projectApi = {
     }
   },
 
-  // 创建新项目（参考论坛创建逻辑）
+  // 创建新项目
   async createProject(projectData) {
     try {
-      const response = await fetch(`${baseUrl}/projects/create`, {
+      const response = await fetch(`${baseUrl}/projects`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -145,7 +224,7 @@ export const projectApi = {
   // 更新项目信息
   async updateProject(projectId, updateData) {
     try {
-      const response = await fetch(`${baseUrl}/projects/${projectId}/update`, {
+      const response = await fetch(`${baseUrl}/projects/${projectId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -155,7 +234,7 @@ export const projectApi = {
       const result = await response.json();
       
       if (result.success) {
-        return result.data;
+        return result;
       } else {
         throw new Error(result.error);
       }
@@ -164,7 +243,25 @@ export const projectApi = {
     }
   },
 
-  // 添加项目更新记录
+  // 删除项目
+  async deleteProject(projectId) {
+    try {
+      const response = await fetch(`${baseUrl}/projects/${projectId}`, {
+        method: 'DELETE'
+      });
+      const result = await response.json();
+      
+      if (result.success) {
+        return result;
+      } else {
+        throw new Error(result.error);
+      }
+    } catch (error) {
+      throw new Error(`删除项目失败: ${error.message}`);
+    }
+  },
+
+  // 添加项目更新
   async addProjectUpdate(projectId, updateData) {
     try {
       const response = await fetch(`${baseUrl}/projects/${projectId}/updates`, {
@@ -186,12 +283,10 @@ export const projectApi = {
     }
   },
 
-  // 删除项目
-  async deleteProject(projectId) {
+  // 获取项目的所有更新
+  async getProjectUpdates(projectId) {
     try {
-      const response = await fetch(`${baseUrl}/projects/${projectId}/delete`, {
-        method: 'DELETE'
-      });
+      const response = await fetch(`${baseUrl}/projects/${projectId}/updates`);
       const result = await response.json();
       
       if (result.success) {
@@ -200,7 +295,25 @@ export const projectApi = {
         throw new Error(result.error);
       }
     } catch (error) {
-      throw new Error(`删除项目失败: ${error.message}`);
+      throw new Error(`获取项目更新失败: ${error.message}`);
+    }
+  },
+
+  // 删除项目更新
+  async deleteProjectUpdate(projectId, updateId) {
+    try {
+      const response = await fetch(`${baseUrl}/projects/${projectId}/updates/${updateId}`, {
+        method: 'DELETE'
+      });
+      const result = await response.json();
+      
+      if (result.success) {
+        return result;
+      } else {
+        throw new Error(result.error);
+      }
+    } catch (error) {
+      throw new Error(`删除项目更新失败: ${error.message}`);
     }
   }
 };

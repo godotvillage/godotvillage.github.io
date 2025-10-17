@@ -25,17 +25,17 @@ date: 2025-10-10
 
   <div class="section">
     <h2>📋 项目展示</h2>
-    <ProjectList />
+    <FarmList />
   </div>
 
   <div class="section">
     <h2>🔍 项目搜索</h2>
-    <ProjectSearch />
+    <FarmSearch />
   </div>
 
   <div class="section">
     <h2>🌱 种下种子</h2>
-    <ProjectSubmitForm />
+    <FarmSubmitForm />
   </div>
 </div>
 
