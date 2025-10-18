@@ -757,7 +757,7 @@ export default {
           isOpenSource: this.projectForm.isOpenSource,
           needHelp: this.projectForm.needHelp,
           allowCollaboration: this.projectForm.allowCollaboration,
-          createdAt: new Date().toISOString().split('T')[0]
+          createdAt: new Date().toLocaleDateString("zh-CN")
         };
 
         // 通过API创建项目
@@ -833,7 +833,7 @@ export default {
       const updateData = {
         content: this.newUpdate.content,
         progress: this.newUpdate.progress,
-        date: new Date().toISOString().split('T')[0]
+        date: new Date().toLocaleDateString("zh-CN")
       };
       
       const projectIndex = this.projects.findIndex(p => p.id === this.updatingProject.id);
