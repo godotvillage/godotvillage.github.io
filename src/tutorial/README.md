@@ -46,18 +46,18 @@ date: 2025-10-11
 - [x] [组件开发](/tutorial/component)
 - [ ] 资源系统开发
 - [ ] 动画播放器和动画树
-- [ ] 存档以及文件操作
+- [ ] 存档以及文件操作 <Badge text="编写中" type="tip" vertical="middle" />
 - [ ] 输入事件系统详解
 - [x] [信号系统](/tutorial/signal)
 - [ ] Tilemap详解 <Badge text="编写中" type="tip" vertical="middle" />
 - [ ] 粒子系统
 - [ ] UI系统和主题开发
-- [ ] 自动加载和单例模式
+- [x] [自动加载和单例模式](/tutorial/single)
 - [ ] 网络系统详解
 - [ ] 多人游戏开发
 - [ ] 窗口系统详解
 - [ ] 导航系统以及A星算法 <Badge text="编写中" type="tip" vertical="middle" />
-- [ ] 物理系统 
+- [ ] 物理系统
 
 #### 着色器教程
 - [x] [着色器简介](/tutorial/shader/intro)

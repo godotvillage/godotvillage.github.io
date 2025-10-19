@@ -262,22 +262,55 @@ func _ready():
 
 两种方式可以组合使用，例如自动加载节点可以调用静态工具类的方法。
 
-
 ## 场景级别的单例模式
 
-``` gdscript
+有时我们需要在某个场景内保证某个节点只有一个实例，但不需要全局存在。这种情况可以使用**场景级别的单例模式**。
+
+```gdscript
+# level_manager.gd
 class_name LevelManager
 extends Node
 
-# 单例实例
-static var instance = null
+# 静态变量保存单例实例
+static var instance: LevelManager = null
 
 func _ready():
-    if instance:
+    # 如果实例已存在，销毁当前节点
+    if instance != null:
+        push_warning("当前节点树中已经存在单例实例")
         queue_free()
-    else:
-        instance = self
+        return
+    # 否则将自己设为实例
+    instance = self
 
-func exit_tree():
-    instance = null
+func _exit_tree():
+    # 节点被销毁时清空实例引用
+    if instance == self:
+        instance = null
 ```
+
+这种模式的特点：
+- 在场景运行期间只允许存在一个实例
+- 如果尝试创建第二个实例，会自动销毁
+- 可以通过 `LevelManager.instance` 访问当前实例
+- 场景切换时实例会被清空，不会全局持久化
+
+**使用示例：**
+
+```gdscript
+# 在其他脚本中访问单例
+func _ready():
+    if LevelManager.instance:
+        LevelManager.instance.start_level()
+    else:
+        push_warning("LevelManager 实例不存在")
+```
+
+::: tip 使用场景
+适合用于在**单个关卡或场景内**需要唯一存在的管理器，例如：
+- 关卡管理器（LevelManager）
+- 波次生成器（WaveSpawner）
+- 场景内的UI管理器
+
+如果需要跨场景持久化，应该使用自动加载而不是场景级单例。
+:::
