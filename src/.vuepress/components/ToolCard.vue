@@ -1,7 +1,7 @@
 <template>
   <div class="tool-card" @click="navigateToTool">
     <div class="tool-cover">
-      <img :src="cover" :alt="name" />
+      <img :src="cover" :alt="name" no-view />
     </div>
     <div class="tool-info">
       <h3 class="tool-name">{{ name }}</h3>
