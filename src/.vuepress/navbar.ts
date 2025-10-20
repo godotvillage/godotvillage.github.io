@@ -62,6 +62,7 @@ export default navbar([
     icon: "list",
     link: "/projects/",
   },
+  "/tools/index"
   // {
   //   text: "博文",
   //   icon: "pen-to-square",
