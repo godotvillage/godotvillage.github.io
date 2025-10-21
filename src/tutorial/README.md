@@ -74,7 +74,7 @@ date: 2025-10-11
 #### 案例教程
 - [ ] 2D游戏案例
 - [ ] 3D游戏案例
-- [ ] 实现一个2D画图软件
+- [ ] [实现一个2D画图软件](/tutorial/example/painter)  <Badge text="编写中" type="tip" vertical="middle" />
 - [ ] 手把手带你实现一个桌宠
 - [ ] 让你的角色产生智能
 - [ ] 更改游戏中的键位
