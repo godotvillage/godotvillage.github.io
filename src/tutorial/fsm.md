@@ -329,8 +329,8 @@ func _notification(what: int) -> void:
 func _ready():
 	state_machine.set_initial_state(state_idle)
 
-func _process(_delta: float) -> void:
-	state_machine.update()
+func _process(delta: float) -> void:
+	state_machine.update(delta)
 
 # 状态相关方法
 func state_idle(_delta: float):
