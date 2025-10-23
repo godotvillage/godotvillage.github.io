@@ -56,7 +56,7 @@ date: 2025-10-11
 - [ ] 网络系统详解
 - [ ] 多人游戏开发
 - [ ] 窗口系统详解
-- [ ] 导航系统以及A星算法 <Badge text="编写中" type="tip" vertical="middle" />
+- [x] [导航系统以及A星算法](/tutorial/navigation)
 - [ ] 物理系统
 
 #### 着色器教程
