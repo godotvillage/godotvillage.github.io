@@ -33,7 +33,8 @@
 
       <!-- 讨论内容 -->
       <article class="discussion-body">
-        <div class="markdown-body" v-html="renderMarkdown(discussion.body)"></div>
+        <!-- <div class="markdown-body" v-html="renderMarkdown(discussion.body)"></div> -->
+        <div class="markdown-body" v-html="discussion.bodyHTML"></div>
       </article>
 
       <!-- 标签和分类 -->
@@ -55,7 +56,7 @@
 </template>
 
 <script>
-import { marked } from 'marked'
+// import { marked } from 'marked'
 import { baseUrl } from '../utils/request'
 
 export default {
@@ -72,6 +73,23 @@ export default {
       // 从路由参数或frontmatter获取讨论编号
       return this.$route.query.number
     }
+  },
+  created() {
+    // 配置marked，只需配置一次
+    // marked.use({
+    //   renderer: {
+    //     image(token) {
+    //       let out = `<img src="${token.href}" alt="${token.text}"`
+    //       if (token.title) {
+    //         out += ` title="${token.title}"`
+    //       }
+    //       out += '>'
+    //       return out
+    //     }
+    //   },
+    //   breaks: true,
+    //   gfm: true
+    // })
   },
   async mounted() {
     await this.fetchDiscussion()
@@ -117,26 +135,17 @@ export default {
     //   }
     // },
 
-    renderMarkdown(content) {
-      if (!content) return ''
+    // renderMarkdown(content) {
+    //   if (!content) return ''
       
-      try {
-        // 使用marked渲染markdown
-        marked.setOptions({
-          highlight: function (code, lang) {
-            // 可以集成highlight.js进行代码高亮
-            return code
-          },
-          breaks: true,
-          gfm: true
-        })
-        
-        return marked.parse(content)
-      } catch (error) {
-        console.error('Markdown渲染失败:', error)
-        return content
-      }
-    },
+    //   try {
+    //     // 使用marked渲染markdown（配置已在created中完成）
+    //     return marked.parse(content)
+    //   } catch (error) {
+    //     console.error('Markdown渲染失败:', error)
+    //     return content
+    //   }
+    // },
 
     formatDate(dateString) {
       const date = new Date(dateString)
