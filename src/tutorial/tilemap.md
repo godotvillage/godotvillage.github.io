@@ -1,6 +1,8 @@
 ---
-title: 全局加载与单例模式
-author: Goodman
+title: 瓦片地图详解
+author: 
+  - Goodman
+  - 陌上竹
 date: 2025-10-23
 category:
   - 教程
@@ -10,31 +12,181 @@ tag:
 
 ## 简介
 
-图块地图（Tile Map）是Godot中功能强大的2d地图制作节点，由于TileMap在Godot4.5已废弃，且与TileMapLayer使用其实差异不大，故本篇主要讲解 TileMapLayer。本篇为快速教程，指在方便用户快速上手TileMapLayer，一个完整的
+图块地图（Tile Map）是Godot中功能强大的2d地图制作节点，由于TileMap在Godot4.5已废弃，且与TileMapLayer使用其实差异不大，故本篇主要讲解 TileMapLayer。本篇为快速教程，指在方便用户快速上手TileMapLayer。
+
+::: info
+在Godot 4.3之后的版本添加了`TilemapLayer`替代原有的`Tilemap`节点，使每层瓦片地图都可以使用不同的`tileset`以及物理数据等，解决了之前版本中`Tilemap`在某些复杂场景下的局限性。
+
+在本教程中，如果没有特殊说明，以下知识默认均使用`TilemapLayer`讲解。`Tilemap`与`TilemapLayer`除了API有部分区别外，其余部分均可通用。
+:::
 ## 基本概念
- - **Tile** : 相当于颜料，瓦片是TileMap中最小的单位 ，包含图集坐标信息，纹理、碰撞形状、导航网格等属性
- - **TileMap** : 相当于画布，包含绘制工具(例如多种不一样画笔)，将设置好的Tile，根据场景需要进行绘制。
- - **TileSet** : 相当于调色板，对导入素材进行预处理，你可以准备绘制前预制颜料的亮度，颜色，数量(编辑图块的渲染，物理层，动画...)
- - 它们之间的关系如下
-![之间的关系](/assets/images/tutorial/tilemap/tilemaplayer.png)
+- **瓦片地图（Tilemap）**: 就像是一张巨大的拼图画板，你可以在上面摆放各种瓦片来构建游戏世界。比如制作一个RPG游戏的地图，草地、道路、房屋都摆放在这个画板上。
+- **瓦片地图层（TilemapLayer）**: 就像Photoshop中的图层概念，每一层都是独立的画布。比如制作游戏场景时，你可以把地面放在底层，装饰物放在中层，云朵放在顶层，这样方便管理和修改。多个TilemapLayer可以堆叠使用，实现前景、中景、背景的分层效果。
+- **瓦片集合（TileSet）**: 相当于你的素材库或工具箱，里面装着所有可以使用的瓦片资源。就像乐高玩具盒，里面有各种形状、颜色的积木供你选择。
+- **图集（AtlasSource）**: 一张大图片，上面整齐排列着许多小瓦片素材。就像一本贴纸册，把所有地形素材（草地、石头、水面等）都印在一张大纸上，使用时按坐标裁剪。
+- **场景集合（Scene Collection）**: 预先制作好的场景模板集合。比如一棵完整的树（包含树干、树冠、阴影等多个节点），可以直接作为瓦片重复使用。
+- **瓦片（Tile）**: TileMap中的最小单位，就像拼图中的一小块。每个瓦片可以是一块草地、一块砖墙，或者一个装饰物。
+- **瓦片数据（Tile Data）**: 每个瓦片携带的详细信息，包括它的图片位置、是否有碰撞、能否行走等。就像产品说明书，记录着这块瓦片的所有属性。
+![Tilemap相关类关系图](/assets/images/tutorial/tilemap/tilemap_classes.png)
 
-## 使用技巧1：TileMapLayer节点搭建一个场景
+### 代码常用API
+#### TilemapLayer
+对于TilemapLayer节点，有以下属性及方法可以方便的获取或设置数据。
+- 属性
+	- tileset: TileSet 
+		获得TilemapLayer设置的tileset
+- 方法
+	- `TileData get_cell_tile_data(coords: Vector2i)`
+		用于获取某个坐标瓦片的瓦片数据tile_data，大部分的功能都要围绕这个API展开
+	- `void _tile_data_runtime_update(coords: Vector2i, tile_data: TileData)`
+		虚函数，重写可在游戏中修改tile的tile_data
+	- `bool _use_tile_data_runtime_update(coords: Vector2i)`
+		虚函数，重写可用于激活在游戏中修改tile_data
+	- `Vector2i get_neighbor_cell(coords: Vector2i, neighbor: CellNeighbor)`
+		用于获取某个坐标的瓦片的相邻瓦片，对于某些异形地图处理瓦片遍历很有用
+	- `Array[Vector2i] get_used_cells()`
+		获取地图中所有瓦片的坐标
+	- `Rect2i get_used_rect()`
+		获取地图所有包围瓦片的包围矩形
+	- `Vector2 map_to_local(map_position: Vector2i)`
+		从地图坐标转换为本地坐标，配合local_to_map可以快速的坐标转换操作
+	- `Vector2i local_to_map(local_position: Vector2)`
+		从本地坐标转换为地图坐标，配合map_to_local可以快速的坐标转换操作
+	- `void set_cell(coords: Vector2i, source_id: int = -1, atlas_coords: Vector2i = Vector2i(-1, -1), alternative_tile: int = 0)`
+		在对应的坐标设置对应的瓦片，自动生成地图需要大量的使用本API，source_id和atlas_coords应从tile_set中获取
+	- `void set_cells_terrain_connect(cells: Array[Vector2i], terrain_set: int, terrain: int, ignore_empty_terrains: bool = true)`
+		更新cells中所有的瓦片为terrain_set中的terrain地形。并按照规则连接地形
+#### TileSet
+对于瓦片集，虽然这个对象很重要，但是在正常使用下，几乎不需要考虑其中的API。维护tileset的工作一般在引擎中进行。
+如果你需要自己开发有关Tileset的插件，则需要使用它的函数。请自行在[官方文档-TileSet](https://docs.godotengine.org/zh-cn/4.x/classes/class_tileset.html#class-tileset)中查阅。
+- 属性
+	- tile_size: Vector2i 用于设置瓦片的大小
+- 方法
+	如上，不再介绍
+
+#### TileData
+瓦片信息中存储着瓦片的数据，默认情况下，某一个tile在tilemapLayer中不管使用多少次，仍使用的是同一个tile_data。如果修改这个tile_data会影响到所有的这个瓦片。如果需要单独修改某个瓦片，应使用`_tile_data_runtime_update`和`_use_tile_data_runtime_update`做特殊处理。
+
+瓦片数据涉及的属性和方法基本都是插件才需要用到的。以下仅展示比较重要的部分。
+
+可以判断瓦片地图是否为空来判断瓦片地图的某个位置是否有瓦片
+
+- 属性
+	- material: Material
+		材质，可以设置shader等
+	- modulate: Color
+		叠加的颜色调制
+- 方法
+	- `Variant get_custom_data(layer_name: String)`
+		获取自定义数据
+	- `void set_custom_data(layer_name: String, value: Variant)`
+		设置自定义数据
+
+
+## 使用瓦片地图
+下面我们将从几方面分别讲解如何使用瓦片地图
+
+### 构建地图
 1.创建TileMaplayer节点（可根据需求添加多个TileMapLayer节点）
-![步骤一](/assets/images/tutorial/tilemap/add-tilemap-node.png)
-2.创建的一个新的TileSet（在TileMap节点的检查器中），编辑好你需要的瓦片
-![步骤二](/assets/images/tutorial/tilemap/tilesetpanel.png)
-3.绘制 使用TileMap编辑工具，使用画笔工具后选择图块来快速构建地图。
-![输入图片说明](/assets/images/tutorial/tilemap/tilemap-panel.png)
-## 使用技巧2：自动地形设置方法
-1.打开TileMapLayer的检查器，在TileSet的地形设置（TerrainSets）添加地形图层，注意设置Mode为Match Corners
-![输入图片说明](/assets/images/tutorial/tilemap/terrainset.png)
+![步骤一](/assets/images/tutorial/tilemap/add-tilemap-node.png){style=width:50%}
+2.创建的一个新的TileSet（在TileMap节点的检查器中），然后选中某一个瓦片地图，即可在下方看到TileSet面板和TileMap面板，其中TileSet面板是用来设置TileSet中的数据的，而TileMap面板则是选取Tile并在场景中绘制的。选中TileSet面板，并在图块源中拖入一个图集图片，会弹出一个弹框询问是否按照TileSet设置的大小自动生成瓦片，可以选择同意。如果不自动生成，可以在设置中点选暗色的瓦片激活。生成的瓦片才可以绘制到Tilemap中。
+::: info
+鼠标点击可以创建一个瓦片。
+按住ctrl并鼠标拖动可以快速创建多个瓦片。
+按住shift并鼠标拖动可以快速创建一个更大的瓦片。
+:::
+![步骤二](/assets/images/tutorial/tilemap/tilesetpanel.png){style=width:50%}
+3.选择TileMap面板，然后选中一个瓦片，确保当前是选择工具而非移动工具，然后在页面中开始绘制。默认情况下鼠标左键绘制，右键删除。
+![输入图片说明](/assets/images/tutorial/tilemap/tilemap-panel.png){style=width:50%}
+
+### 地形
+地形系统就像是给瓦片贴上标签，将具有相同属性的瓦片（比如都是草地、都是水域）归类为同一种地形。设置地形后，当你绘制地图时，这些瓦片会自动连接和匹配，不需要手动一个个调整边缘，大大提高了绘制效率。比如制作一片草地时，只需要选中草地地形工具涂抹，系统就会自动帮你选择合适的草地瓦片并处理好边界过渡。
+
+#### 自动地形设置方法
+1.打开TileMapLayer的检查器，在TileSet的地形设置（TerrainSets）添加一个地形集，然后再添加一个地形，注意设置Mode为Match Corners（不同的匹配模式适合不同的纹理集，此处使用匹配角举例），同一个地形集使用的是同一种匹配模式。
+![输入图片说明](/assets/images/tutorial/tilemap/terrainset.png){style=width:50%}
 2.在TileSet中，选择绘制属性/地形/选择创建好的地形，在素材中进行绘制
-![输入图片说明](/assets/images/tutorial/tilemap/tileset-draw-terrain.png)
-3.回到TileMap中，选择地形进行绘制
-![输入图片说明](/assets/images/tutorial/tilemap/use-tileset-terrain.png)
+::: info
+**绘制**面板可以同时设置多个瓦片的属性，**选择**面板只可以设置单个瓦片的属性。
+:::
+![输入图片说明](/assets/images/tutorial/tilemap/tileset-draw-terrain.png){style=width:50%}
+3.回到TileMap面板中，选择地形，然后在场景中使用画笔进行绘制，此时可以发现，图块已经可以链接到一起了。
+![输入图片说明](/assets/images/tutorial/tilemap/use-tileset-terrain.png){style=width:50%}
 
+#### 地形原理
+地形系统的核心工作原理可以理解为"智能拼图识别"。每个瓦片都携带了一张"身份卡"（地形位掩码），记录着它四周（上下左右及四个角）分别连接着什么类型的地形。
 
+当你在地图上绘制时，系统会实时检查当前瓦片周围的地形情况，就像拼图时会看相邻的拼图片边缘是否匹配一样。比如一个草地瓦片，它的上方是草地、右侧是水域，系统就会自动选择一个"上边是草地、右边是水域"的边界瓦片来放置，保证地形的自然过渡。
 
+**匹配模式**决定了系统如何判断"匹配"：
+- **Match Corners（匹配角）**：主要关注四个角的连接情况，适合45度角的纹理或需要精确角点过渡的场景
+![匹配角示例](/assets/images/tutorial/tilemap/match_corner_example.png){style=width:50%}
+
+- **Match Sides（匹配边）**：主要关注上下左右四条边的连接，适合简单的矩形瓦片
+![匹配角示例](/assets/images/tutorial/tilemap/match_sides_example.png){style=width:50%}
+
+- **Match Corners and Sides（匹配角和边）**：同时考虑角和边，提供最精确的匹配，适合复杂的地形纹理
+![匹配边和角示例](/assets/images/tutorial/tilemap/match_corner_and_sides_example.png){style=width:50%}
+![匹配边和角](/assets/images/tutorial/tilemap/match_corner_and_sides.png){style=width:50%}
+
+由上面的示例中可以发现，匹配边和角可以展示出最复杂的地形，其缺点就是对美术要求较高。具体使用哪种地形可以根据已有的图集情况选择。
+
+通过这种自动匹配机制，你只需要像涂色一样大面积绘制，系统就能智能地为你选择正确的边界瓦片，避免了手动拼接的繁琐工作。
+
+### 物理
+物理系统就像是给瓦片地图添加"无形的墙"和"禁区标识"。在游戏中，玩家不能穿墙而过，角色不能掉出地图边界，这些都需要通过物理碰撞来实现。TileMap的物理系统让你可以直接在瓦片上绘制碰撞形状，比如给墙壁、岩石、地图边界等瓦片设置碰撞体，角色在移动时就会自动被这些"无形的墙"阻挡。这样你就不需要手动创建大量的碰撞体节点，大大简化了场景搭建的工作。
+
+首先需要在tileset中添加一个物理层。并设置物理层和物理遮罩层。需要的话也可以设置物理材质。
+![物理层](/assets/images/tutorial/tilemap/tilemap_physics_layer.png)
+然后在TileSet面板中切换到绘制面板，选择刚才新建的物理层，在下方添加形状后点击瓦片开始绘制。物理形状可以有多个。尽量不要重叠。
+![绘制物理形状](/assets/images/tutorial/tilemap/tilemap_physics_draw.png)
+
+::: warning
+物理绘制必须像素对齐。否则可能会导致玩家在场景中移动时卡在某个位置无法移动。
+可以点开绘制旁边的**栅格吸附**。选择**半像素吸附**或**栅格吸附**(推荐)，即可获得更加准确的定位。
+:::
+
+以下是一个绘制地图边界的示例
+![物理示例](/assets/images/tutorial/tilemap/tilemap_physics.png){style=width:50%}
+以下是一个绘制不可穿过的地形的示例
+![物理示例2](/assets/images/tutorial/tilemap/tilemap_physics2.png){style=width:50%}
+
+在绘制时，还可以为形状设置不同的属性，例如是否单向碰撞等。
+
+### 导航
+2D导航可以参照教程[导航系统以及A星算法](/tutorial/navigation)，接下来介绍使用TilemapLayer构建导航区域。
+![导航层](/assets/images/tutorial/tilemap/tilemap_physics_draw.png)
+
+创建导航层之后，即可像是物理那样在绘制中绘制导航层形状。
+![导航示例](/assets/images/tutorial/tilemap/tilemap_navigation_example.png){style=width:50%}
+
+绘制导航层后，即可像使用NavigationRegion2D那样开始使用2D导航了。
+
+::: warning
+需要注意的是，由于Tilemap的导航层不可以烘焙，所以无法使用根据StaticBody来动态的烘焙导航区域。请根据需求自行选择方案。
+
+此处提供另一种方案，即为TilemapLayer添加分组，并使NavigationRegion2D根据分组烘焙导航区域。
+![烘焙导航区域](/assets/images/tutorial/tilemap/tilemap_bake_navation_region.png){style=width:50%}
+
+:::
+
+### 光照
+光照系统就像是给瓦片地图添加"光影魔法"。在游戏中，墙壁可以阻挡光线形成阴影，营造出真实的明暗效果。TileMap的光照遮挡系统让你可以直接在瓦片上绘制遮挡形状，就像使用LightOccluder2D节点一样，为游戏场景添加丰富的光影效果，增强视觉层次感。
+
+首先需要在TileSet的Rendering（渲染）设置中找到Occlusion Layers（遮挡层），新建一个遮挡层。
+
+然后在TileSet面板中切换到绘制面板，选择刚才新建的遮挡层，在下方添加遮挡形状后点击瓦片开始绘制。遮挡形状定义了哪些区域会阻挡光线，从而产生阴影效果。
+
+绘制完成后，场景中的Light2D节点就会根据这些遮挡形状自动计算阴影，就像使用LightOccluder2D节点一样。你可以为不同的瓦片设置不同的遮挡形状，比如墙壁需要完全遮挡光线，而栅栏可能只需要部分遮挡。
+
+::: info
+遮挡层的使用方式与LightOccluder2D完全相同，如果你熟悉LightOccluder2D的使用方法，那么在TileMap中使用遮挡层会非常容易上手。
+:::
+
+![光照示例](/assets/images/tutorial/tilemap/tileset-light.png){style=width:50%}
+### Y排序
+
+### 场景集合
 
 ## 在GDscritp访问TileMap
 **访问节点与基础信息**​
