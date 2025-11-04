@@ -34,28 +34,28 @@ export default navbar([
     icon: "comment",
     link: "/discussion/list",
   },
-  {
-    text: "游戏",
-    icon: "gamepad",
-    prefix: "/game/",
-    children: [
-      {
-        text: "在线游戏说明",
-        icon: "pen-to-square",
-        link: "index",
-      },
-      {
-        text: "游戏列表",
-        icon: "list",
-        link: "list",
-      },
-      {
-        text: "游戏上传",
-        icon: "upload",
-        link: "upload",
-      }
-    ]
-  },
+  // {
+  //   text: "游戏",
+  //   icon: "gamepad",
+  //   prefix: "/game/",
+  //   children: [
+  //     {
+  //       text: "在线游戏说明",
+  //       icon: "pen-to-square",
+  //       link: "index",
+  //     },
+  //     {
+  //       text: "游戏列表",
+  //       icon: "list",
+  //       link: "list",
+  //     },
+  //     {
+  //       text: "游戏上传",
+  //       icon: "upload",
+  //       link: "upload",
+  //     }
+  //   ]
+  // },
   "/farm/",
   {
     text: "项目跟踪",
