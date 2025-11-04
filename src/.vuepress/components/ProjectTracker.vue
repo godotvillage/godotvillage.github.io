@@ -1492,6 +1492,7 @@ export default {
 
 .detail-section {
   margin-bottom: 25px;
+  white-space: pre-line;
 }
 
 .detail-section h4 {
