@@ -181,98 +181,186 @@ tag:
 
 ::: info
 遮挡层的使用方式与LightOccluder2D完全相同，如果你熟悉LightOccluder2D的使用方法，那么在TileMap中使用遮挡层会非常容易上手。
+如果绘制完成后发现没有出现遮挡，需要开启光线节点的`shadow_enable`属性
 :::
 
 ![光照示例](/assets/images/tutorial/tilemap/tileset-light.png){style=width:50%}
+
 ### Y排序
+在使用瓦片地图时，往往会出现瓦片大小超出网格的情况，此时需要离相机更近的瓦片盖住离相机更远的瓦片，因为是2D环境下，所以通常会使用瓦片所在的Y坐标作为渲染前后的依据，即：Y坐标更大的瓦片会盖住Y坐标更小的瓦片。
 
-### 场景集合
+Godot中开启Y坐标排序的方法很简单，只需要在节点上勾选`Ordering`中的`Y Sort Enabled`即可。开启选项之后，会将这个节点的**所有子节点**按照Y坐标大小排序。
 
-## 在GDscritp访问TileMap
-**访问节点与基础信息**​
-|代码| 作用 |
-|--|--|
-|​`@onready var tilemap = $TileMap` | 获取场景中TileMap节点的引用。 |
-|`tile_set`|获取该TileMap所使用的TileSet资源|
-|`get_cell_source_id(coords)`| 获取指定单元格的瓦片源ID|
-|`get_cell_atlas_coords(layer, coords)`|获取指定单元格的瓦片在图集中的坐标。|
+我们继续使用案例来讲解，这是一个没有开启Y排序的地图，可以看到，虽然所有图块都在同一层，但是出现了莫名奇妙的重叠现象。
 
-**调整和修改**
-|代码| 作用 |
-|--|--|
-|`local_to_map(pos)`|转换为瓦片位置|
-|`set_cell(coords, source_id, atlas_coords, alternative_tile)`|在指定位置设置瓦片|
-|`serase_cell(coords)`|清除指定位置的瓦片|
+![关闭Y排序示例](/assets/images/tutorial/tilemap/tileset_with_no_ysort.png){style=width:50%}
 
-## 案例1：防止相机移出地图范围
+而打开Y排序后，无需任何其他操作，Y坐标更大的下方的瓦片就会自然的盖住上方的瓦片。
+![开启Y排序示例](/assets/images/tutorial/tilemap/tileset_with_ysort.png){style=width:50%}
+
+### 场景合集
+瓦片图集通常可以满足大部分的需求，但有时我们会遇到更复杂的场景。
+类似希望能将一个Area2D像瓦片那样可以在网格上放置。此时我们就需要场景合集功能。
+
+首先在TileSet面板中点击下方的加号
+然后选择场景合集，然后上方即可出现一个场景合集，选中它之后，即可看到一个空的场景合集。
+
+![场景合集](/assets/images/tutorial/tilemap/tilemap_scene_collection.png){style=width:50%}
+
+然后将需要作为场景合集的场景拖入到场景合集中，然后切换到TileMap面板，即可像正常绘制的瓦片那样绘制场景。
+
+![使用场景合集](/assets/images/tutorial/tilemap/tilemap_add_scene.png){style=width:50%}
+
+
+## 具体案例
+### 案例1：防止相机移出地图范围
 
 ​基于地图信息的游戏逻辑：利用获取到的地图信息来决定游戏行为。一个典型的应用是**设置相机边界**，防止相机移出地图范围
 
 1.添加TileMapLayer节点和玩家相机节点
-```gdscript
-	@onready var camera_2d: Camera2D = $player/Camera2D
-	@export var tile_map: TileMapLayer
-```
 2.设置相机边界逻辑
+
+完整代码如下：
+
 ```gdscript
+# 1. 添加TileMapLayer节点和玩家相机节点
+@onready var camera_2d: Camera2D = $player/Camera2D
+@export var tile_map: TileMapLayer
+
+# 2. 设置相机边界逻辑
 func _ready() -> void:
-	#获取TileMap节点中所有已被放置图块所占据的矩形区域
-	#grow(-1)为缩进一格 为避免在相机视口内露出地图边缘
+	# 获取TileMap节点中所有已被放置图块所占据的矩形区域
+	# grow(-1)为缩进一格 为避免在相机视口内露出地图边缘
 	var used := tile_map.get_used_rect().grow(-1)
-	#获取 TileMap 一个图块的尺寸
+
+	# 获取 TileMap 一个图块的尺寸
 	var tile_size := tile_map.tile_set.tile_size
 
-	#根据TileMap地块尺寸 限制相机的移动
+	# 根据TileMap地块尺寸 限制相机的移动
 	# 将网格坐标表示的边界转换为像素坐标表示的边界
-	#2d相机的最高/低点
+	# 2d相机的最高/低点
 	camera_2d.limit_top = used.position.y * tile_size.y
-	camera_2d.limit_bottom =used.end.y * tile_size.y
-	#2d相机的最左/右点
+	camera_2d.limit_bottom = used.end.y * tile_size.y
+
+	# 2d相机的最左/右点
 	camera_2d.limit_left = used.position.x * tile_size.x
 	camera_2d.limit_right = used.end.x * tile_size.x
 
 	# 重置相机的平滑过渡，防止玩家初始位置在限制区域外时产生镜头抖动
 	camera_2d.reset_smoothing()
 ```
-## 案例2：鼠标点击添加图块
+### 案例2：鼠标点击添加图块
 通过获取TileMap的瓦片位置坐标来修改地图效果，制作出游戏中实时添加地图图块的效果
 
-1.还是添加需要修改的TileMapLayer节点
-```gdscript
-	@onready var tile_map_layer: TileMapLayer = $TileMapLayer
-```
+1.添加需要修改的TileMapLayer节点引用
 2.在func _input()中设置好输入映射（鼠标点击动作），获取鼠标点击位置，再转换为瓦片位置
+3.定位要添加的瓦片素材坐标位置（图片ID+图集坐标）
+4.使用set_cell函数将瓦片在运行时添加到TileMap中
+5.拓展：添加鼠标右击清除图块的效果
+
+完整代码如下：
+
 ```gdscript
-func _input(event):
-	#当鼠标左键点击，执行以下操作
-	if Input.is_action_just_pressed("click"):
-		#获取鼠标点击的全局位置
-		var mouse_pos : Vector2 = get_global_mouse_position()
-		#转换鼠标全局为瓦片位置
-		var tile_mosuse_pos : Vector2i = tile_map_layer.local_to_map(mouse_pos)
-```
-3.定位要添加的瓦片素材坐标位置 图片ID+图集坐标
-```gdscript
-#TileSet中图片素材的id
+# 1. 添加TileMapLayer节点引用
+@onready var tile_map_layer: TileMapLayer = $TileMapLayer
+
+# 2. TileSet中图片素材的id
 var source_id : int = 0 
-#TileSet中图片素材的坐标位置
-var atlas_coord : Vector2i = Vector2i(13,0)
-```
-4.使用set_cell（鼠标点击位置，素材图片的id,素材瓦片的位置坐标）函数，将瓦片在运行时添加到TileMap中
-```gdscript
-tile_map_layer.set_cell(tile_mosuse_pos , source_id , atlas_coord)
-```
-5.拓展：再添加一个鼠标右击清除的图块的效果
-```gdscript
-tile_map_layer.set_cell(tile_mosuse_pos , -1 , atlas_coord)
+# TileSet中图片素材的坐标位置
+var atlas_coord : Vector2i = Vector2i(0,0)
+
+func _input(event):
+	# 当鼠标左键点击，执行以下操作
+	if Input.is_action_just_pressed("click"):
+		# 获取鼠标点击的全局位置
+		var mouse_pos : Vector2 = get_global_mouse_position()
+		# 转换鼠标全局为瓦片位置
+		var tile_mosuse_pos : Vector2i = tile_map_layer.local_to_map(mouse_pos)
+		# 使用set_cell将瓦片添加到TileMap中
+		tile_map_layer.set_cell(tile_mosuse_pos , source_id , atlas_coord)
+	
+	# 拓展：鼠标右击清除图块
+	if Input.is_action_just_pressed("right_click"):
+		var mouse_pos : Vector2 = get_global_mouse_position()
+		var tile_mosuse_pos : Vector2i = tile_map_layer.local_to_map(mouse_pos)
+		# 将source_id设置为-1即可清除瓦片
+		tile_map_layer.set_cell(tile_mosuse_pos , -1 , atlas_coord)
 ```
 注意
 1.为确保类型安全可以在var 声明这个变量的类型
 2.tile_mosuse_posw瓦片位置变量类型为Vector2i区别于Vector2，所以需要转化 
 
 
+### 案例3：动态切换瓦片数据实现隐藏地图效果
+接下来我们创建一个游戏，然后创建三层瓦片地图，一层是背景，一层是无法穿过的墙，一层是当达到条件是就会消失的墙。
+并添加一个玩家，这里代码比较简单且无关，不再赘述。场景节点如下。Area2D盖住的部分就是会消失的墙。
 
+![使用场景合集](/assets/images/tutorial/tilemap/example3-1.png){style=width:50%}
 
+目前由于物理形状的存在，所以所有的墙都不能穿过。接下来，我们要为MaskLayer添加一个脚本，当Area2D检测到玩家时，就将瓦片的物理关闭，并且透明度变成0.3。展示出内部的山洞并且允许玩家进入。
+
+```gdscript
+## mask_layer.gd
+
+extends TileMapLayer
+
+# 记录玩家是否进入
+var player_entered: bool = false
+
+func _on_area_2d_body_entered(_body: Node2D) -> void:
+	player_entered = true
+	notify_runtime_tile_data_update()
+
+func _on_area_2d_body_exited(_body: Node2D) -> void:
+	player_entered = false
+	notify_runtime_tile_data_update()
+
+# 是否更新瓦片信息
+func _use_tile_data_runtime_update(_coords: Vector2i) -> bool:
+	# 因为玩家离开后会慢慢恢复不透明，所以所有的瓦片都需要更新
+	return true
+
+# 隐藏层的透明度
+var layer_alpha = 1.0
+
+# 更新瓦片数据
+func _tile_data_runtime_update(_coords: Vector2i, tile_data: TileData) -> void:
+	if player_entered:
+		tile_data.set_collision_polygons_count(0, 0)
+
+# 根据玩家进入状态修改透明度
+func _process(delta: float) -> void:
+	if player_entered:
+		if layer_alpha > 0.3:
+			layer_alpha = move_toward(layer_alpha, 0.3, delta)
+			set_modulate(Color(1, 1, 1, layer_alpha))
+	else:
+		if layer_alpha < 1.0:
+			layer_alpha = move_toward(layer_alpha, 1.0, delta)
+			set_modulate(Color(1, 1, 1, layer_alpha))
+
+```
+
+<video src="/assets/images/tutorial/tilemap/example3-2.mp4" controls></video>
+
+**代码实现要点：**
+
+这个案例的核心思路是让地图"活起来"——当玩家靠近时，墙壁会变得透明并允许穿过，就像游戏中的"透视墙"或"隐藏通道"效果。实现的关键步骤如下：
+
+1. **玩家检测**：就像在门口安装感应器一样，当玩家进入`Area2D`区域时，系统会收到信号，然后通知所有瓦片"该更新了！"。这里使用`notify_runtime_tile_data_update()`来触发更新。
+
+2. **移除碰撞**：当玩家进入区域后，原本阻挡玩家的墙壁需要"消失"。通过重写`_tile_data_runtime_update()`函数，把瓦片的碰撞形状清空（设置为0），这样玩家就可以自由穿过了。就像原本坚硬的墙壁突然变成了空气。
+
+3. **透明度动画**：为了让效果更自然，使用`move_toward()`让透明度平滑过渡。玩家靠近时，墙壁慢慢变透明（降到0.3），让玩家能隐约看到后面的内容；玩家离开时，墙壁又慢慢恢复不透明，营造出神秘感。
+
+4. **同步更新**：通过让`_use_tile_data_runtime_update()`返回`true`，确保整个图层的所有瓦片都能实时响应状态变化，而不是只有个别瓦片在更新。
+
+这种动态修改瓦片数据的技术非常实用，你可以用它制作探索类的隐藏区域、根据剧情触发的地形变化，或者像传送门那样可穿透的特殊墙壁效果。
+
+示例项目代码下载 [项目文件](/zips/tilemap-example.zip)
+ 
+### 案例4：六边形寻路
+未完待续
 
 ## 参考视频
 [如何使用 TileMap｜Godot 4 教程《勇者传说》#2_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1Yz4y1b7hz)
