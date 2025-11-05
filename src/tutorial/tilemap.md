@@ -341,7 +341,7 @@ func _process(delta: float) -> void:
 
 ```
 
-<video src="/assets/images/tutorial/tilemap/example3-2.mp4" controls></video>
+<video src="/assets/images/tutorial/tilemap/example3-2.mp4" controls style="width:100%"></video>
 
 **代码实现要点：**
 
