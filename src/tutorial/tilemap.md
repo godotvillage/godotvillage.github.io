@@ -360,7 +360,168 @@ func _process(delta: float) -> void:
 示例项目代码下载 [项目文件](/zips/tilemap-example.zip)
  
 ### 案例4：六边形寻路
-未完待续
+
+在策略类游戏中，我们经常需要实现类似"回合制移动"的效果——玩家每回合只能移动固定步数，并且需要在地图上高亮显示所有可以到达的位置。这个案例将展示如何在六边形网格地图上实现这个功能。
+
+想象一下你在玩一个战棋游戏，角色每回合有3步行动力。当你点击角色时，游戏会自动计算出所有在3步内可以到达的位置，并用不同颜色标记出来。这背后的原理就是**广度优先搜索（BFS）**——就像水波扩散一样，从起点开始一层一层向外探索，每一层代表一步移动。
+
+**实现思路：**
+
+1. **准备六边形网格地图**：首先需要创建一个使用六边形瓦片的TileMapLayer。六边形网格与方形网格不同，每个六边形有6个相邻位置，而且需要特殊的坐标转换算法来正确处理相邻关系。
+![准备六边形网格地图](/assets/images/tutorial/tilemap/example4-1.png){style=width:50%}
+
+2. **获取起点和步数限制**：确定玩家当前所在的六边形坐标，以及这一回合可以移动的最大步数（比如3步）。
+
+3. **使用广度优先搜索探索**：就像雷达扫描一样，从起点开始，先标记起点为"可以到达"，然后探索起点周围的所有邻居位置。每个探索到的位置会被标记为"可以到达"，并且记录它是从哪个位置到达的（就像在地图上做标记"我从这里来"）。接着继续探索这些邻居位置的邻居，一层一层向外扩散，直到达到步数限制。
+
+4. **记录路径信息**：在搜索过程中，我们需要用一个字典（Dictionary）来记录每个可到达位置的前一个位置。这样当玩家选择移动目标时，我们就能反向追踪路径，知道要经过哪些位置才能到达目的地。
+![使用广度优先搜索探索并记录路径信息](/assets/images/tutorial/tilemap/example4-2.png){style=width:50%}
+
+5. **高亮显示可到达区域**：搜索完成后，所有在步数限制内可以到达的位置都会被标记出来。你可以通过修改这些位置的瓦片颜色、添加高亮效果，或者绘制特殊标记来让玩家清楚地看到移动范围。
+
+6. **处理障碍物**：在搜索过程中，如果遇到障碍物（比如墙壁、其他角色占据的位置），就要跳过这个位置，不继续从这个位置向外探索。就像实际走路遇到墙，你不可能穿墙而过。
+
+7. **鼠标点击检测与路径获取**：当玩家点击地图上的某个位置时，需要将鼠标的屏幕坐标转换为六边形网格坐标。使用`local_to_map()`函数可以将鼠标点击的位置转换为对应的瓦片坐标。然后检查这个位置是否在之前搜索到的"可到达位置"列表中。如果这个位置是可以到达的，就可以开始获取移动路径了。
+
+8. **反向追踪路径**：由于我们在搜索时记录了每个位置的"前一个位置"，现在可以从目标位置开始，沿着"前一个位置"一直往回追溯，直到回到起点。这个过程就像沿着标记一路走回起点，最终得到一条从起点到目标的完整路径。注意，由于是从目标往回追溯，得到的路径是反序的，需要反转一下才能得到从起点到目标的正确顺序。
+![鼠标点击检测与路径获取和反向计算路径](/assets/images/tutorial/tilemap/example4-3.png){style=width:50%}
+
+9. **使用Tween平滑移动**：得到路径后，使用Godot的Tween节点或Tween类来实现平滑的移动动画。就像让角色沿着路径"滑行"过去，而不是瞬间传送。对于路径上的每个位置，使用`map_to_local()`将网格坐标转换为世界坐标，然后让Tween将玩家的位置从当前位置平滑过渡到下一个位置。每到达一个位置后，继续移动到下一个位置，直到到达目标。这样玩家就能看到角色一步一步沿着规划好的路径移动，而不是直接跳过去。
+![鼠标点击检测与路径获取和反向计算路径](/assets/images/tutorial/tilemap/example4-4.png){style=width:50%}
+
+::: details 代码
+```gdscript
+extends Node2D
+
+# 1、准备六边形网格地图和玩家
+@onready var tile_map_layer: TileMapLayer = $TileMapLayer
+@onready var player: Node2D = $Player
+@onready var marked_layer: TileMapLayer = $MarkedLayer
+
+# 2、获取起点和步数限制
+var init_position: Vector2i = Vector2i(0, 0)
+var step_limit: int = 3
+
+
+var path_info: Dictionary = {} # 记录路径信息
+func _ready() -> void:
+	# 将玩家起点位置
+	player.global_position = tile_map_layer.map_to_local(init_position)
+	search_and_show_path(init_position)
+
+# 搜索并展示
+func search_and_show_path(start_position: Vector2i):
+	search_path(start_position)
+	print("当前位置可以移动到的坐标: ", path_info)
+	highlight_cells()
+
+# 3、使用广度优先搜索探索
+# 4、记录路径信息
+func search_path(start_position: Vector2i) -> void:
+	# 清空路径信息
+	path_info = {}
+	# 记录路径信息
+	path_info[start_position] = {
+		"front_point": null,
+		"step": 0
+	}
+	# 记录已访问位置
+	var visited: Dictionary = {}
+	visited[start_position] = true
+
+	# 记录待探索位置
+	var queue: Array[Vector2i] = [start_position]
+	while not queue.is_empty():
+		var current_position: Vector2i = queue.pop_front()
+		if path_info[current_position]["step"] >= step_limit:
+			continue
+		var surrounding_cells: Array[Vector2i] = tile_map_layer.get_surrounding_cells(current_position)
+		for cell in surrounding_cells:
+			# 如果cell没有tile_data，则跳过
+			if tile_map_layer.get_cell_tile_data(cell) == null:
+				continue
+			# 如果cell已经访问过，则跳过
+			if not visited.has(cell):
+				visited[cell] = true
+				# 记录待探索位置
+				queue.append(cell)
+				# 记录路径信息
+				path_info[cell] = {
+					"front_point": current_position,
+					"step": path_info[current_position]["step"] + 1,
+				}
+
+var marked_cell_source_id = 0
+var marked_cell_coord = Vector2i(20, 0)
+
+# 5、高亮可以移动到的坐标
+func highlight_cells():
+	# 清空标记层
+	marked_layer.clear()
+	for cell_coord in path_info.keys():
+		# 设置标记层
+		marked_layer.set_cell(cell_coord, marked_cell_source_id, marked_cell_coord)
+
+func _input(event: InputEvent) -> void:
+	# 7、当玩家鼠标点击时获取坐标并处理
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		var mouse_pos = get_global_mouse_position()
+		var map_coord = tile_map_layer.local_to_map(tile_map_layer.to_local(mouse_pos))
+		print(map_coord)
+		# 判断是否可以移动到对应位置
+		if tile_map_layer.get_cell_tile_data(map_coord) != null and path_info.has(map_coord):
+			# 8、反向获得路径
+			var path: Array[Vector2i] = []
+			var current: Vector2i = map_coord
+			while path_info.has(current):
+				# 将路径点添加到路径数组前方
+				path.push_front(current)
+				var front_point = path_info[current]["front_point"]
+				if front_point == null:
+					break
+				current = front_point
+
+			print("移动路径: ", path)
+			# 移动玩家到目标位置
+			await move_player_along_path(path)
+			# 更新起点并重新搜索路径
+			search_and_show_path(map_coord)
+
+# 9、让玩家沿着路径移动
+func move_player_along_path(path: Array[Vector2i]) -> void:
+	if path.is_empty():
+		return
+	# 删除当前位置
+	path.pop_front()
+	# 更新玩家位置到目标点
+	while not path.is_empty():
+		var next_position: Vector2i = path.pop_front()
+		var tween = get_tree().create_tween()
+		tween.tween_property(player, "global_position", tile_map_layer.map_to_local(next_position), 1)
+		await tween.finished
+
+```
+:::
+
+<video src="/assets/images/tutorial/tilemap/example4.mp4" controls style="width:100%"></video>
+
+**关键要点：**
+
+- **队列结构**：广度优先搜索需要一个队列（Queue）来存储待探索的位置，按照"先探索的先处理"的原则，保证每次都是先处理距离起点更近的位置。
+
+- **已访问标记**：为了避免重复探索同一个位置（防止绕圈子），需要记录哪些位置已经被访问过。
+
+- **步数计数**：每个位置都要记录它距离起点多少步，只有当步数小于等于限制步数时，才继续从这个位置向外探索。
+
+- **路径回溯**：通过记录"前一个位置"，当玩家点击目标位置时，可以从目标位置开始，沿着"前一个位置"一路回溯到起点，就能得到完整的移动路径。
+
+- **坐标转换**：在鼠标点击和移动过程中，需要频繁进行坐标转换。`local_to_map()`将世界坐标转换为网格坐标，用于判断点击的是哪个瓦片；`map_to_local()`将网格坐标转换为世界坐标，用于设置角色的实际位置。
+
+- **Tween动画链**：移动路径可能包含多个位置，需要让Tween依次执行。可以在每个Tween动画完成后，通过回调函数或者检查Tween的状态，触发下一个位置的移动，形成一条连贯的移动动画链。
+
+这种寻路方式非常适合回合制策略游戏，不仅能显示移动范围，还能在玩家选择目标后自动规划最优路径。通过Tween实现的平滑移动让游戏体验更加流畅自然。你可以在战棋游戏、RPG游戏的地图探索，或者任何需要限制移动范围的游戏中使用这个技术。
+
+示例项目代码下载 [项目文件](/zips/tilemap-hexagon-example.zip)
 
 ## 参考视频
 [如何使用 TileMap｜Godot 4 教程《勇者传说》#2_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1Yz4y1b7hz)
