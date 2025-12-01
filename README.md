@@ -52,10 +52,12 @@ src/
 ├── demo/              # 演示文档
 ├── discussion/        # 讨论区
 ├── discussionList/    # 讨论列表
-└── game/              # 游戏相关
-    ├── list.md        # 游戏列表
-    ├── play.md        # 游戏试玩
-    ├── upload.md      # 游戏上传
+├── game/              # 游戏相关
+│   ├── list.md        # 游戏列表
+│   ├── play.md        # 游戏试玩
+│   ├── upload.md      # 游戏上传
+│   └── README.md
+└── gamejam/           # GameJam 活动页
     └── README.md
 ```
 

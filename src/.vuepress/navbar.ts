@@ -62,6 +62,11 @@ export default navbar([
     icon: "list",
     link: "/projects/",
   },
+  {
+    text: "GameJam",
+    icon: "gamepad",
+    link: "/gamejam/",
+  },
   "/tools/index"
   // {
   //   text: "博文",

@@ -23,6 +23,9 @@ export default hopeTheme({
   // 侧边栏
   sidebar,
 
+  // 图标资源配置，使用国内镜像加速
+  iconAssets: "https://npm.elemecdn.com/iconify-icon@2",
+
   // 页脚
   footer: "山高万仞，只登一步。日拱一卒，功不唐捐",
   displayFooter: true,
