@@ -125,7 +125,7 @@ Alpha 拥有强大的记忆能力，可以记住你的重要信息。
 
 ## 项目信息
 
-Alpha 是一个完全开源的项目，欢迎所有开发者参与贡献。项目地址：https://github.com/925236118/GodotAiAgent
+Alpha 是一个完全开源的项目，欢迎所有开发者参与贡献。[项目地址](https://github.com/925236118/GodotAiAgent)
 
 项目采用 MIT 开源协议，你可以自由使用、修改和分发。
 
