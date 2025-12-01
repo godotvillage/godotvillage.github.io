@@ -67,7 +67,12 @@ export default navbar([
     icon: "gamepad",
     link: "/gamejam/",
   },
-  "/tools/index"
+  "/tools/index",
+  {
+    text: "Alpha Agent",
+    icon: "robot",
+    link: "/alpha/",
+  }
   // {
   //   text: "博文",
   //   icon: "pen-to-square",

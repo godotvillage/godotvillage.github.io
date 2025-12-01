@@ -49,6 +49,7 @@ yarn docs:build
 src/
 ├── README.md          # 首页
 ├── intro.md           # 介绍页面
+├── alpha/             # Alpha Agent
 ├── demo/              # 演示文档
 ├── discussion/        # 讨论区
 ├── discussionList/    # 讨论列表
