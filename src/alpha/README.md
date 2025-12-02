@@ -8,6 +8,8 @@ author: 陌上竹
 date: 2025-12-01
 ---
 
+![](/assets/images/alpha/alpha-icon.png)
+
 # 简介
 
 Alpha 是一个专为 Godot 编辑器打造的 AI Agent，让游戏开发者在编辑器内直接享受 AI 的强大能力。无需切换窗口，无需复制粘贴，你的创意想法可以在这里直接转化为游戏代码。Alpha 基于 DeepSeek 这一快速、准确、高效且高性价比的 AI 模型，为你提供最智能的开发体验。
