@@ -141,4 +141,23 @@ Alpha 是一个完全开源的项目，欢迎所有开发者参与贡献。[项�
 
 ## 下载
 
-敬请期待
+### 资产库下载
+- 在Godot中选择资产库
+- 然后再在输入框中输入`AlphaAgent`，等待搜索结果
+- 搜索出结果后，点击插件，然后点击下载
+- 下载完成后，点击安装
+- 安装后，即可看到`资产“AlphaAgent”安装成功！`字样
+![](/assets/images/alpha/download.png)
+![](/assets/images/alpha/install.png)
+### 手动下载
+如果因网络等原因无法访问Godot资产库，也可以手动下载。
+- 访问 [AlphaAgent仓库发布页面](https://github.com/925236118/AlphaAgent/releases)
+- 选择最新版本下载zip压缩包
+- 解压后将addons文件夹复制到项目目录
+- 完成手动下载
+
+## 启用
+- 在项目管理中选择插件
+- 启用AlphaAgent
+- 然后即可在编辑器右侧看到插件
+![](/assets/images/alpha/enable.png)
