@@ -82,6 +82,11 @@ export default navbar([
         text: "开发计划",
         icon: "list",
         link: "roadmap",
+      },
+      {
+        text: "更新内容",
+        icon: "list",
+        link: "CHANGELOG",
       }
     ]
   }
