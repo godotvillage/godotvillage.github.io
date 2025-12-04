@@ -16,6 +16,29 @@ Alpha 是一个专为 Godot 编辑器打造的 AI Agent，让游戏开发者在�
 
 ![](/assets/images/alpha/overview.png)
 
+## 下载并使用
+
+### 资产库下载
+- 在Godot中选择资产库
+- 然后再在输入框中输入`AlphaAgent`，等待搜索结果
+- 搜索出结果后，点击插件，然后点击下载
+- 下载完成后，点击安装
+- 安装后，即可看到`资产“AlphaAgent”安装成功！`字样
+![](/assets/images/alpha/download.png)
+![](/assets/images/alpha/install.png)
+### 手动下载
+如果因网络等原因无法访问Godot资产库，也可以手动下载。
+- 访问 [AlphaAgent仓库发布页面](https://github.com/925236118/AlphaAgent/releases)
+- 选择最新版本下载zip压缩包
+- 解压后将addons文件夹复制到项目目录
+- 完成手动下载
+
+### 启用
+- 在项目管理中选择插件
+- 启用AlphaAgent
+- 然后即可在编辑器右侧看到插件
+![](/assets/images/alpha/enable.png)
+
 ## 设计哲学
 
 ### α - 始于初心，无限可能
@@ -153,26 +176,3 @@ Alpha 是一个完全开源的项目，欢迎所有开发者参与贡献。[项�
 **社区**：Godot新手村（943630255）
 
 如果你有任何想法、建议或发现了问题，欢迎在 GitHub 上提交 Issue 或 Pull Request，让我们一起让 Alpha 变得更好！
-
-## 下载
-
-### 资产库下载
-- 在Godot中选择资产库
-- 然后再在输入框中输入`AlphaAgent`，等待搜索结果
-- 搜索出结果后，点击插件，然后点击下载
-- 下载完成后，点击安装
-- 安装后，即可看到`资产“AlphaAgent”安装成功！`字样
-![](/assets/images/alpha/download.png)
-![](/assets/images/alpha/install.png)
-### 手动下载
-如果因网络等原因无法访问Godot资产库，也可以手动下载。
-- 访问 [AlphaAgent仓库发布页面](https://github.com/925236118/AlphaAgent/releases)
-- 选择最新版本下载zip压缩包
-- 解压后将addons文件夹复制到项目目录
-- 完成手动下载
-
-## 启用
-- 在项目管理中选择插件
-- 启用AlphaAgent
-- 然后即可在编辑器右侧看到插件
-![](/assets/images/alpha/enable.png)
