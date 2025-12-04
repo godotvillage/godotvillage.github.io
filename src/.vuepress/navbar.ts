@@ -71,7 +71,19 @@ export default navbar([
   {
     text: "Alpha Agent",
     icon: "robot",
-    link: "/alpha/",
+    prefix: "/alpha/",
+    children: [
+      {
+        text: "介绍",
+        icon: "info",
+        link: "",
+      },
+      {
+        text: "开发计划",
+        icon: "list",
+        link: "roadmap",
+      }
+    ]
   }
   // {
   //   text: "博文",
