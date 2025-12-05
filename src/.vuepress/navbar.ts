@@ -87,6 +87,11 @@ export default navbar([
         text: "更新内容",
         icon: "list",
         link: "CHANGELOG",
+      },
+      {
+        text: "提交反馈",
+        icon: "comment",
+        link: "https://ai.feishu.cn/share/base/form/shrcncDRFhpbbhOqR9AMBKMOuBe",
       }
     ]
   }
