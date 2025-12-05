@@ -48,3 +48,5 @@ All notable changes to this project will be documented in this file.
   - 新增主面板UI以及界面。
   - 新增帮助页面。
   - 主面板添加了跳转至官方文档/页面的链接。
+
+<AlphaFeedbackLink />
