@@ -46,7 +46,7 @@ date: 2025-10-11
 - [x] [组件开发](/tutorial/component)
 - [ ] 资源系统开发
 - [ ] 动画播放器和动画树
-- [ ] 文件读写与存档系统 <Badge text="编写中" type="tip" vertical="middle" />
+- [x] [文件读写与存档系统](/tutorial/file) <Badge text="编写中" type="tip" vertical="middle" />
 - [ ] 输入事件系统详解
 - [x] [信号系统](/tutorial/signal)
 - [x] [Tilemap详解](/tutorial/tilemap)
