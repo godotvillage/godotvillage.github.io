@@ -94,7 +94,12 @@ export default navbar([
         link: "https://ai.feishu.cn/share/base/form/shrcncDRFhpbbhOqR9AMBKMOuBe",
       }
     ]
-  }
+  },
+  {
+    text: "友情链接",
+    icon: "link",
+    link: "/friendlink/",
+  },
   // {
   //   text: "博文",
   //   icon: "pen-to-square",
