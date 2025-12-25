@@ -20,17 +20,11 @@
         </div>
       </div>
       <div class="header-right">
-        <GitHubLogin 
-          @login="handleUserLogin"
-          @logout="handleUserLogout"
-          @error="handleAuthError"
-        />
-        <br />
         <button 
           class="btn-primary" 
           @click="openCreateModal"
           :disabled="!isLoggedIn"
-          :title="isLoggedIn ? '创建新项目' : '请先登录GitHub'"
+          :title="isLoggedIn ? '创建新项目' : '请先登录'"
         >
           ➕ 创建新项目
         </button>
@@ -545,7 +539,7 @@
 </template>
 
 <script>
-import { githubAuth } from '../utils/githubAuth.js'
+import { userAuth } from '../utils/userAuth'
 import { projectApi } from '../utils/request.ts'
 
 export default {
@@ -637,7 +631,7 @@ export default {
     },
     
     isLoggedIn() {
-      return githubAuth.isLoggedIn();
+      return userAuth.isLoggedIn();
     },
     
     filteredProjects() {
@@ -741,7 +735,7 @@ export default {
         const project = {
           title: this.projectForm.title.trim(),
           author: this.projectForm.author.trim(),
-          githubUser: githubAuth.getCurrentUser().login,
+          githubUser: (userAuth.getCurrentUser() && userAuth.getCurrentUser().loginName) || '',
           contact: this.projectForm.contact.trim(),
           type: this.projectForm.type,
           status: this.projectForm.status,
@@ -868,6 +862,11 @@ export default {
     openCreateModal() {
       this.projectModalMode = 'create';
       this.resetProjectForm();
+      // 预填作者昵称（可手动修改）
+      const u = userAuth.getCurrentUser();
+      if (u) {
+        this.projectForm.author = u.nickName || u.loginName || '';
+      }
       this.showProjectModal = true;
     },
 
@@ -1011,7 +1010,7 @@ export default {
       return text.substring(0, maxLength) + '...';
     },
     
-    // GitHub身份验证相关方法
+    // 登录态相关方法
     canEditProject(project) {
       // 首先检查用户是否已登录
       if (!this.isLoggedIn) {
@@ -1024,7 +1023,7 @@ export default {
       }
       
       // 检查用户是否是项目作者
-      return githubAuth.isProjectAuthor(project);
+      return userAuth.isProjectAuthor(project);
     },
     
     handleUserLogin(user) {

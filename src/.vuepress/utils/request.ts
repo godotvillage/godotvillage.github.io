@@ -1,7 +1,33 @@
-export const baseUrl = 'https://village.moshangzhu.com.cn';
-// export const baseUrl = 'http://localhost:31024'; // 本地调试使用
+// export const baseUrl = 'https://village.moshangzhu.com.cn';
+export const baseUrl = 'http://localhost:5000'; // 本地调试使用
 export const imageBaseUrl = 'https://games.moshangzhu.com.cn/';
 export const gameBaseUrl = 'https://games.moshangzhu.com.cn/games';
+
+import { getAuthorizationHeaderValue } from "./authStorage";
+
+function withAuthHeaders(headers: Record<string, string> = {}) {
+  const auth = getAuthorizationHeaderValue();
+  return auth ? { ...headers, Authorization: auth } : headers;
+}
+
+// 认证相关 API
+export const authApi = {
+  async login(username: string, password: string) {
+    try {
+      const response = await fetch(`${baseUrl}/api/Auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+      const result = await response.json();
+      return result;
+    } catch (error: any) {
+      throw new Error(`登录失败: ${error?.message || String(error)}`);
+    }
+  },
+};
 
 // 游戏相关 API 函数
 export const gameApi = {
@@ -92,7 +118,7 @@ export const farmApi = {
       const response = await fetch(`${baseUrl}/farms`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          ...withAuthHeaders({ 'Content-Type': 'application/json' })
         },
         body: JSON.stringify(projectData)
       });
@@ -114,7 +140,7 @@ export const farmApi = {
       const response = await fetch(`${baseUrl}/farms/${farmId}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
+          ...withAuthHeaders({ 'Content-Type': 'application/json' })
         },
         body: JSON.stringify(updateData)
       });
@@ -134,7 +160,8 @@ export const farmApi = {
   async deleteFarmProject(farmId) {
     try {
       const response = await fetch(`${baseUrl}/farms/${farmId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: withAuthHeaders()
       });
       const result = await response.json();
       
@@ -205,7 +232,7 @@ export const projectApi = {
       const response = await fetch(`${baseUrl}/projects`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          ...withAuthHeaders({ 'Content-Type': 'application/json' })
         },
         body: JSON.stringify(projectData)
       });
@@ -227,7 +254,7 @@ export const projectApi = {
       const response = await fetch(`${baseUrl}/projects/${projectId}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
+          ...withAuthHeaders({ 'Content-Type': 'application/json' })
         },
         body: JSON.stringify(updateData)
       });
@@ -247,7 +274,8 @@ export const projectApi = {
   async deleteProject(projectId) {
     try {
       const response = await fetch(`${baseUrl}/projects/${projectId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: withAuthHeaders()
       });
       const result = await response.json();
       
@@ -267,7 +295,7 @@ export const projectApi = {
       const response = await fetch(`${baseUrl}/projects/${projectId}/updates`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          ...withAuthHeaders({ 'Content-Type': 'application/json' })
         },
         body: JSON.stringify(updateData)
       });
