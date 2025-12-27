@@ -2,11 +2,13 @@
 title: 导航系统以及A星算法
 sticky: false
 star: false
-author: 玄溟
+author: 
+  - 玄溟
+  - 阿鱼
 category:
-	- 教程
+  - 教程
 tag:
-	- 功能教程
+  - 功能教程
 date: 2025-10-13
 ---
 
@@ -158,3 +160,79 @@ AStarGrid2D 是 AStar2D 的变种，针对疏松 2D 网格进行了优化。因�
 
 ### 本教程所用工程文件
 [Github仓库地址](https://github.com/JessieLR/Godot_Navigation/tree/main)
+
+
+## 在Godot使用避障提升性能
+
+### 说在前面
+
+本文使用的方法中用到的节点在4.5版本中被标记为实验性，如果您是在更新的版本中看到了该方法，则下文节点有被未来版本删除的可能性，不过godot也许会有相应的替代节点或是别的实现方式。（没有就当笔者没说）
+
+### 为什么要提升性能
+
+因为遇到了性能问题，或是预见了性能问题一定会成为阻拦开发的障碍。如果没有遇到性能问题也没预见自己之后的开发会遭遇何种性能瓶颈的话，笔者推荐暂时不用急着考虑如何将优化做到完美。
+
+### 为什么使用避障
+
+以笔者为例，笔者在开发类幸存者原型的时候因为设计了多种敌人，出于快速实现原型的需求，笔者让这些敌人简单的朝着玩家所在的点加速移动直到最高速度，并且给每个不同强度的敌人使用了不同的加速度与最大速度，同时希望这些（同种）敌人在追逐玩家时不要因为玩家带着敌人绕圈而汇聚成“一坨的敌人”，这样无论是何种攻击方式都基本将攻击到近乎所有的尾随敌人。所以笔者一开始为此给所有的敌人使用了相同大小的圆形碰撞体，旨在让敌人追逐玩家时可以自然的散成“茫茫的敌人”，而攻击方式的数值和范围也可以得到合理的展现。
+
+但是，问题出现的想象的要快，屏幕上超过300个怪物在追逐玩家的时候，因为每种怪物的最大速度不一致导致敌人之间的彼此碰撞明显增多，游戏明显变得卡顿。经由大佬提醒，（2D项目中）可以使用NavigationRegion2D节点+敌人身上附着NavigationAgent2D节点来实现对敌人内部实现避障，从根本上解决过多的碰撞检测带来的性能开销。
+
+### 性能提升效果
+
+测试项目的内容为每帧生成一个会追击鼠标最后点击的位置的小鸡并打印当前小鸡数量。
+
+在一个只有简单结构的小鸡身上，使用4px半径避障时在全图小鸡数量达到2k以上的时候，笔者电脑的调试帧数才出现些许下降。（60帧于小鸡数量2k时下降至30帧左右）
+
+![避障小鸡](/assets/images/tutorial/navigation/避障小鸡.png)
+
+![避障性能](/assets/images/tutorial/navigation/避障性能.png)
+
+而使用4px圆形碰撞体实现效果时，仅在900只小鸡数量的时候，笔者电脑的调试帧数就从60狂跌到10帧。（60帧于小鸡数量900时下降至10帧左右)
+
+![碰撞小鸡](/assets/images/tutorial/navigation/碰撞小鸡.png)
+
+![碰撞性能](/assets/images/tutorial/navigation/碰撞性能.png)
+
+### 如何使用避障（2D项目）
+
+我们需要知道避障的本质是选择一个更合理的不会撞到（敌人的）同伴的路径，所以避障算是寻路/导航的一部份，关于这部分内容则可以查询新手村的另一篇教程“导航系统以及A星算法”。
+
+所以在我们的游戏中，想要实现避障需要解决两个问题：应该在哪里避障（导航）？谁需要避障（导航）？
+
+#### 1、应该在哪里避障（导航）？
+
+在2D界面以下三个节点中我们应最常用到的是NavigationRegion2D。简单来说，该Region的范围便是处于该导航层（navigation_layers）上的需要被导航的对象（NavigationAgent2D）会使用到的范围。
+
+而NavigationObstacle2D和NavigationLink2D，笔者也还不熟悉。（老陌帮我想想怎么糊弄过去）
+
+![应该在哪里避障](/assets/images/tutorial/navigation/应该在哪里避障.png)
+
+一般我们使用NavigationRegion2D划定的方式大多为以下两种
+
+##### 1·直接使用3个及以上的点构成的多边形作为导航多边形
+
+如图，只需要在选择模式(Q)中画出自己想要的形状便可以完成多边形。
+
+![自行划定多边形](/assets/images/tutorial/navigation/自行划定多边形.png)
+
+![画多边形](/assets/images/tutorial/navigation/画多边形.png)
+
+##### 2·使用tileset的Navigation Layers设置完成地图的构建后烘焙成完整多边形
+
+如图，tileset的方式会稍微复杂一些，需要设置好了tileset并完成了tilemap之后点击“烘焙导航多边形”才行，不过好处是tileset里面做完了之后无论是新拓展什么瓦片组合的地形，只需要做好之后重新烘焙便可完成调整。
+
+![tileset导航](/assets/images/tutorial/navigation/tileset导航.png)
+
+![tilemap烘焙多边形](/assets/images/tutorial/navigation/tilemap烘焙多边形.png)
+
+#### 2、谁需要避障（导航）？
+
+一言以蔽之，NavigationAgent2D。在设置好navigation_layers并对需要的属性进行调整之后，只需要在需要使用避障的会移动的节点（以CharacterBody2D举例）上挂载NavigationAgent2D节点，并设置其的target_position，在每个物理帧中使用调用get_next_path_position()得到的向量进行归一化并乘上节点的速度后由NavigationAgent2D的velocity_computed信号来执行move_and_slide()即可。
+
+![谁需要避障](/assets/images/tutorial/navigation/谁需要避障.png)
+
+### 避障做不到的事
+
+说是导航+避障，但其实不在导航内的区域如果是不想让节点去的地方的话，其实并不代表不会被太多数量的对象挤过去，这部分需求应当还是使用NavigationObstacle2D或是碰撞达成。同时就算是使用了避障导航避免碰撞的计算问题，但导航本身大量使用也是有性能开销的，如果需要更加大量的对象进行分散式追逐的话，应该需要寻找别的解决方案。
+
