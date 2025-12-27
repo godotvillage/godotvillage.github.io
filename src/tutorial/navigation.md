@@ -204,7 +204,7 @@ AStarGrid2D 是 AStar2D 的变种，针对疏松 2D 网格进行了优化。因�
 
 在2D界面以下三个节点中我们应最常用到的是NavigationRegion2D。简单来说，该Region的范围便是处于该导航层（navigation_layers）上的需要被导航的对象（NavigationAgent2D）会使用到的范围。
 
-而NavigationObstacle2D和NavigationLink2D，笔者也还不熟悉。（老陌帮我想想怎么糊弄过去）
+而NavigationObstacle2D和NavigationLink2D，笔者也还不熟悉。~~（老陌帮我想想怎么糊弄过去）~~ ~~（老陌也不会）~~
 
 ![应该在哪里避障](/assets/images/tutorial/navigation/应该在哪里避障.png)
 
