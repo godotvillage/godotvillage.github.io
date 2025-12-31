@@ -19,3 +19,4 @@ star: true
 |-|-|-|
 |Valar|[B站链接](https://space.bilibili.com/214217611)||
 |拔刀谦逊|[B站链接](https://space.bilibili.com/30014736)||
+|Freeman|[B站链接](https://space.bilibili.com/281430873)||
