@@ -3,6 +3,11 @@ import { navbar } from "vuepress-theme-hope";
 export default navbar([
   "/",
   {
+    text: "2026",
+    icon: "star",
+    link: "/2026/",
+  },
+  {
     text: "教程",
     prefix: "/tutorial/",
     icon: "book",
