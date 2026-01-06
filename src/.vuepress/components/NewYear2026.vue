@@ -94,7 +94,7 @@ const rawData = [
   { content: "诛杀老登", sender: "3KTerror" },
   { content: "要做rts", sender: "蝶蝶子" },
   { content: "做10个游戏", sender: "热爱生活" },
-  { content: "花开富贵", sender: "花开富贵" },
+  { content: "多洗澡", sender: "花开富贵" },
   { content: "发布一款游戏", sender: "异鸣" },
   { content: "发布steam游戏", sender: "十九" },
   { content: "学学学", sender: "end" },
