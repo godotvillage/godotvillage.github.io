@@ -93,7 +93,16 @@ const rawData = [
   { content: "我是天帝", sender: "雪碧雪碧" },
   { content: "诛杀老登", sender: "3KTerror" },
   { content: "要做rts", sender: "蝶蝶子" },
-  { content: "做10个游戏", sender: "热爱生活" }
+  { content: "做10个游戏", sender: "热爱生活" },
+  { content: "花开富贵", sender: "花开富贵" },
+  { content: "发布一款游戏", sender: "异鸣" },
+  { content: "发布steam游戏", sender: "十九" },
+  { content: "学学学", sender: "end" },
+  { content: "梦想成真", sender: "沈帅锅" },
+  { content: "更进一步", sender: "轻风云再起" },
+  { content: "健康快乐", sender: "罗康" },
+  { content: "自由的风", sender: "自由的风" },
+  { content: "告别水逆！！！", sender: "梦轩" }
 ];
 
 const rootRef = ref(null);
