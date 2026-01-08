@@ -185,3 +185,4 @@ Alpha 是一个完全开源的项目，欢迎所有开发者参与贡献。[项�
 
 <AlphaFeedbackLink />
 <AlphaFeedbackBtn />
+<AlphaAZZButton />

@@ -104,3 +104,5 @@ All notable changes to this project will be documented in this file.
   - 主面板添加了跳转至官方文档/页面的链接。
 
 <AlphaFeedbackLink />
+<AlphaFeedbackBtn />
+<AlphaAZZButton />

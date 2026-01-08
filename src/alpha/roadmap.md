@@ -108,3 +108,5 @@ Alpha 通过一系列原子化的工具函数来操作 Godot 编辑器和项目�
 - [ ] **关于页面**：添加作者页面跳转
 
 <AlphaFeedbackLink />
+<AlphaFeedbackBtn />
+<AlphaAZZButton />
