@@ -8,6 +8,11 @@ export default navbar([
     link: "/2026/",
   },
   {
+    text: "Godot 4.6",
+    icon: "info",
+    link: "/godot4.6",
+  },
+  {
     text: "教程",
     prefix: "/tutorial/",
     icon: "book",
@@ -61,11 +66,17 @@ export default navbar([
   //     }
   //   ]
   // },
-  "/farm/",
   {
-    text: "项目跟踪",
-    icon: "list",
-    link: "/projects/",
+    text: "小工具",
+    icon: "folder",
+    children: [
+      "/farm/",
+      {
+        text: "项目跟踪",
+        icon: "list",
+        link: "/projects/",
+      },
+    ],
   },
   {
     text: "GameJam",
