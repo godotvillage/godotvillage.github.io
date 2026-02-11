@@ -91,9 +91,10 @@
 
 <script setup lang="ts">
 const sponsors = [
-  "一位不知名的大佬",
+  "Monky",
   "Valar",
   "斓",
+  "陌上竹",
   "下划线瞎子",
   "小咩咩",
   "Goodman",
