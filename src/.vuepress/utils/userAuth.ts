@@ -1,5 +1,5 @@
-import { authApi } from "./request";
-import { clearAuthSession, isAuthSessionValid, readAuthUser, writeAuthSession } from "./authStorage";
+import { authApi } from "./request.js";
+import { clearAuthSession, isAuthSessionValid, readAuthUser, writeAuthSession } from "./authStorage.js";
 import { ref } from "vue";
 
 // A reactive signal for auth state changes.
@@ -30,7 +30,7 @@ type LoginResponse = {
   message?: string;
   data?: {
     token: string;
-    tokenType: string;
+    tokenType?: string;
     expiresIn: number;
     user: {
       id: number;
@@ -73,7 +73,7 @@ class UserAuthService {
 
     writeAuthSession({
       token,
-      tokenType,
+      tokenType: tokenType || "Bearer",
       expiresAt,
       user,
     });

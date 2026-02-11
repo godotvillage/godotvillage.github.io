@@ -59,10 +59,10 @@ export default {
   methods: {
     async updateStats() {
       try {
-        // 使用API获取统计数据
+        // 先基于 /api/Farm 列表计算统计（避免猜测后端 stats 路由）
         const statsResponse = await farmApi.getFarmListStats();
-        if (statsResponse.success) {
-          const newStats = statsResponse.data;
+        if (statsResponse && statsResponse.success) {
+          const newStats = statsResponse.data || {};
           
           // 添加更新动画效果
           this.animateUpdate('totalProjects', this.stats.total, newStats.total || 0);
@@ -75,6 +75,8 @@ export default {
             active: newStats.active || 0,
             completed: newStats.completed || 0
           };
+        } else {
+          throw new Error(statsResponse?.error || '获取项目统计失败');
         }
       } catch (error) {
         console.error('获取项目统计失败:', error);

@@ -168,6 +168,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { farmApi } from '../utils/request.ts'
+import { nextStatusCode, nextStatusLabel, statusLabelToCode } from '../utils/farmTransform.ts'
 
 const projects = ref([])
 const selectedProject = ref(null)
@@ -218,7 +219,9 @@ const loadProjects = async () => {
       projects.value = response.data.map(project => ({
         ...project,
         name: project.title,
-        createdAt: project.create_time
+        createdAt: project.create_time,
+        // 兼容老数据：如果没有 statusCode，则从 status 文本推断
+        statusCode: (typeof project.statusCode === 'number') ? project.statusCode : statusLabelToCode(project.status)
       }))
     }
   } catch (error) {
@@ -233,8 +236,8 @@ const loadProjects = async () => {
 
 const saveProject = async (project) => {
   try {
-    await farmApi.updateFarmProject(project.farm_id, {
-      status: project.status
+    await farmApi.updateFarmProject(project.id ?? project.farm_id, {
+      status: (typeof project.statusCode === 'number') ? project.statusCode : statusLabelToCode(project.status)
     })
   } catch (error) {
     console.error('更新项目失败:', error)
@@ -256,10 +259,9 @@ const closeModal = () => {
 }
 
 const toggleStatus = async (project) => {
-  const statusCycle = ['计划中', '进行中', '暂停', '已完成']
-  const currentIndex = statusCycle.indexOf(project.status)
-  const nextIndex = (currentIndex + 1) % statusCycle.length
-  project.status = statusCycle[nextIndex]
+  const nextCode = nextStatusCode(project.statusCode ?? project.status)
+  project.statusCode = nextCode
+  project.status = nextStatusLabel(project.status)
   await saveProject(project)
 }
 

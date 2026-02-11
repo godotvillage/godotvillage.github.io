@@ -3,11 +3,28 @@ export const baseUrl = 'http://localhost:5000'; // 本地调试使用
 export const imageBaseUrl = 'https://games.moshangzhu.com.cn/';
 export const gameBaseUrl = 'https://games.moshangzhu.com.cn/games';
 
-import { getAuthorizationHeaderValue } from "./authStorage";
+import { getAuthorizationHeaderValue } from "./authStorage.js";
+import { computeFarmStats, extractFarmList } from "./farmTransform.js";
 
 function withAuthHeaders(headers: Record<string, string> = {}) {
   const auth = getAuthorizationHeaderValue();
   return auth ? { ...headers, Authorization: auth } : headers;
+}
+
+async function readJsonSafe(res: Response): Promise<any> {
+  const text = await res.text();
+  if (!text) return null;
+  try {
+    return JSON.parse(text);
+  } catch {
+    return text;
+  }
+}
+
+function getErrorMessage(raw: any, fallback: string): string {
+  if (!raw) return fallback;
+  if (typeof raw === "string") return raw;
+  return raw.message || raw.error || raw.msg || raw.title || fallback;
 }
 
 // 认证相关 API
@@ -67,111 +84,112 @@ export const farmApi = {
   // 获取项目列表
   async getFarmList() {
     try {
-      const response = await fetch(`${baseUrl}/farms`);
-      const result = await response.json();
-      
-      if (result.success) {
-        return result;
-      } else {
-        throw new Error(result.error);
+      const response = await fetch(`${baseUrl}/api/Farm`, {
+        method: "GET",
+        headers: withAuthHeaders(),
+      });
+      const raw = await readJsonSafe(response);
+
+      // 先把原始结构打出来，便于你确认字段/包装层
+      if (typeof window !== "undefined") {
+        // eslint-disable-next-line no-console
+        console.log("[farmApi] GET /api/Farm raw response:", raw);
+        (window as any).__farmLastResponse = raw;
       }
+
+      if (!response.ok) {
+        return { success: false, error: getErrorMessage(raw, `请求失败(${response.status})`), raw };
+      }
+
+      // 兼容：raw 可能是数组，也可能是 {success,data:[...]} 等
+      const data = extractFarmList(raw);
+      return { success: true, data, raw };
     } catch (error) {
-      throw new Error(`获取项目列表失败: ${error.message}`);
+      return { success: false, error: `获取项目列表失败: ${error.message}`, raw: null };
     }
   },
 
   // 获取项目统计信息
   async getFarmListStats() {
     try {
-      const response = await fetch(`${baseUrl}/farms/stats`);
-      const result = await response.json();
-      
-      if (result.success) {
-        return result.data;
-      } else {
-        throw new Error(result.error);
-      }
+      // 不猜测后端 stats 路由，先基于列表计算
+      const listRes = await this.getFarmList();
+      if (!listRes?.success) return { success: false, error: listRes?.error || "获取项目列表失败", raw: listRes?.raw };
+      const stats = computeFarmStats(listRes.data || []);
+      return { success: true, data: stats, raw: listRes.raw };
     } catch (error) {
-      throw new Error(`获取项目统计失败: ${error.message}`);
+      return { success: false, error: `获取项目统计失败: ${error.message}`, raw: null };
     }
   },
 
   // 根据ID获取项目详情
   async getFarmProjectById(farmId) {
     try {
-      const response = await fetch(`${baseUrl}/farms/${farmId}`);
-      const result = await response.json();
-      
-      if (result.success) {
-        return result.data;
-      } else {
-        throw new Error(result.error);
+      const response = await fetch(`${baseUrl}/api/Farm/${farmId}`, {
+        method: "GET",
+        headers: withAuthHeaders(),
+      });
+      const raw = await readJsonSafe(response);
+      if (!response.ok) {
+        return { success: false, error: getErrorMessage(raw, `请求失败(${response.status})`), raw };
       }
+      // 不强行做字段映射，先把 raw 原样返回，方便你看结构
+      return { success: true, data: raw?.data ?? raw, raw };
     } catch (error) {
-      throw new Error(`获取项目详情失败: ${error.message}`);
+      return { success: false, error: `获取项目详情失败: ${error.message}`, raw: null };
     }
   },
 
   // 创建新项目
   async createFarmProject(projectData) {
     try {
-      const response = await fetch(`${baseUrl}/farms`, {
-        method: 'POST',
-        headers: {
-          ...withAuthHeaders({ 'Content-Type': 'application/json' })
-        },
-        body: JSON.stringify(projectData)
+      const response = await fetch(`${baseUrl}/api/Farm`, {
+        method: "POST",
+        headers: withAuthHeaders({ "Content-Type": "application/json" }),
+        body: JSON.stringify(projectData),
       });
-      const result = await response.json();
-      
-      if (result.success) {
-        return result;
-      } else {
-        throw new Error(result.error);
+      const raw = await readJsonSafe(response);
+      if (!response.ok) {
+        return { success: false, error: getErrorMessage(raw, `请求失败(${response.status})`), raw };
       }
+      return { success: true, data: raw?.data ?? raw, raw };
     } catch (error) {
-      throw new Error(`创建项目失败: ${error.message}`);
+      return { success: false, error: `创建项目失败: ${error.message}`, raw: null };
     }
   },
 
   // 更新项目信息
   async updateFarmProject(farmId, updateData) {
     try {
-      const response = await fetch(`${baseUrl}/farms/${farmId}`, {
-        method: 'PUT',
-        headers: {
-          ...withAuthHeaders({ 'Content-Type': 'application/json' })
-        },
-        body: JSON.stringify(updateData)
+      const response = await fetch(`${baseUrl}/api/Farm/${farmId}`, {
+        method: "PUT",
+        headers: withAuthHeaders({ "Content-Type": "application/json" }),
+        body: JSON.stringify(updateData),
       });
-      const result = await response.json();
-      
-      if (result.success) {
-        return result;
-      } else {
-        throw new Error(result.error);
+      const raw = await readJsonSafe(response);
+      if (!response.ok) {
+        return { success: false, error: getErrorMessage(raw, `请求失败(${response.status})`), raw };
       }
+      return { success: true, data: raw?.data ?? raw, raw };
     } catch (error) {
-      throw new Error(`更新项目失败: ${error.message}`);
+      return { success: false, error: `更新项目失败: ${error.message}`, raw: null };
     }
   },
 
   // 删除项目
   async deleteFarmProject(farmId) {
     try {
-      const response = await fetch(`${baseUrl}/farms/${farmId}`, {
-        method: 'DELETE',
-        headers: withAuthHeaders()
+      const response = await fetch(`${baseUrl}/api/Farm/${farmId}`, {
+        method: "DELETE",
+        headers: withAuthHeaders(),
       });
-      const result = await response.json();
-      
-      if (result.success) {
-        return result;
-      } else {
-        throw new Error(result.error);
+      const raw = await readJsonSafe(response);
+      if (!response.ok) {
+        return { success: false, error: getErrorMessage(raw, `请求失败(${response.status})`), raw };
       }
+      return { success: true, data: raw?.data ?? raw, raw };
     } catch (error) {
-      throw new Error(`删除项目失败: ${error.message}`);
+      return { success: false, error: `删除项目失败: ${error.message}`, raw: null };
     }
   }
 };

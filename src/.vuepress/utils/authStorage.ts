@@ -26,13 +26,13 @@ export function clearAuthSession(): void {
 
 export function writeAuthSession(params: {
   token: string;
-  tokenType: string;
+  tokenType?: string;
   expiresAt: number;
   user: AuthUser;
 }): void {
   if (!canUseStorage()) return;
   localStorage.setItem(AUTH_STORAGE_KEYS.token, params.token);
-  localStorage.setItem(AUTH_STORAGE_KEYS.tokenType, params.tokenType);
+  localStorage.setItem(AUTH_STORAGE_KEYS.tokenType, params.tokenType || "Bearer");
   localStorage.setItem(AUTH_STORAGE_KEYS.expiresAt, String(params.expiresAt));
   localStorage.setItem(AUTH_STORAGE_KEYS.user, JSON.stringify(params.user));
 }
@@ -55,8 +55,8 @@ export function readAuthToken(): { token: string; tokenType: string; expiresAt: 
   const expiresAtRaw = localStorage.getItem(AUTH_STORAGE_KEYS.expiresAt) || "";
   const expiresAt = Number(expiresAtRaw);
 
-  if (!token || !tokenType || !Number.isFinite(expiresAt)) return null;
-  return { token, tokenType, expiresAt };
+  if (!token || !Number.isFinite(expiresAt)) return null;
+  return { token, tokenType: tokenType || "Bearer", expiresAt };
 }
 
 export function isAuthSessionValid(now: number = Date.now()): boolean {
@@ -70,7 +70,8 @@ export function getAuthorizationHeaderValue(): string | null {
   const token = readAuthToken();
   if (!token) return null;
   if (token.expiresAt <= Date.now()) return null;
-  return `${token.tokenType} ${token.token}`;
+  // 按约定统一使用 Bearer，不依赖后端返回 tokenType
+  return `Bearer ${token.token}`;
 }
 
 

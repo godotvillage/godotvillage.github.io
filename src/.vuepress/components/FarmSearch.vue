@@ -159,6 +159,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { farmApi } from '../utils/request.ts'
+import { statusLabelToCode } from '../utils/farmTransform.ts'
 
 const searchQuery = ref('')
 const activeQuickFilter = ref('')
@@ -233,7 +234,8 @@ const loadProjects = async () => {
       projects.value = response.data.map(project => ({
         ...project,
         name: project.title,
-        createdAt: project.create_time
+        createdAt: project.create_time,
+        statusCode: (typeof project.statusCode === 'number') ? project.statusCode : statusLabelToCode(project.status)
       }))
     }
   } catch (error) {

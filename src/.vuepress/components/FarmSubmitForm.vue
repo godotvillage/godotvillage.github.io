@@ -109,6 +109,8 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { farmApi } from '../utils/request.ts'
+import { buildFarmCreatePayload, normalizeFarmProject } from '../utils/farmTransform.ts'
+import { userAuth } from '../utils/userAuth.ts'
 
 const form = ref({
   submitter: '',
@@ -158,25 +160,32 @@ const submitProject = async () => {
   isSubmitting.value = true
 
   try {
-    const projectData = {
+    const expectedEndYmd = form.value.expectedTime ? getExpectedEndDate(form.value.expectedTime) : null
+    const u = userAuth.getCurrentUser()
+    const projectData = buildFarmCreatePayload({
       title: form.value.name,
       description: form.value.description,
       author: form.value.submitter,
       category: form.value.category,
-      priority: '中等',
-      status: '计划中',
+      statusLabel: '计划中',
       progress: 0,
       tags: form.value.tags,
-      expected_end_date: form.value.expectedTime ? getExpectedEndDate(form.value.expectedTime) : null,
-      github_url: '',
-      demo_url: ''
-    }
+      // 你确认后端必须 ISO，这里将 YYYY-MM-DD 转为 ISO Z
+      expectedEndDate: expectedEndYmd,
+      githubUrl: '',
+      demoUrl: '',
+      audit: {
+        userId: u?.id,
+        userName: u?.loginName || u?.nickName
+      }
+    })
 
     const response = await farmApi.createFarmProject(projectData)
     
     if (response.success) {
       // 触发自定义事件通知其他组件更新
-      window.dispatchEvent(new CustomEvent('projectAdded', { detail: response.data }))
+      const normalized = response.data && typeof response.data === 'object' ? normalizeFarmProject(response.data) : response.data
+      window.dispatchEvent(new CustomEvent('projectAdded', { detail: normalized }))
       
       showSuccess.value = true
       setTimeout(() => {
