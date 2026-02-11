@@ -8,6 +8,8 @@ tag:
   - 比赛
 sticky: true
 star: true
+sidebar: false
+toc: false
 ---
 
 # 新手村第四届游戏制作大赛结果

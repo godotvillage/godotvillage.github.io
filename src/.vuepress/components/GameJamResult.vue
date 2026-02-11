@@ -260,12 +260,6 @@ const sponsors = [
       font-weight: bold;
       color: var(--c-text);
       padding: 0.25rem 0.5rem;
-      
-      &:first-child {
-        width: 100%;
-        margin-bottom: 0.5rem;
-        color: var(--c-brand);
-      }
     }
   }
 }
