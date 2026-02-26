@@ -2,11 +2,7 @@ import { navbar } from "vuepress-theme-hope";
 
 export default navbar([
   "/",
-  {
-    text: "2026",
-    icon: "star",
-    link: "/2026/",
-  },
+
   {
     text: "Godot 4.6",
     icon: "info",
