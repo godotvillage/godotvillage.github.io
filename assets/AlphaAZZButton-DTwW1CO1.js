@@ -1,0 +1,1 @@
+import{_ as t,c as a,o,d as n}from"./app-CGqHLZwa.js";const r={},s={class:"azz-button",href:"https://azz.net/godotalphaagent",target:"_blank",rel:"noopener noreferrer",title:"Alpha爱赞助链接"};function c(l,e){return o(),a("a",s,[...e[0]||(e[0]=[n("span",{class:"text"},"爱赞助",-1)])])}const p=t(r,[["render",c],["__scopeId","data-v-053114e9"]]);export{p as default};
