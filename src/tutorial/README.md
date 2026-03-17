@@ -53,8 +53,8 @@ date: 2025-10-11
 - [ ] 粒子系统
 - [ ] UI系统和主题开发
 - [x] [自动加载和单例模式](/tutorial/single)
-- [ ] 网络系统详解
-- [ ] 多人游戏开发
+- [x] [网络系统详解](/tutorial/mutiplayer_tutorial/network-architecture-overview)
+- [x] [多人游戏开发](/tutorial/mutiplayer_tutorial/network-architecture-overview)
 - [ ] 窗口系统详解
 - [x] [导航系统以及A星算法](/tutorial/navigation)
 - [ ] 物理系统
@@ -79,6 +79,20 @@ date: 2025-10-11
 - [ ] 让你的角色产生智能
 - [ ] 更改游戏中的键位
 - [ ] 手把手实现一个音乐播放器
+
+#### 多人游戏教程
+本系列教程基于 2D Multiplayer Course 项目，深入讲解 Godot 4 多人游戏开发的核心概念和实现方式。
+
+🎥 **配套视频教程**: [2D Multiplayer Course - YouTube](https://www.youtube.com/watch?v=F3P5uWgJrj0)
+
+- [x] [多人游戏教程概览](/tutorial/mutiplayer_tutorial/multiplayer-overview) - 教程系列介绍与学习路径
+- [x] [网络架构概述](/tutorial/mutiplayer_tutorial/network-architecture-overview) - 网络架构设计、权威模式、RPC通信
+- [x] [玩家输入同步机制](/tutorial/mutiplayer_tutorial/player-input-synchronization) - PlayerInputSynchronizerComponent、输入采集与同步
+- [x] [大厅与连接管理](/tutorial/mutiplayer_tutorial/lobby-and-connection-management) - ENetMultiplayerPeer、LobbyManager、连接与断线处理
+- [x] [敌人AI与状态管理](/tutorial/mutiplayer_tutorial/enemy-ai-and-state-management) - 敌人状态机、服务器权威 AI
+- [x] [攻击与碰撞系统](/tutorial/mutiplayer_tutorial/attack-and-collision-system) - 子弹、Hitbox/Hurtbox、伤害同步
+- [x] [场景管理与玩家生命周期](/tutorial/mutiplayer_tutorial/scene-management-and-player-lifecycle) - MultiplayerSpawner、玩家生成与复活
+- [x] [CallableStateMachine实现](/tutorial/mutiplayer_tutorial/callable-state-machine-implementation) - 自定义状态机实现详解
 
 ### 📝 学习建议
 
