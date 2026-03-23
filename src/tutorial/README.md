@@ -61,6 +61,9 @@ date: 2025-10-11
 
 #### 着色器教程
 - [x] [着色器简介](/tutorial/shader/intro)
+- [x] [着色器常用数学](/tutorial/shader/shader-math)
+- [x] [着色器实现思路](/tutorial/shader/shader-implementation)
+- [x] [着色器常见案例](/tutorial/shader/shader-common-cases)
 - [ ] 2D顶点着色器
 - [ ] 2D片段着色器
 - [ ] 2D灯光着色器
