@@ -1,24 +1,33 @@
 {
-  "name": "godotvillage.github.io",
-  "description": "godot新手村web项目",
-  "version": "0.0.1",
-  "license": "MIT",
+  "name": "godotvillage-forum",
+  "version": "1.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
-    "docs:build": "vuepress-vite build src",
-    "docs:clean-dev": "vuepress-vite dev src --clean-cache",
-    "docs:dev": "vuepress-vite dev src",
-    "docs:update-package": "npx vp-update"
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix"
+  },
+  "dependencies": {
+    "axios": "^1.6.7",
+    "element-plus": "^2.5.6",
+    "@element-plus/icons-vue": "^2.3.1",
+    "pinia": "^2.1.7",
+    "vue": "^3.4.21",
+    "vue-router": "^4.3.0",
+    "@vueup/vue-quill": "^1.2.0",
+    "dayjs": "^1.11.10",
+    "marked": "^12.0.1"
   },
   "devDependencies": {
-    "@vuepress/bundler-vite": "2.0.0-rc.24",
-    "@vuepress/plugin-comment": "^2.0.0-rc.112",
-    "@vuepress/plugin-register-components": "^2.0.0-rc.112",
-    "marked": "^16.4.0",
-    "sass-embedded": "^1.89.2",
-    "vue": "^3.5.17",
-    "vuepress": "2.0.0-rc.24",
-    "vuepress-theme-hope": "2.0.0-rc.94",
-    "@vuepress/plugin-docsearch": "^2.0.0-rc.112"
+    "@types/node": "^20.11.24",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "sass": "^1.71.1",
+    "typescript": "~5.4.2",
+    "unplugin-auto-import": "^0.17.5",
+    "unplugin-vue-components": "^0.26.0",
+    "vite": "^5.1.5",
+    "vue-tsc": "^2.0.6"
   }
 }
