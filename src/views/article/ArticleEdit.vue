@@ -52,11 +52,12 @@
 
         <el-form-item label="内容" prop="content">
           <div class="editor-container">
-            <el-input
+            <MdEditor
               v-model="form.content"
-              type="textarea"
-              :rows="15"
-              placeholder="输入文章内容（支持 Markdown）"
+              :preview="false"
+              :toolbars="toolbars"
+              placeholder="输入文章内容..."
+              @onUploadImg="handleUploadImg"
             />
           </div>
         </el-form-item>
@@ -67,8 +68,30 @@
 
         <el-form-item>
           <el-button @click="$router.back()">取消</el-button>
-          <el-button type="primary" @click="handleSave" :loading="loading">
-            保存修改
+          <el-button @click="handleSaveDraft" :loading="loading">
+            保存到草稿
+          </el-button>
+          <el-button
+            v-if="articleStatus === 'Draft' || articleStatus === 'Rejected'"
+            type="primary"
+            @click="handlePublish"
+            :loading="publishing"
+          >
+            发布
+          </el-button>
+          <el-button
+            v-else-if="articleStatus === 'Pending'"
+            type="warning"
+            disabled
+          >
+            待审核中
+          </el-button>
+          <el-button
+            v-else-if="articleStatus === 'Published'"
+            type="success"
+            disabled
+          >
+            已发布
           </el-button>
         </el-form-item>
       </el-form>
@@ -88,14 +111,27 @@ import { articleApi } from '@/api/article'
 import { categoryApi } from '@/api/category'
 import { ElMessage } from 'element-plus'
 import { Loading } from '@element-plus/icons-vue'
+import { MdEditor } from 'md-editor-v3'
+import 'md-editor-v3/lib/style.css'
 import type { CategoryDto } from '@/api/category'
 
 const route = useRoute()
 const router = useRouter()
 
+// md-editor 配置
+const toolbars = [
+  'bold', 'underline', 'italic', 'strikeThrough', 'title',
+  'sub', 'sup', 'quote', 'unorderedList', 'orderedList',
+  'codeRow', 'code', 'link', 'image', 'table',
+  'revoke', 'next', 'save', 'pageFullscreen', 'fullscreen',
+  'preview', 'htmlPreview', 'github'
+]
+
 const formRef = ref<FormInstance>()
 const loading = ref(true)
+const publishing = ref(false)
 const categories = ref<CategoryDto[]>([])
+const articleStatus = ref('')
 
 const form = reactive({
   title: '',
@@ -131,6 +167,7 @@ const loadArticle = async () => {
     form.categoryId = article.categoryId || ''
     form.tags = article.tags || ''
     form.allowGuestView = article.allowGuestView
+    articleStatus.value = article.status
   } catch (error) {
     ElMessage.error('加载文章失败')
     router.push('/article')
@@ -148,7 +185,32 @@ const loadCategories = async () => {
   }
 }
 
-const handleSave = async () => {
+// 图片上传处理
+const handleUploadImg = async (files: FileList, callback: (urls: string[]) => void) => {
+  const urls: string[] = []
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i]
+    const formData = new FormData()
+    formData.append('file', file)
+    try {
+      // 这里需要替换为实际上传图片的 API
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      })
+      const data = await response.json()
+      if (data.url) {
+        urls.push(data.url)
+      }
+    } catch (error) {
+      console.error('图片上传失败:', error)
+      ElMessage.error('图片上传失败')
+    }
+  }
+  callback(urls)
+}
+
+const handleSaveDraft = async () => {
   if (!formRef.value) return
 
   await formRef.value.validate(async (valid) => {
@@ -162,7 +224,8 @@ const handleSave = async () => {
         summary: form.summary || undefined,
         categoryId: form.categoryId || undefined,
         tags: form.tags || undefined,
-        allowGuestView: form.allowGuestView
+        allowGuestView: form.allowGuestView,
+        status: 'Draft'
       })
       ElMessage.success('保存成功')
       router.push(`/article/${articleId}`)
@@ -170,6 +233,35 @@ const handleSave = async () => {
       // 错误已在拦截器处理
     } finally {
       loading.value = false
+    }
+  })
+}
+
+const handlePublish = async () => {
+  if (!formRef.value) return
+
+  await formRef.value.validate(async (valid) => {
+    if (!valid) return
+
+    publishing.value = true
+    try {
+      // 先保存文章
+      await articleApi.update(articleId, {
+        title: form.title,
+        content: form.content,
+        summary: form.summary || undefined,
+        categoryId: form.categoryId || undefined,
+        tags: form.tags || undefined,
+        allowGuestView: form.allowGuestView
+      })
+      // 然后提交审核
+      await articleApi.submitForReview(articleId)
+      ElMessage.success('已提交审核，等待管理员审批')
+      router.push(`/article/${articleId}`)
+    } catch (error) {
+      // 错误已在拦截器处理
+    } finally {
+      publishing.value = false
     }
   })
 }

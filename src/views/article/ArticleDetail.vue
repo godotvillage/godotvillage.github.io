@@ -7,6 +7,9 @@
           <el-tag v-if="article.isTop" type="danger">置顶</el-tag>
           <el-tag v-if="article.isFeatured" type="warning">精华</el-tag>
           <el-tag v-if="article.categoryName">{{ article.categoryName }}</el-tag>
+          <el-tag v-if="article.status === 'Draft'" type="info">草稿</el-tag>
+          <el-tag v-if="article.status === 'Pending'" type="warning">待审核</el-tag>
+          <el-tag v-if="article.status === 'Rejected'" type="danger">已拒绝</el-tag>
         </div>
 
         <h1 class="article-title">{{ article.title }}</h1>
@@ -32,6 +35,16 @@
               删除
             </el-button>
           </div>
+          <div class="article-actions" v-else-if="authStore.isAdmin && article.status === 'Pending'">
+            <el-button type="success" @click="handleApprove">
+              <el-icon><CircleCheck /></el-icon>
+              通过
+            </el-button>
+            <el-button type="danger" @click="openRejectDialog">
+              <el-icon><CircleClose /></el-icon>
+              拒绝
+            </el-button>
+          </div>
         </div>
 
         <div class="article-tags" v-if="article.tags">
@@ -47,10 +60,12 @@
       </header>
 
       <!-- 文章内容 -->
-      <div class="article-content card" v-html="article.content"></div>
+      <div class="article-content card">
+        <MdPreview :modelValue="article.content" previewTheme="smart-blue" />
+      </div>
 
       <!-- 表情反应 -->
-      <div class="article-reactions card">
+      <div class="article-reactions card" v-if="isPublished">
         <div class="reaction-stats" v-if="Object.keys(reactions).length > 0">
           <span
             v-for="(count, emoji) in reactions"
@@ -80,7 +95,7 @@
       </div>
 
       <!-- 评论区 -->
-      <div class="article-comments card">
+      <div class="article-comments card" v-if="isPublished">
         <h3><el-icon><ChatDotRound /></el-icon>评论 ({{ comments.length }})</h3>
 
         <!-- 发布评论 -->
@@ -190,17 +205,32 @@
         返回文章列表
       </el-button>
     </div>
+
+    <!-- 拒绝原因对话框 -->
+    <el-dialog v-model="rejectDialogVisible" title="拒绝文章" width="500px">
+      <el-form :model="rejectForm" label-position="top">
+        <el-form-item label="拒绝原因">
+          <el-input v-model="rejectForm.reason" type="textarea" :rows="4" placeholder="请输入拒绝原因" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="rejectDialogVisible = false">取消</el-button>
+        <el-button type="danger" @click="confirmReject">确认拒绝</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { Edit, Delete, ChatDotRound, Loading } from '@element-plus/icons-vue'
+import { Edit, Delete, ChatDotRound, Loading, CircleCheck, CircleClose } from '@element-plus/icons-vue'
 import { articleApi } from '@/api/article'
 import type { ArticleDto, CommentDto } from '@/api/article'
 import { useAuthStore } from '@/stores/auth'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { MdPreview } from 'md-editor-v3'
+import 'md-editor-v3/lib/style.css'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import 'dayjs/locale/zh-cn'
@@ -228,6 +258,15 @@ const articleId = computed(() => route.params.id as string)
 
 const isAuthor = computed(() => {
   return authStore.userInfo?.id === article.value?.authorId
+})
+
+const isPublished = computed(() => {
+  return article.value?.status === 'Published'
+})
+
+const rejectDialogVisible = ref(false)
+const rejectForm = reactive({
+  reason: ''
 })
 
 onMounted(() => {
@@ -356,6 +395,43 @@ const handleDelete = async () => {
   }
 }
 
+const handleApprove = async () => {
+  try {
+    await ElMessageBox.confirm(`确定通过文章「${article.value?.title}」吗？`, '审核确认', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'info'
+    })
+    await articleApi.approve(articleId.value)
+    ElMessage.success('文章已通过')
+    loadArticle()
+  } catch (error) {
+    if (error !== 'cancel') {
+      ElMessage.error('操作失败')
+    }
+  }
+}
+
+const openRejectDialog = () => {
+  rejectForm.reason = ''
+  rejectDialogVisible.value = true
+}
+
+const confirmReject = async () => {
+  if (!rejectForm.reason.trim()) {
+    ElMessage.warning('请输入拒绝原因')
+    return
+  }
+  try {
+    await articleApi.reject(articleId.value, { reason: rejectForm.reason })
+    ElMessage.success('已拒绝该文章')
+    rejectDialogVisible.value = false
+    loadArticle()
+  } catch (error) {
+    ElMessage.error('操作失败')
+  }
+}
+
 const getSubComments = (parentId: string) => {
   return comments.value.filter(c => c.parentCommentId === parentId)
 }
@@ -440,6 +516,10 @@ const formatTime = (time: string) => {
   font-size: 16px;
   line-height: 1.8;
   color: var(--text-primary);
+
+  :deep(.md-editor-preview) {
+    padding: 0;
+  }
 
   :deep(p) {
     margin-bottom: 16px;

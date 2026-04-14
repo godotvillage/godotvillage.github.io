@@ -4,6 +4,9 @@
       <el-tag v-if="article.isTop" type="danger" size="small">置顶</el-tag>
       <el-tag v-if="article.isFeatured" type="warning" size="small">精华</el-tag>
       <el-tag v-if="article.categoryName" size="small">{{ article.categoryName }}</el-tag>
+      <el-tag v-if="article.status === 'Draft'" type="info" size="small">草稿</el-tag>
+      <el-tag v-if="article.status === 'Pending'" type="warning" size="small">待审核</el-tag>
+      <el-tag v-if="article.status === 'Rejected'" type="danger" size="small">已拒绝</el-tag>
     </div>
 
     <h3 class="article-title">{{ article.title }}</h3>

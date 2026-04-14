@@ -14,6 +14,7 @@ export interface ArticleQueryDto {
 // 文章 DTO
 export interface ArticleDto {
   id: string
+  articleId: string
   title: string
   content: string
   summary?: string
@@ -54,6 +55,12 @@ export interface ArticleUpdateDto {
   allowGuestView?: boolean
   isTop?: boolean
   isFeatured?: boolean
+  status?: string
+}
+
+// 文章拒绝
+export interface ArticleRejectDto {
+  reason: string
 }
 
 // 评论 DTO
@@ -148,5 +155,20 @@ export const articleApi = {
   // 删除表情反应
   deleteReaction(articleId: string, reactionId: string) {
     return request.delete<any, void>(`/article/${articleId}/reactions/${reactionId}`)
+  },
+
+  // 审核通过文章
+  approve(articleId: string) {
+    return request.post<any, void>(`/article/${articleId}/approve`)
+  },
+
+  // 审核拒绝文章
+  reject(articleId: string, data: ArticleRejectDto) {
+    return request.post<any, void>(`/article/${articleId}/reject`, data)
+  },
+
+  // 提交文章审核
+  submitForReview(articleId: string) {
+    return request.post<any, void>(`/article/${articleId}/publish`)
   }
 }

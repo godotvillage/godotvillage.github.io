@@ -462,8 +462,8 @@ const formatTime = (time: string) => {
 
       .update-marker {
         position: absolute;
-        left: -20px;
-        top: 4px;
+        left: -24px;
+        top: -4px;
         width: 12px;
         height: 12px;
         background: var(--primary-color);

@@ -52,11 +52,12 @@
 
         <el-form-item label="内容" prop="content">
           <div class="editor-container">
-            <el-input
+            <MdEditor
               v-model="form.content"
-              type="textarea"
-              :rows="15"
-              placeholder="输入文章内容（支持 Markdown）"
+              :preview="false"
+              :toolbars="toolbars"
+              placeholder="输入文章内容..."
+              @onUploadImg="handleUploadImg"
             />
           </div>
         </el-form-item>
@@ -83,9 +84,20 @@ import type { FormInstance, FormRules } from 'element-plus'
 import { articleApi } from '@/api/article'
 import { categoryApi } from '@/api/category'
 import { ElMessage } from 'element-plus'
+import { MdEditor } from 'md-editor-v3'
+import 'md-editor-v3/lib/style.css'
 import type { CategoryDto } from '@/api/category'
 
 const router = useRouter()
+
+// md-editor 配置
+const toolbars = [
+  'bold', 'underline', 'italic', 'strikeThrough', 'title',
+  'sub', 'sup', 'quote', 'unorderedList', 'orderedList',
+  'codeRow', 'code', 'link', 'image', 'table',
+  'revoke', 'next', 'save', 'pageFullscreen', 'fullscreen',
+  'preview', 'htmlPreview', 'github'
+]
 
 const formRef = ref<FormInstance>()
 const loading = ref(false)
@@ -121,6 +133,31 @@ const loadCategories = async () => {
   } catch (error) {
     console.error('加载分类失败:', error)
   }
+}
+
+// 图片上传处理
+const handleUploadImg = async (files: FileList, callback: (urls: string[]) => void) => {
+  const urls: string[] = []
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i]
+    const formData = new FormData()
+    formData.append('file', file)
+    try {
+      // 这里需要替换为实际上传图片的 API
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      })
+      const data = await response.json()
+      if (data.url) {
+        urls.push(data.url)
+      }
+    } catch (error) {
+      console.error('图片上传失败:', error)
+      ElMessage.error('图片上传失败')
+    }
+  }
+  callback(urls)
 }
 
 const handlePublish = async () => {

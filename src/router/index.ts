@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
+import { ElMessage } from 'element-plus'
 import { useAuthStore } from '@/stores/auth'
 
 const routes: RouteRecordRaw[] = [
@@ -68,10 +69,41 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '个人中心', requiresAuth: true }
       },
       {
+        path: 'user/messages',
+        name: 'user-messages',
+        component: () => import('@/views/user/UserMessages.vue'),
+        meta: { title: '我的消息', requiresAuth: true }
+      },
+      {
         path: 'user/:id',
         name: 'user-detail',
         component: () => import('@/views/user/UserDetail.vue'),
         meta: { title: '用户详情' }
+      },
+      {
+        path: 'backend',
+        component: () => import('@/layouts/BackendLayout.vue'),
+        meta: { title: '管理后台', requiresAdmin: true },
+        children: [
+          {
+            path: 'article',
+            name: 'backend-article',
+            component: () => import('@/views/backend/BackendArticle.vue'),
+            meta: { title: '文章管理', requiresAdmin: true }
+          },
+          {
+            path: 'project',
+            name: 'backend-project',
+            component: () => import('@/views/backend/BackendProject.vue'),
+            meta: { title: '项目管理', requiresAdmin: true }
+          },
+          {
+            path: 'user',
+            name: 'backend-user',
+            component: () => import('@/views/backend/BackendUser.vue'),
+            meta: { title: '用户管理', requiresAdmin: true }
+          }
+        ]
       }
     ]
   },
@@ -111,6 +143,13 @@ router.beforeEach((to, _from, next) => {
 
   // 已登录访问游客页面（如登录页）
   if (to.meta.guest && authStore.isLoggedIn) {
+    next({ name: 'home' })
+    return
+  }
+
+  // 需要管理员权限的页面
+  if (to.meta.requiresAdmin && !authStore.isAdmin) {
+    ElMessage.warning('需要管理员权限')
     next({ name: 'home' })
     return
   }

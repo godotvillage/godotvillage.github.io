@@ -57,6 +57,13 @@
                   <el-dropdown-item command="my-projects">
                     <el-icon><FolderOpened /></el-icon>我的项目
                   </el-dropdown-item>
+                  <el-dropdown-item command="my-messages">
+                    <el-icon><ChatDotRound /></el-icon>我的消息
+                    <el-badge :value="unreadCount" :hidden="unreadCount === 0" class="badge" />
+                  </el-dropdown-item>
+                  <el-dropdown-item v-if="authStore.isAdmin" divided command="backend">
+                    <el-icon><Setting /></el-icon>进入后台
+                  </el-dropdown-item>
                   <el-dropdown-item divided command="logout">
                     <el-icon><SwitchButton /></el-icon>退出登录
                   </el-dropdown-item>
@@ -97,16 +104,32 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { Search, House, Document, FolderOpened, User, ArrowDown, SwitchButton, Grid } from '@element-plus/icons-vue'
+import { Search, House, Document, FolderOpened, User, ArrowDown, SwitchButton, Grid, ChatDotRound, Setting } from '@element-plus/icons-vue'
 import { useAuthStore } from '@/stores/auth'
+import { messageApi } from '@/api/message'
 import { ElMessage } from 'element-plus'
 
 const router = useRouter()
 const authStore = useAuthStore()
 
 const searchQuery = ref('')
+const unreadCount = ref(0)
+
+const loadUnreadCount = async () => {
+  if (!authStore.isLoggedIn) return
+  try {
+    const res = await messageApi.getUnreadCount()
+    unreadCount.value = res.data
+  } catch (error) {
+    console.error('加载未读消息失败:', error)
+  }
+}
+
+onMounted(() => {
+  loadUnreadCount()
+})
 
 const avatarUrl = authStore.userInfo?.email
   ? `https://api.dicebear.com/7.x/initials/svg?seed=${authStore.userInfo.nickname || authStore.userInfo.userName}`
@@ -128,6 +151,12 @@ const handleUserCommand = (command: string) => {
       break
     case 'my-projects':
       router.push({ path: '/project', query: { author: authStore.userInfo?.userName } })
+      break
+    case 'my-messages':
+      router.push('/user/messages')
+      break
+    case 'backend':
+      router.push('/backend/article')
       break
     case 'logout':
       authStore.logout()

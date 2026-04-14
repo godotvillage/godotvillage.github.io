@@ -8,6 +8,11 @@ export const useAuthStore = defineStore('auth', () => {
 
   const isLoggedIn = computed(() => !!token.value)
 
+  const isAdmin = computed(() => {
+    if (!userInfo.value) return false
+    return userInfo.value.roles.some(role => role.name === 'Admin')
+  })
+
   // 从 localStorage 恢复用户信息
   const storedUserInfo = localStorage.getItem('userInfo')
   if (storedUserInfo) {
@@ -41,6 +46,7 @@ export const useAuthStore = defineStore('auth', () => {
     userInfo,
     token,
     isLoggedIn,
+    isAdmin,
     setAuth,
     logout,
     hasPermission

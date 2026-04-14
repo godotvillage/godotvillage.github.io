@@ -23,17 +23,17 @@
       <div class="stats-grid">
         <div class="stat-card">
           <el-icon :size="32" color="#667eea"><Document /></el-icon>
-          <div class="stat-value">{{ stats.articleCount || 0 }}</div>
+          <div class="stat-value">{{ siteStats.articleCount || 0 }}</div>
           <div class="stat-label">篇文章</div>
         </div>
         <div class="stat-card">
           <el-icon :size="32" color="#67c23a"><FolderOpened /></el-icon>
-          <div class="stat-value">{{ projectStats.total || 0 }}</div>
+          <div class="stat-value">{{ siteStats.projectCount || 0 }}</div>
           <div class="stat-label">个项目</div>
         </div>
         <div class="stat-card">
           <el-icon :size="32" color="#e6a23c"><User /></el-icon>
-          <div class="stat-value">{{ stats.userCount || 0 }}</div>
+          <div class="stat-value">{{ siteStats.userCount || 0 }}</div>
           <div class="stat-label">位开发者</div>
         </div>
       </div>
@@ -94,16 +94,18 @@ import { ref, onMounted } from 'vue'
 import { Document, FolderOpened, User, Edit, FolderAdd, Loading } from '@element-plus/icons-vue'
 import { articleApi } from '@/api/article'
 import { projectApi } from '@/api/project'
+import { statsApi } from '@/api/stats'
 import ArticleCard from '@/components/ArticleCard.vue'
 import ProjectCard from '@/components/ProjectCard.vue'
 import type { ArticleDto } from '@/api/article'
 import type { ProjectDto } from '@/api/project'
+import type { SiteStatsDto } from '@/api/stats'
 
 const loading = ref(true)
 const projectLoading = ref(true)
 const articles = ref<ArticleDto[]>([])
 const projects = ref<ProjectDto[]>([])
-const stats = ref({ articleCount: 0, userCount: 0 })
+const siteStats = ref<SiteStatsDto>({ articleCount: 0, projectCount: 0, userCount: 0, categoryCount: 0 })
 const projectStats = ref({ total: 0, active: 0, completed: 0 })
 
 onMounted(async () => {
@@ -141,10 +143,11 @@ const loadProjects = async () => {
 }
 
 const loadStats = async () => {
-  // 暂时使用文章数和项目数作为统计
-  stats.value = {
-    articleCount: articles.value.length,
-    userCount: 0
+  try {
+    const res = await statsApi.getSiteStats()
+    siteStats.value = res.data
+  } catch (error) {
+    console.error('加载统计失败:', error)
   }
 }
 </script>
