@@ -28,7 +28,7 @@
             v-for="article in articles"
             :key="article.id"
             :article="article"
-            @click="$router.push(`/article/${article.id}`)"
+            @click="$router.push(`/article/${article.articleId}`)"
           />
         </div>
       </el-tab-pane>
@@ -45,7 +45,7 @@
             v-for="project in projects"
             :key="project.id"
             :project="project"
-            @click="$router.push(`/project/${project.id}`)"
+            @click="$router.push(`/project/${project.projectId}`)"
           />
         </div>
       </el-tab-pane>

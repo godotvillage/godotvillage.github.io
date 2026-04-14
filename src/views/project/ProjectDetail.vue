@@ -11,7 +11,7 @@
             <el-tag size="large" effect="plain">{{ project.type }}</el-tag>
           </div>
           <div class="header-actions" v-if="isOwner">
-            <el-button @click="$router.push(`/project/${project.id}/edit`)">
+            <el-button @click="$router.push(`/project/${project.projectId}/edit`)">
               <el-icon><Edit /></el-icon>
               编辑
             </el-button>

@@ -58,7 +58,7 @@
             v-for="article in articles.slice(0, 6)"
             :key="article.id"
             :article="article"
-            @click="$router.push(`/article/${article.id}`)"
+            @click="$router.push(`/article/${article.articleId}`)"
           />
         </div>
       </section>
@@ -81,7 +81,7 @@
             v-for="project in projects.slice(0, 4)"
             :key="project.id"
             :project="project"
-            @click="$router.push(`/project/${project.id}`)"
+            @click="$router.push(`/project/${project.projectId}`)"
           />
         </div>
       </section>

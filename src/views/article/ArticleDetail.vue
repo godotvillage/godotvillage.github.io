@@ -23,7 +23,7 @@
           </div>
 
           <div class="article-actions" v-if="isAuthor">
-            <el-button @click="$router.push(`/article/${article.id}/edit`)">
+            <el-button @click="$router.push(`/article/${article.articleId}/edit`)">
               <el-icon><Edit /></el-icon>
               编辑
             </el-button>
