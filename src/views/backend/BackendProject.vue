@@ -129,14 +129,14 @@ const handleFilter = () => {
   // 筛选在 computed 中处理
 }
 
-const getStatusType = (status: string) => {
-  const typeMap: Record<string, string> = {
+const getStatusType = (status: string): 'success' | 'primary' | 'warning' | 'info' | 'danger' => {
+  const map: Record<string, 'success' | 'primary' | 'warning' | 'info' | 'danger'> = {
     '进行中': 'success',
     '已完成': 'primary',
     '已暂停': 'warning',
     '已取消': 'info'
   }
-  return typeMap[status] || 'info'
+  return map[status] || 'info'
 }
 
 const handleView = (project: ProjectDto) => {

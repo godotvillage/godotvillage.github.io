@@ -68,8 +68,8 @@ defineEmits<{
   click: []
 }>()
 
-const getStatusType = (status: string) => {
-  const statusMap: Record<string, string> = {
+const getStatusType = (status: string): 'success' | 'primary' | 'warning' | 'info' | 'danger' => {
+  const statusMap: Record<string, 'success' | 'primary' | 'warning' | 'info' | 'danger'> = {
     '进行中': 'success',
     '已完成': 'primary',
     '已暂停': 'warning',

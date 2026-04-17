@@ -11,7 +11,7 @@
 
     <h3 class="article-title">{{ article.title }}</h3>
 
-    <p class="article-summary">{{ article.summary || stripHtml(article.content).slice(0, 120) }}</p>
+    <p class="article-summary">{{ computedSummary }}</p>
 
     <div class="article-footer">
       <div class="article-author">
@@ -48,6 +48,7 @@
 import { computed } from 'vue'
 import { View, ChatDotRound, Star, Clock } from '@element-plus/icons-vue'
 import type { ArticleDto } from '@/api/article'
+import { getAvatarUrl } from '@/utils/avatar'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import 'dayjs/locale/zh-cn'
@@ -55,7 +56,7 @@ import 'dayjs/locale/zh-cn'
 dayjs.locale('zh-cn')
 dayjs.extend(relativeTime)
 
-defineProps<{
+const props = defineProps<{
   article: ArticleDto
 }>()
 
@@ -64,12 +65,16 @@ defineEmits<{
 }>()
 
 const avatarUrl = computed(() => {
-  return `https://api.dicebear.com/7.x/initials/svg?seed=`
+  return getAvatarUrl(props.article.authorName)
 })
 
-const stripHtml = (html: string) => {
-  return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ')
-}
+const computedSummary = computed(() => {
+  if (props.article.summary) {
+    return props.article.summary
+  }
+  const html = props.article.content || ''
+  return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').slice(0, 120)
+})
 
 const formatTime = (time: string) => {
   return dayjs(time).fromNow()

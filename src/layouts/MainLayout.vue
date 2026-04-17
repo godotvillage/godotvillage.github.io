@@ -1,30 +1,33 @@
 <template>
-  <div class="main-layout">
-    <!-- 顶部导航 -->
-    <header class="header">
-      <div class="header-content">
-        <div class="header-left">
-          <router-link to="/" class="logo">
-            <el-icon :size="28"><Grid /></el-icon>
-            <span class="logo-text">Godot新手村</span>
-          </router-link>
+  <div class="app-layout">
+    <!-- 左侧导航栏 -->
+    <aside class="sidebar">
+      <router-link to="/" class="logo">
+        <el-icon :size="24" color="#667eea"><Grid /></el-icon>
+        <span class="logo-text">Godot新手村</span>
+      </router-link>
 
-          <nav class="nav-menu">
-            <router-link to="/" class="nav-item" :class="{ active: $route.path === '/' }">
-              <el-icon><House /></el-icon>
-              <span>首页</span>
-            </router-link>
-            <router-link to="/article" class="nav-item" :class="{ active: $route.path.startsWith('/article') }">
-              <el-icon><Document /></el-icon>
-              <span>文章</span>
-            </router-link>
-            <router-link to="/project" class="nav-item" :class="{ active: $route.path.startsWith('/project') }">
-              <el-icon><FolderOpened /></el-icon>
-              <span>项目</span>
-            </router-link>
-          </nav>
-        </div>
+      <nav class="nav-menu">
+        <router-link to="/" class="nav-item" :class="{ active: $route.path === '/' }">
+          <el-icon><House /></el-icon>
+          <span>首页</span>
+        </router-link>
+        <router-link to="/article" class="nav-item" :class="{ active: $route.path.startsWith('/article') }">
+          <el-icon><Document /></el-icon>
+          <span>文章</span>
+        </router-link>
+        <router-link to="/project" class="nav-item" :class="{ active: $route.path.startsWith('/project') }">
+          <el-icon><FolderOpened /></el-icon>
+          <span>项目</span>
+        </router-link>
+      </nav>
+    </aside>
 
+    <!-- 右侧主内容区 -->
+    <div class="main-wrapper">
+      <!-- 顶部操作栏 -->
+      <header class="top-header">
+        <div class="header-left"></div>
         <div class="header-right">
           <!-- 搜索 -->
           <el-input
@@ -36,14 +39,20 @@
             @keyup.enter="handleSearch"
           />
 
+          <!-- 消息通知 -->
+          <div class="notification-icon" @click="router.push('/user/messages')">
+            <el-badge :value="unreadCount" :hidden="unreadCount === 0" class="badge">
+              <el-icon :size="20"><Bell /></el-icon>
+            </el-badge>
+          </div>
+
           <!-- 登录状态 -->
           <template v-if="authStore.isLoggedIn">
             <el-dropdown trigger="click" @command="handleUserCommand">
               <div class="user-info">
-                <el-avatar :size="36" :src="avatarUrl">
+                <el-avatar :size="32" :src="avatarUrl">
                   {{ authStore.userInfo?.nickname || authStore.userInfo?.userName?.charAt(0) }}
                 </el-avatar>
-                <span class="username">{{ authStore.userInfo?.nickname || authStore.userInfo?.userName }}</span>
                 <el-icon><ArrowDown /></el-icon>
               </div>
               <template #dropdown>
@@ -56,10 +65,6 @@
                   </el-dropdown-item>
                   <el-dropdown-item command="my-projects">
                     <el-icon><FolderOpened /></el-icon>我的项目
-                  </el-dropdown-item>
-                  <el-dropdown-item command="my-messages">
-                    <el-icon><ChatDotRound /></el-icon>我的消息
-                    <el-badge :value="unreadCount" :hidden="unreadCount === 0" class="badge" />
                   </el-dropdown-item>
                   <el-dropdown-item v-if="authStore.isAdmin" divided command="backend">
                     <el-icon><Setting /></el-icon>进入后台
@@ -76,21 +81,19 @@
             <el-button type="primary" @click="$router.push('/register')">注册</el-button>
           </template>
         </div>
-      </div>
-    </header>
+      </header>
 
-    <!-- 主内容 -->
-    <main class="main-content">
-      <router-view v-slot="{ Component }">
-        <transition name="fade" mode="out-in">
-          <component :is="Component" />
-        </transition>
-      </router-view>
-    </main>
+      <!-- 页面内容 -->
+      <main class="page-content">
+        <router-view v-slot="{ Component }">
+          <transition name="fade" mode="out-in">
+            <component :is="Component" />
+          </transition>
+        </router-view>
+      </main>
 
-    <!-- 底部 -->
-    <footer class="footer">
-      <div class="footer-content">
+      <!-- 底部 -->
+      <footer class="footer">
         <div class="footer-links">
           <a href="https://godotengine.org" target="_blank">Godot Engine</a>
           <span class="divider">|</span>
@@ -98,18 +101,19 @@
           <span class="divider">|</span>
           <span>© 2024 Godot新手村</span>
         </div>
-      </div>
-    </footer>
+      </footer>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { Search, House, Document, FolderOpened, User, ArrowDown, SwitchButton, Grid, ChatDotRound, Setting } from '@element-plus/icons-vue'
+import { Search, House, Document, FolderOpened, User, ArrowDown, SwitchButton, Grid, Bell, Setting } from '@element-plus/icons-vue'
 import { useAuthStore } from '@/stores/auth'
 import { messageApi } from '@/api/message'
 import { ElMessage } from 'element-plus'
+import { getAvatarUrl } from '@/utils/avatar'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -131,9 +135,9 @@ onMounted(() => {
   loadUnreadCount()
 })
 
-const avatarUrl = authStore.userInfo?.email
-  ? `https://api.dicebear.com/7.x/initials/svg?seed=${authStore.userInfo.nickname || authStore.userInfo.userName}`
-  : ''
+const avatarUrl = computed(() => {
+  return getAvatarUrl(authStore.userInfo?.nickname || authStore.userInfo?.userName || authStore.userInfo?.email)
+})
 
 const handleSearch = () => {
   if (searchQuery.value.trim()) {
@@ -152,9 +156,6 @@ const handleUserCommand = (command: string) => {
     case 'my-projects':
       router.push({ path: '/project', query: { author: authStore.userInfo?.userName } })
       break
-    case 'my-messages':
-      router.push('/user/messages')
-      break
     case 'backend':
       router.push('/backend/article')
       break
@@ -168,87 +169,123 @@ const handleUserCommand = (command: string) => {
 </script>
 
 <style scoped lang="scss">
-.main-layout {
-  min-height: 100vh;
+.app-layout {
   display: flex;
-  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--color-background);
 }
 
-.header {
-  background: var(--card-bg);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  position: sticky;
+.sidebar {
+  width: 240px;
+  background-color: #0B1120;
+  border-right: 1px solid var(--color-secondary);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
   top: 0;
+  left: 0;
+  height: 100vh;
   z-index: 1000;
-
-  .header-content {
-    max-width: 1400px;
-    margin: 0 auto;
-    height: var(--header-height);
-    padding: 0 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .header-left {
-    display: flex;
-    align-items: center;
-    gap: 32px;
-  }
-
+  
   .logo {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    padding: 24px;
     text-decoration: none;
-    color: var(--primary-color);
-
+    
     .logo-text {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 700;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: var(--color-text);
     }
   }
 
   .nav-menu {
+    flex: 1;
+    padding: 0 16px;
     display: flex;
+    flex-direction: column;
     gap: 8px;
 
     .nav-item {
       display: flex;
       align-items: center;
-      gap: 6px;
-      padding: 8px 16px;
+      gap: 12px;
+      padding: 12px 16px;
       border-radius: 8px;
       text-decoration: none;
-      color: var(--text-regular);
+      color: #94A3B8;
       font-size: 15px;
       font-weight: 500;
-      transition: all 0.2s;
+      transition: all 0.2s ease;
 
       &:hover {
-        background: var(--bg-color);
-        color: var(--primary-color);
+        color: var(--color-text);
+        background-color: rgba(255, 255, 255, 0.05);
       }
 
       &.active {
-        background: #ecf5ff;
-        color: var(--primary-color);
+        color: var(--color-text);
+        background-color: var(--color-secondary);
       }
     }
   }
+}
+
+.main-wrapper {
+  flex: 1;
+  margin-left: 240px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.top-header {
+  height: 64px;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: transparent;
+  position: sticky;
+  top: 0;
+  z-index: 900;
+  backdrop-filter: blur(8px);
 
   .header-right {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 24px;
 
     .search-input {
-      width: 200px;
+      width: 240px;
+      
+      :deep(.el-input__wrapper) {
+        background-color: var(--color-secondary);
+        box-shadow: none;
+        border-radius: 20px;
+        
+        &.is-focus {
+          box-shadow: 0 0 0 1px var(--color-primary) inset;
+        }
+        
+        .el-input__inner {
+          color: var(--color-text);
+        }
+      }
+    }
+
+    .notification-icon {
+      cursor: pointer;
+      color: #94A3B8;
+      display: flex;
+      align-items: center;
+      transition: color 0.2s;
+
+      &:hover {
+        color: var(--color-text);
+      }
     }
 
     .user-info {
@@ -256,61 +293,60 @@ const handleUserCommand = (command: string) => {
       align-items: center;
       gap: 8px;
       cursor: pointer;
-      padding: 4px 8px;
-      border-radius: 8px;
-      transition: background 0.2s;
+      color: #94A3B8;
+      transition: color 0.2s;
 
       &:hover {
-        background: var(--bg-color);
-      }
-
-      .username {
-        font-size: 14px;
-        font-weight: 500;
-        color: var(--text-primary);
+        color: var(--color-text);
       }
     }
   }
 }
 
-.main-content {
+.page-content {
   flex: 1;
-  padding: 24px 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .footer {
-  background: var(--card-bg);
-  border-top: 1px solid var(--border-light);
-  padding: 24px 0;
-  margin-top: auto;
-
-  .footer-content {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 24px;
-    text-align: center;
-  }
+  padding: 24px;
+  border-top: 1px solid var(--color-secondary);
+  margin-top: 40px;
 
   .footer-links {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
     font-size: 14px;
-    color: var(--text-secondary);
+    color: #64748B;
 
     a {
-      color: var(--text-secondary);
+      color: #64748B;
       text-decoration: none;
+      transition: color 0.2s;
 
       &:hover {
-        color: var(--primary-color);
+        color: var(--color-text);
       }
     }
 
     .divider {
-      color: var(--border-color);
+      color: var(--color-secondary);
     }
+  }
+}
+
+/* 响应式处理 */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  
+  .main-wrapper {
+    margin-left: 0;
   }
 }
 </style>

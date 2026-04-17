@@ -106,8 +106,12 @@ const formatTime = (time: string) => {
 
 const handleRead = async (message: MessageDto) => {
   if (!message.isRead) {
-    await messageApi.markAsRead(message.id)
-    message.isRead = true
+    try {
+      await messageApi.markAsRead(message.id)
+      message.isRead = true
+    } catch (error) {
+      console.error('标记已读失败:', error)
+    }
   }
 }
 

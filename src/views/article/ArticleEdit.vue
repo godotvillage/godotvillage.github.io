@@ -111,7 +111,8 @@ import { articleApi } from '@/api/article'
 import { categoryApi } from '@/api/category'
 import { ElMessage } from 'element-plus'
 import { Loading } from '@element-plus/icons-vue'
-import { MdEditor } from 'md-editor-v3'
+import request from '@/api/request'
+import { MdEditor, type ToolbarNames } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 import type { CategoryDto } from '@/api/category'
 
@@ -119,7 +120,7 @@ const route = useRoute()
 const router = useRouter()
 
 // md-editor 配置
-const toolbars = [
+const toolbars: ToolbarNames[] = [
   'bold', 'underline', 'italic', 'strikeThrough', 'title',
   'sub', 'sup', 'quote', 'unorderedList', 'orderedList',
   'codeRow', 'code', 'link', 'image', 'table',
@@ -193,18 +194,19 @@ const handleUploadImg = async (files: FileList, callback: (urls: string[]) => vo
     const formData = new FormData()
     formData.append('file', file)
     try {
-      // 这里需要替换为实际上传图片的 API
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData
+      const response: any = await request.post('/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       })
-      const data = await response.json()
-      if (data.url) {
-        urls.push(data.url)
+      
+      const url = response.data?.url || response.url || (response.data && typeof response.data === 'string' ? response.data : null)
+      if (url) {
+        urls.push(url)
       }
     } catch (error) {
       console.error('图片上传失败:', error)
-      ElMessage.error('图片上传失败')
+      // 错误已由拦截器处理
     }
   }
   callback(urls)

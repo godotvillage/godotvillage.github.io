@@ -140,14 +140,14 @@ const handleFilter = () => {
   // 筛选在 computed 中处理
 }
 
-const getStatusType = (status: string) => {
-  const typeMap: Record<string, string> = {
+const getStatusType = (status: string): 'success' | 'primary' | 'warning' | 'info' | 'danger' => {
+  const map: Record<string, 'success' | 'primary' | 'warning' | 'info' | 'danger'> = {
     'Draft': 'info',
     'Pending': 'warning',
     'Published': 'success',
     'Rejected': 'danger'
   }
-  return typeMap[status] || 'info'
+  return map[status] || 'info'
 }
 
 const getStatusText = (status: string) => {

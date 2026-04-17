@@ -1,18 +1,45 @@
-// 主题颜色变量
+// 主题颜色变量 (Tokens)
 :root {
-  --primary-color: #409eff;
+  // 色彩调色板 - Dark Theme (Task 3.1)
+  --color-background: #0F172A;
+  --color-primary: #1E293B;
+  --color-secondary: #334155;
+  --color-text: #F8FAFC;
+  --color-cta: #22C55E;
+
+  // 间距变量 (Spacing - Task 3.2)
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+
+  // 阴影变量 (Shadows - Task 3.3)
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.5);
+
+  // 字体变量 (Typography - Task 2.2)
+  --font-heading: 'Space Grotesk', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+
+  // 兼容旧的颜色变量名，将其映射到新的调色板上，确保不会破坏现有代码
+  --primary-color: var(--color-cta);
   --success-color: #67c23a;
   --warning-color: #e6a23c;
   --danger-color: #f56c6c;
-  --info-color: #909399;
+  --info-color: #94A3B8;
 
-  --bg-color: #f5f7fa;
-  --card-bg: #ffffff;
-  --text-primary: #303133;
-  --text-regular: #606266;
-  --text-secondary: #909399;
-  --border-color: #dcdfe6;
-  --border-light: #e4e7ed;
+  --bg-color: var(--color-background);
+  --card-bg: var(--color-primary);
+  --text-primary: var(--color-text);
+  --text-regular: #94A3B8; // slate-400
+  --text-secondary: #64748B; // slate-500
+  --border-color: var(--color-secondary);
+  --border-light: #475569;
 
   --header-height: 60px;
   --sidebar-width: 220px;
@@ -20,21 +47,123 @@
 
 // 全局样式
 body {
-  background-color: var(--bg-color);
-  color: var(--text-primary);
+  background-color: var(--bg-color); // #0F172A (Task 5.1)
+  color: var(--text-primary);        // #F8FAFC (Task 5.1)
+  font-family: var(--font-body);     // (Task 2.2)
   line-height: 1.6;
 }
 
-// 卡片样式
+// 标题字体配置 (Task 2.2)
+h1, h2, h3, h4, h5, h6, 
+.page-title, .article-title, .project-title {
+  font-family: var(--font-heading);
+}
+
+// 统一的可点击元素样式和过渡效果 (Task 5.2)
+a, button, .btn, .btn-primary, .btn-secondary, 
+.article-card, .project-card, .emoji-btn, 
+.user-avatar {
+  cursor: pointer;
+  transition: all 0.2s ease; // 150-300ms transition
+
+  // 键盘导航的聚焦状态 (Task 6)
+  &:focus-visible {
+    outline: 2px solid var(--color-cta);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2); // 使用 CTA 颜色的淡阴影增强可见性
+  }
+}
+
+// 基础按钮样式 (Task 4.1)
+.btn-primary {
+  background-color: var(--color-cta);
+  color: var(--color-background);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: 6px;
+  border: none;
+  font-family: var(--font-body);
+  font-weight: 600;
+
+  &:hover {
+    background-color: #16a34a; // slightly darker/lighter green
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+.btn-secondary {
+  background-color: var(--color-secondary);
+  color: var(--color-text);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  font-family: var(--font-body);
+  font-weight: 600;
+
+  &:hover {
+    background-color: var(--border-light);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+// 输入框 (Task 4.3)
+.input {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: var(--space-sm) var(--space-md);
+  font-family: var(--font-body);
+  transition: all 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-cta);
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+  }
+}
+
+// 模态框 (Task 4.4)
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: var(--color-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-xl);
+  max-width: 500px;
+  width: 90%;
+  color: var(--color-text);
+}
+
+// 卡片样式 (Task 4.2)
 .card {
   background: var(--card-bg);
   border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-  padding: 20px;
-  transition: box-shadow 0.3s;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-lg); // updated to use space token
+  transition: all 0.2s ease; // for hover transition
 
   &:hover {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
   }
 }
 
@@ -42,7 +171,7 @@ body {
 .page-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: var(--space-lg); // updated to use space token
 }
 
 // 标题样式
@@ -50,8 +179,8 @@ body {
   font-size: 24px;
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 20px;
-  padding-bottom: 12px;
+  margin-bottom: var(--space-lg); // updated to use space token
+  padding-bottom: var(--space-md); // updated to use space token
   border-bottom: 2px solid var(--primary-color);
 }
 
@@ -59,19 +188,19 @@ body {
 .tag-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--space-sm); // updated to use space token
 }
 
 // 空状态
 .empty-state {
   text-align: center;
-  padding: 60px 20px;
+  padding: var(--space-3xl) var(--space-lg);
   color: var(--text-secondary);
 
   .empty-icon {
     font-size: 64px;
-    margin-bottom: 16px;
-    color: #dcdfe6;
+    margin-bottom: var(--space-md);
+    color: var(--border-color);
   }
 
   .empty-text {
@@ -100,9 +229,7 @@ body {
 
 // 文章卡片
 .article-card {
-  cursor: pointer;
-  transition: all 0.3s;
-
+  // cursor and transition are in the unified block
   &:hover {
     transform: translateY(-4px);
   }
@@ -111,7 +238,7 @@ body {
     font-size: 18px;
     font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: 12px;
+    margin-bottom: var(--space-sm); // updated to use space token
     line-height: 1.4;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -129,13 +256,13 @@ body {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
-    margin-bottom: 12px;
+    margin-bottom: var(--space-sm); // updated to use space token
   }
 
   .article-meta {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: var(--space-md); // updated to use space token
     font-size: 13px;
     color: var(--text-secondary);
   }
@@ -143,9 +270,7 @@ body {
 
 // 项目卡片
 .project-card {
-  cursor: pointer;
-  transition: all 0.3s;
-
+  // cursor and transition are in the unified block
   &:hover {
     transform: translateY(-4px);
   }
@@ -154,7 +279,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 12px;
+    margin-bottom: var(--space-sm); // updated to use space token
   }
 
   .project-title {
@@ -164,11 +289,11 @@ body {
   }
 
   .project-progress {
-    margin-top: 12px;
+    margin-top: var(--space-sm); // updated to use space token
   }
 
   .project-tags {
-    margin-top: 12px;
+    margin-top: var(--space-sm); // updated to use space token
   }
 }
 
@@ -197,32 +322,31 @@ body {
 .emoji-picker {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  padding: 8px;
+  gap: var(--space-sm); // updated to use space token
+  padding: var(--space-sm); // updated to use space token
 
   .emoji-btn {
     font-size: 24px;
     padding: 6px;
     border: none;
     background: transparent;
-    cursor: pointer;
+    // cursor and transition are in the unified block
     border-radius: 8px;
-    transition: all 0.2s;
 
     &:hover {
-      background: #f5f7fa;
+      background: var(--color-primary);
       transform: scale(1.2);
     }
 
     &.active {
-      background: #ecf5ff;
+      background: var(--color-secondary);
     }
   }
 }
 
 // 评论区
 .comment-item {
-  padding: 16px 0;
+  padding: var(--space-md) 0; // updated to use space token
   border-bottom: 1px solid var(--border-light);
 
   &:last-child {
@@ -230,14 +354,14 @@ body {
   }
 
   .comment-content {
-    margin: 12px 0;
+    margin: var(--space-sm) 0; // updated to use space token
     color: var(--text-primary);
     line-height: 1.6;
   }
 
   .comment-actions {
     display: flex;
-    gap: 16px;
+    gap: var(--space-md); // updated to use space token
     font-size: 13px;
     color: var(--text-secondary);
   }
