@@ -189,10 +189,11 @@ const goToRelated = (message: MessageDto) => {
   }
 
   &.unread {
-    background: #ecf5ff;
+    background: var(--bg-color);
+    border: 1px solid var(--primary-color);
 
     &:hover {
-      background: #d9ecff;
+      background: var(--color-secondary);
     }
   }
 

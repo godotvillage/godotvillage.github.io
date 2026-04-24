@@ -287,9 +287,10 @@ const formatTime = (time: string) => {
 
 <style scoped lang="scss">
 .project-detail-page {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 0 24px;
+  width: 90%;
 }
 
 .project-container {

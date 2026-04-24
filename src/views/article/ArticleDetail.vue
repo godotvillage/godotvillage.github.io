@@ -61,7 +61,7 @@
 
       <!-- 文章内容 -->
       <div class="article-content card">
-        <MdPreview :modelValue="article.content" previewTheme="smart-blue" />
+        <MdPreview theme="dark" :modelValue="article.content" previewTheme="smart-blue" />
       </div>
 
       <!-- 表情反应 -->
@@ -443,9 +443,10 @@ const formatTime = (time: string) => {
 
 <style scoped lang="scss">
 .article-detail-page {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 0 24px;
+  width: 90%;
 }
 
 .article-container {
@@ -526,10 +527,11 @@ const formatTime = (time: string) => {
   }
 
   :deep(pre) {
-    background: #f6f8fa;
+    background: var(--bg-color);
     padding: 16px;
     border-radius: 8px;
     overflow-x: auto;
+    border: 1px solid var(--border-color);
   }
 
   :deep(img) {
@@ -557,13 +559,15 @@ const formatTime = (time: string) => {
       font-size: 16px;
       cursor: pointer;
       transition: all 0.2s;
+      border: 1px solid var(--border-color);
 
       &:hover {
-        background: #ecf5ff;
+        background: var(--color-secondary);
+        border-color: var(--primary-color);
       }
 
       &.active {
-        background: #ecf5ff;
+        background: var(--color-secondary);
         border: 1px solid var(--primary-color);
       }
     }
@@ -599,7 +603,8 @@ const formatTime = (time: string) => {
         }
 
         &.active {
-          background: #ecf5ff;
+          background: var(--color-secondary);
+          transform: scale(1.2);
         }
       }
     }
