@@ -54,6 +54,8 @@
           <div class="editor-container">
             <MdEditor
               v-model="form.content"
+              theme="dark"
+              previewTheme="smart-blue"
               :preview="false"
               :toolbars="toolbars"
               placeholder="输入文章内容..."

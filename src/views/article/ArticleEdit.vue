@@ -51,6 +51,7 @@
         </el-form-item>
 
         <el-form-item label="内容" prop="content">
+          啊实打实的
           <div class="editor-container">
             <MdEditor
               v-model="form.content"

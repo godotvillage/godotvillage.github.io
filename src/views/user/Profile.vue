@@ -154,6 +154,7 @@ const handleSaveSettings = async () => {
 .profile-page {
   max-width: 1000px;
   margin: 0 auto;
+  width: 90%;
 }
 
 .profile-header {
