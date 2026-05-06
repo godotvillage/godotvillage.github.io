@@ -1,27 +1,4 @@
 {
-<<<<<<< HEAD
-  "name": "godotvillage.github.io",
-  "description": "godot新手村web项目",
-  "version": "0.0.1",
-  "license": "MIT",
-  "type": "module",
-  "scripts": {
-    "docs:build": "vuepress-vite build src",
-    "docs:clean-dev": "vuepress-vite dev src --clean-cache",
-    "docs:dev": "vuepress-vite dev src",
-    "docs:update-package": "npx vp-update"
-  },
-  "devDependencies": {
-    "@vuepress/bundler-vite": "2.0.0-rc.24",
-    "@vuepress/plugin-comment": "^2.0.0-rc.112",
-    "@vuepress/plugin-docsearch": "^2.0.0-rc.112",
-    "@vuepress/plugin-register-components": "^2.0.0-rc.112",
-    "marked": "^16.4.0",
-    "sass-embedded": "^1.89.2",
-    "vue": "^3.5.17",
-    "vuepress": "2.0.0-rc.24",
-    "vuepress-theme-hope": "2.0.0-rc.94"
-=======
   "name": "godotvillage-forum",
   "version": "1.0.0",
   "private": true,
@@ -53,6 +30,5 @@
     "unplugin-vue-components": "^0.26.0",
     "vite": "^5.1.5",
     "vue-tsc": "^2.0.6"
->>>>>>> origin/new_backend_20251225
   }
 }
