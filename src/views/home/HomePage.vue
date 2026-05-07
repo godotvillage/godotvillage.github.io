@@ -35,21 +35,21 @@
     <section class="stats-section">
       <div class="stats-container">
         <div class="stat-item">
-          <div class="stat-value">{{ siteStats.userCount ? siteStats.userCount.toLocaleString() : '2,847' }}</div>
+          <div class="stat-value">{{ siteStats.userCount ? siteStats.userCount.toLocaleString() : '0' }}</div>
           <div class="stat-label">活跃成员</div>
         </div>
         <div class="stat-item">
-          <div class="stat-value">{{ siteStats.articleCount ? siteStats.articleCount.toLocaleString() : '156' }}</div>
-          <div class="stat-label">教程资源</div>
+          <div class="stat-value">{{ siteStats.articleCount ? siteStats.articleCount.toLocaleString() : '0' }}</div>
+          <div class="stat-label">文章数量</div>
         </div>
         <div class="stat-item">
-          <div class="stat-value">{{ siteStats.projectCount ? siteStats.projectCount.toLocaleString() : '89' }}</div>
-          <div class="stat-label">开源项目</div>
+          <div class="stat-value">{{ siteStats.projectCount ? siteStats.projectCount.toLocaleString() : '0' }}</div>
+          <div class="stat-label">项目跟踪</div>
         </div>
-        <div class="stat-item">
+        <!-- <div class="stat-item">
           <div class="stat-value">{{ ((siteStats.articleCount || 0) + (siteStats.projectCount || 0)) || '3,421' }}</div>
           <div class="stat-label">讨论帖子</div>
-        </div>
+        </div> -->
       </div>
     </section>
 
@@ -63,8 +63,8 @@
               <el-icon><Reading /></el-icon>
             </div>
             <div class="link-info">
-              <h3>教程库</h3>
-              <p>从入门到精通</p>
+              <h3>文章列表</h3>
+              <p>学习资源讨论与分享</p>
             </div>
           </div>
           <div class="link-card" @click="$router.push('/project')">
@@ -72,26 +72,26 @@
               <el-icon><Monitor /></el-icon>
             </div>
             <div class="link-info">
-              <h3>作品展示</h3>
+              <h3>项目追踪</h3>
               <p>发现优秀作品</p>
             </div>
           </div>
-          <div class="link-card" @click="$router.push('/article')">
+          <div class="link-card" @click="$router.push('/assetweb')">
             <div class="link-icon-wrapper bg-green">
               <el-icon><ChatLineRound /></el-icon>
             </div>
             <div class="link-info">
-              <h3>技术论坛</h3>
-              <p>交流开发经验</p>
+              <h3>资源网站</h3>
+              <p>获取开发资源</p>
             </div>
           </div>
-          <div class="link-card">
+          <div class="link-card" @click="$router.push('/gamejam')">
             <div class="link-icon-wrapper bg-orange">
               <el-icon><Calendar /></el-icon>
             </div>
             <div class="link-info">
-              <h3>活动日历</h3>
-              <p>参与线上线下</p>
+              <h3>Gamejam活动</h3>
+              <p>群内活动记录</p>
             </div>
           </div>
         </div>
@@ -109,21 +109,6 @@
           </div>
           
           <div class="news-list">
-            <!-- 置顶新闻（静态或混合动态） -->
-            <div class="news-item featured">
-              <div class="news-content">
-                <h3>Godot 4.3 正式发布</h3>
-                <p>全新渲染管线、改进的2D光照系统、更强大的GDScript</p>
-              </div>
-            </div>
-            <div class="news-item event">
-              <div class="news-content">
-                <span class="tag-event">event</span>
-                <h3>2024年度游戏开发大赛开启报名</h3>
-                <p>总奖金池50万元，面向全球Godot开发者</p>
-              </div>
-            </div>
-            
             <!-- 动态文章列表 -->
             <div v-if="loading" class="loading-state">
               <el-icon class="is-loading"><Loading /></el-icon> 加载中...
@@ -145,47 +130,12 @@
         </div>
 
         <!-- 右侧：精选教程 -->
-        <div class="tutorial-column">
+        <!-- <div class="tutorial-column">
           <div class="section-header">
             <h2 class="section-title">精选教程</h2>
             <router-link to="/article" class="view-all">查看全部</router-link>
           </div>
-          
           <div class="tutorial-list">
-            <div class="tutorial-item" @click="$router.push('/article')">
-              <div class="tutorial-tag tag-beginner">入门</div>
-              <div class="tutorial-info">
-                <h3>Godot 4.x 完全入门指南</h3>
-                <div class="tutorial-meta">
-                  <span class="rating"><el-icon><StarFilled /></el-icon> 4.8</span>
-                  <span class="views"><el-icon><View /></el-icon> 12500</span>
-                </div>
-              </div>
-            </div>
-            
-            <div class="tutorial-item" @click="$router.push('/article')">
-              <div class="tutorial-tag tag-intermediate">进阶</div>
-              <div class="tutorial-info">
-                <h3>2D平台跳跃游戏开发实战</h3>
-                <div class="tutorial-meta">
-                  <span class="rating"><el-icon><StarFilled /></el-icon> 4.9</span>
-                  <span class="views"><el-icon><View /></el-icon> 8900</span>
-                </div>
-              </div>
-            </div>
-            
-            <div class="tutorial-item" @click="$router.push('/article')">
-              <div class="tutorial-tag tag-advanced">高级</div>
-              <div class="tutorial-info">
-                <h3>高级着色器编程技巧</h3>
-                <div class="tutorial-meta">
-                  <span class="rating"><el-icon><StarFilled /></el-icon> 4.7</span>
-                  <span class="views"><el-icon><View /></el-icon> 5600</span>
-                </div>
-              </div>
-            </div>
-            
-            <!-- 动态项目/文章填充 -->
             <div 
               v-for="project in projects.slice(0, 2)" 
               :key="project.id" 
@@ -202,7 +152,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </section>
   </div>
