@@ -63,6 +63,54 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '编辑项目', requiresAuth: true }
       },
       {
+        path: 'gamejam',
+        name: 'gamejam',
+        component: () => import('@/views/gamejam/GameJam5.vue'),
+        meta: { title: '第五届GameJam' }
+      },
+      {
+        path: 'gamejam/list',
+        name: 'gamejam-list',
+        component: () => import('@/views/gamejam/GameJam.vue'),
+        meta: { title: '往届记录' }
+      },
+      {
+        path: 'gamejam/1',
+        name: 'gamejam-1',
+        component: () => import('@/views/gamejam/GameJam1.vue'),
+        meta: { title: '第一届GameJam' }
+      },
+      {
+        path: 'gamejam/2',
+        name: 'gamejam-2',
+        component: () => import('@/views/gamejam/GameJam2.vue'),
+        meta: { title: '第二届GameJam' }
+      },
+      {
+        path: 'gamejam/3',
+        name: 'gamejam-3',
+        component: () => import('@/views/gamejam/GameJam3.vue'),
+        meta: { title: '第三届GameJam' }
+      },
+      {
+        path: 'gamejam/4',
+        name: 'gamejam-4',
+        component: () => import('@/views/gamejam/GameJam4.vue'),
+        meta: { title: '第四届GameJam' }
+      },
+      {
+        path: 'gamejam/5',
+        name: 'gamejam-5',
+        component: () => import('@/views/gamejam/GameJam5.vue'),
+        meta: { title: '第五届GameJam' }
+      },
+      {
+        path: 'friendlink',
+        name: 'friendlink',
+        component: () => import('@/views/friendlink/FriendLink.vue'),
+        meta: { title: '友链' }
+      },
+      {
         path: 'user/profile',
         name: 'user-profile',
         component: () => import('@/views/user/Profile.vue'),

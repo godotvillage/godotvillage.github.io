@@ -20,6 +20,14 @@
           <el-icon><FolderOpened /></el-icon>
           <span>项目</span>
         </router-link>
+        <router-link to="/gamejam" class="nav-item" :class="{ active: $route.path.startsWith('/gamejam') }">
+          <el-icon><Trophy /></el-icon>
+          <span>GameJam</span>
+        </router-link>
+        <router-link to="/friendlink" class="nav-item" :class="{ active: $route.path.startsWith('/friendlink') }">
+          <el-icon><Link /></el-icon>
+          <span>友链</span>
+        </router-link>
       </nav>
     </aside>
 
@@ -109,7 +117,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { Search, House, Document, FolderOpened, User, ArrowDown, SwitchButton, Grid, Bell, Setting } from '@element-plus/icons-vue'
+import { Search, House, Document, FolderOpened, User, ArrowDown, SwitchButton, Grid, Bell, Setting, Trophy, Link } from '@element-plus/icons-vue'
 import { useAuthStore } from '@/stores/auth'
 import { messageApi } from '@/api/message'
 import { ElMessage } from 'element-plus'

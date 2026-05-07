@@ -4,11 +4,11 @@
     <section class="hero-section">
       <div class="hero-glow"></div>
       <div class="hero-content">
-        <div class="hero-badge">
+        <!-- <div class="hero-badge">
           <span class="icon-sparkle">✨</span>
           Godot 4.3 现已发布
           <span class="icon-lightning">⚡</span>
-        </div>
+        </div> -->
 
         <h1 class="hero-title">
           <div class="title-line-1">Godot中文</div>

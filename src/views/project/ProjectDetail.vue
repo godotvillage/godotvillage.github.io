@@ -362,6 +362,7 @@ const formatTime = (time: string) => {
     color: var(--text-primary);
     line-height: 1.6;
     margin-bottom: 16px;
+    white-space: pre-wrap;
   }
 
   .project-tags {
