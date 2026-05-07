@@ -98,7 +98,7 @@
       <section class="project-updates card">
         <div class="section-header">
           <h3><el-icon><Timer /></el-icon>更新日志</h3>
-          <el-button v-if="authStore.isLoggedIn" type="primary" size="small" @click="showAddUpdate">
+          <el-button v-if="isOwner" type="primary" size="small" @click="showAddUpdate">
             <el-icon><Plus /></el-icon>
             添加更新
           </el-button>

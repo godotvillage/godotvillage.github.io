@@ -111,6 +111,12 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '友链' }
       },
       {
+        path: 'assetweb',
+        name: 'assetweb',
+        component: () => import('@/views/assetweb/AssetWeb.vue'),
+        meta: { title: '资源网站分享' }
+      },
+      {
         path: 'user/profile',
         name: 'user-profile',
         component: () => import('@/views/user/Profile.vue'),

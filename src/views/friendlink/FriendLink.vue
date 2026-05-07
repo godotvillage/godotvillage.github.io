@@ -117,6 +117,20 @@ const friendLinks: FriendLink[] = [
   },
   {
     id: 6,
+    name: '百泽（分氏狸猫）',
+    url: 'https://space.bilibili.com/201640218',
+    platform: 'B站',
+    note: ''
+  },
+  {
+    id: 7,
+    name: '陌上竹',
+    url: 'https://www.moshangzhu.com.cn',
+    platform: '个人博客',
+    note: ''
+  },
+  {
+    id: 8,
     name: 'Godot中文社区',
     url: 'https://godotengine.org',
     platform: '官网',

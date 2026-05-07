@@ -35,7 +35,7 @@
               删除
             </el-button>
           </div>
-          <div class="article-actions" v-else-if="authStore.isAdmin && article.status === 'Pending'">
+          <div class="article-actions" v-else-if="authStore.isAdmin && article.status !== 'Published'">
             <el-button type="success" @click="handleApprove">
               <el-icon><CircleCheck /></el-icon>
               通过
