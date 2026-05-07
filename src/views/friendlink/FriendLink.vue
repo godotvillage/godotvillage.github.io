@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import { Link, Connection, Platform, ArrowRight, Plus } from '@element-plus/icons-vue'
+import { Connection, Platform, ArrowRight, Plus } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 
 interface FriendLink {
