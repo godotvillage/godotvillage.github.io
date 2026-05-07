@@ -100,8 +100,8 @@ const handleLogin = async () => {
 
       const redirect = route.query.redirect as string
       router.push(redirect || '/')
-    } catch (error) {
-      // 错误已在拦截器处理
+    } catch {
+      // 错误消息已在拦截器中处理
     } finally {
       loading.value = false
     }

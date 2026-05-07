@@ -46,24 +46,30 @@ request.interceptors.response.use(
     if (error.response) {
       const { status, data } = error.response
 
+      // 优先使用服务端返回的消息
+      const serverMsg = data?.message
+      const isLoginPage = router.currentRoute.value.path === '/login'
+
       switch (status) {
         case 401:
-          ElMessage.error('登录已过期，请重新登录')
-          localStorage.removeItem('accessToken')
-          localStorage.removeItem('userInfo')
-          router.push('/login')
+          ElMessage.error(serverMsg || '登录已过期，请重新登录')
+          if (!isLoginPage) {
+            localStorage.removeItem('accessToken')
+            localStorage.removeItem('userInfo')
+            router.push('/login')
+          }
           break
         case 403:
-          ElMessage.error('没有权限访问该资源')
+          ElMessage.error(serverMsg || '没有权限访问该资源')
           break
         case 404:
-          ElMessage.error('请求的资源不存在')
+          ElMessage.error(serverMsg || '请求的资源不存在')
           break
         case 500:
-          ElMessage.error('服务器错误，请稍后重试')
+          ElMessage.error(serverMsg || '服务器错误，请稍后重试')
           break
         default:
-          ElMessage.error(data?.message || '请求失败')
+          ElMessage.error(serverMsg || '请求失败')
       }
     } else {
       ElMessage.error('网络错误，请检查您的连接')
