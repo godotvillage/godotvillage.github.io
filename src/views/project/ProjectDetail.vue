@@ -125,7 +125,7 @@
         </div>
 
         <!-- 添加更新表单 -->
-        <el-dialog v-model="showUpdateDialog" title="添加项目更新" width="500px">
+        <el-dialog v-model="showUpdateDialog" title="添加项目更新" width="500px" append-to-body>
           <el-form :model="updateForm" label-position="top">
             <el-form-item label="更新内容">
               <el-input
@@ -497,6 +497,7 @@ const formatTime = (time: string) => {
           color: var(--text-primary);
           line-height: 1.6;
           margin-bottom: 8px;
+          white-space: pre-wrap;
         }
 
         .update-time {
