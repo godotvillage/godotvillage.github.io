@@ -162,7 +162,7 @@
 import { ref, onMounted } from 'vue'
 import { 
   Monitor, Reading, ChatLineRound, Calendar, 
-  Loading, StarFilled, View 
+  Loading
 } from '@element-plus/icons-vue'
 import { articleApi } from '@/api/article'
 import { projectApi } from '@/api/project'
