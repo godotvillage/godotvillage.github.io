@@ -1,0 +1,38 @@
+/** 第五届 GameJam 参赛作品（顺序与后端 GameJam5Catalog 一致） */
+export interface GameJam5Entry {
+  entryId: string
+  work: string
+  author: string
+}
+
+export const gameJam5Edition = '5'
+
+export const gameJam5Entries: GameJam5Entry[] = [
+  { entryId: 'f5e60000-0000-4000-8000-000000000001', work: '十秒臭豆腐，挣够100就收手', author: 'Valar' },
+  { entryId: 'f5e60000-0000-4000-8000-000000000002', work: '十秒爬塔', author: '凉城清风' },
+  {
+    entryId: 'f5e60000-0000-4000-8000-000000000003',
+    work: '因为吃外卖没有勺子然后发现了一个比赛冠军能获得无限的金钱或者一把勺子所以前进吧',
+    author: '百泽'
+  },
+  { entryId: 'f5e60000-0000-4000-8000-000000000004', work: '十秒跑酷', author: '傅霜' },
+  { entryId: 'f5e60000-0000-4000-8000-000000000005', work: '十秒无双', author: '陌上竹' },
+  { entryId: 'f5e60000-0000-4000-8000-000000000006', work: '分头行动', author: '热爱生活' },
+  { entryId: 'f5e60000-0000-4000-8000-000000000007', work: '十秒快答', author: '戈多戈' },
+  { entryId: 'f5e60000-0000-4000-8000-000000000008', work: '我的小猫能撑十秒', author: '三川' },
+  { entryId: 'f5e60000-0000-4000-8000-000000000009', work: '重生之我是五月食伍', author: '大吉赐福' },
+  { entryId: 'f5e60000-0000-4000-8000-00000000000a', work: '10sec1.2', author: '无人知晓' },
+  { entryId: 'f5e60000-0000-4000-8000-00000000000b', work: '10sec', author: 'JrD' },
+  { entryId: 'f5e60000-0000-4000-8000-00000000000c', work: '购物狂欢节', author: '哈气的～' },
+  { entryId: 'f5e60000-0000-4000-8000-00000000000d', work: '十秒速消', author: '雪里蕻' },
+  { entryId: 'f5e60000-0000-4000-8000-00000000000e', work: '抓史莱姆', author: '发光' },
+  { entryId: 'f5e60000-0000-4000-8000-00000000000f', work: '小鸡冒险记', author: '轻风云再起' },
+  { entryId: 'f5e60000-0000-4000-8000-000000000010', work: '针要射了', author: '帆帆月影' },
+  { entryId: 'f5e60000-0000-4000-8000-000000000011', work: '十秒不动', author: '鸽鸽鸽鸽鸽鸽鸽' },
+  { entryId: 'f5e60000-0000-4000-8000-000000000012', work: '10秒跳一跳', author: '夜𝒟𝑎𝑦 ¹⁹⁰' },
+  { entryId: 'f5e60000-0000-4000-8000-000000000013', work: '10秒无限突破', author: '咩咩青羽' }
+]
+
+export function gameJam5CoverUrl(entryId: string): string {
+  return `/gamejam5/covers/${entryId}.webp`
+}

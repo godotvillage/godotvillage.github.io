@@ -105,6 +105,12 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '第五届GameJam' }
       },
       {
+        path: 'gamejam/:edition/vote',
+        name: 'gamejam-vote',
+        component: () => import('@/views/gamejam/GameJamVote.vue'),
+        meta: { title: 'GameJam 作品打分', requiresAuth: true }
+      },
+      {
         path: 'friendlink',
         name: 'friendlink',
         component: () => import('@/views/friendlink/FriendLink.vue'),

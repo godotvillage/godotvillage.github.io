@@ -17,6 +17,12 @@
         </div>
         <h1 class="hero-title">Godot新手村游戏制作大赛</h1>
         <p class="hero-desc">49人报名参赛，比赛火热进行中。</p>
+        <div class="hero-actions">
+          <router-link to="/gamejam/5/vote" class="vote-cta">
+            <el-icon><Star /></el-icon>
+            作品打分
+          </router-link>
+        </div>
         <div class="hero-stats">
           <div class="hero-stat">
             <span class="stat-num">49</span>
@@ -113,16 +119,14 @@
 
 <script setup lang="ts">
 import { Trophy, Calendar, Star, UserFilled, ArrowLeft, List, User, Clock } from '@element-plus/icons-vue'
+import { gameJam5Entries } from '@/data/gameJam5Entries'
 
 interface ScheduleItem {
   phase: string
   desc: string
 }
 
-interface Entry {
-  author: string
-  work: string
-}
+const entries = gameJam5Entries
 
 const schedule: ScheduleItem[] = [
   { phase: '主题公布', desc: '赛事开始时一并公布主题，计时随即开始' },
@@ -130,28 +134,6 @@ const schedule: ScheduleItem[] = [
   { phase: '提交截止', desc: '2026年5月6日 10:00（中国标准时间），逾期将不予受理' },
   { phase: '投票阶段', desc: '提交截止后开放，具体时间由主办方公布' },
   { phase: '结果公布', desc: '投票结束后公布最终排名与点评' }
-]
-
-const entries: Entry[] = [
-  { author: 'Valar', work: '十秒臭豆腐，挣够100就收手' },
-  { author: '凉城清风', work: '十秒爬塔' },
-  { author: '百泽', work: '因为吃外卖没有勺子然后发现了一个比赛冠军能获得无限的金钱或者一把勺子所以前进吧' },
-  { author: '傅霜', work: '十秒跑酷' },
-  { author: '陌上竹', work: '十秒无双' },
-  { author: '热爱生活', work: '分头行动' },
-  { author: '戈多戈', work: '十秒快答' },
-  { author: '三川', work: '我的小猫能撑十秒' },
-  { author: '大吉赐福', work: '重生之我是五月食伍' },
-  { author: '无人知晓', work: '10sec1.2' },
-  { author: 'JrD', work: '10sec' },
-  { author: '哈气的～', work: '购物狂欢节' },
-  { author: '雪里蕻', work: '十秒速消' },
-  { author: '发光', work: '抓史莱姆' },
-  { author: '轻风云再起', work: '小鸡冒险记' },
-  { author: '帆帆月影', work: '针要射了' },
-  { author: '鸽鸽鸽鸽鸽鸽鸽', work: '十秒不动' },
-  { author: '夜𝒟𝑎𝑦 ¹⁹⁰', work: '10秒跳一跳' },
-  { author: '咩咩青羽', work: '10秒无限突破' }
 ]
 
 const sponsors: string[] = [
@@ -256,8 +238,32 @@ const sponsors: string[] = [
     font-size: 16px;
     color: #94A3B8;
     max-width: 600px;
-    margin: 0 auto 40px;
+    margin: 0 auto 20px;
     line-height: 1.6;
+  }
+
+  .hero-actions {
+    margin-bottom: 32px;
+  }
+
+  .vote-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #0f172a;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    text-decoration: none;
+    box-shadow: 0 4px 24px rgba(251, 191, 36, 0.35);
+    transition: transform 0.15s, box-shadow 0.15s;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 28px rgba(251, 191, 36, 0.45);
+    }
   }
 
   .hero-stats {
