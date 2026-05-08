@@ -118,7 +118,7 @@
                 v-for="article in articles.slice(0, 3)" 
                 :key="article.id" 
                 class="news-item"
-                @click="$router.push(`/article/${article.articleId}`)"
+                @click="$router.push(`/article/${article.id}`)"
               >
                 <div class="news-content">
                   <h3>{{ article.title }}</h3>

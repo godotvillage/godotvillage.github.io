@@ -33,7 +33,7 @@
             v-for="article in articles"
             :key="article.id"
             :article="article"
-            @click="$router.push(`/article/${article.articleId}`)"
+            @click="$router.push(`/article/${article.id}`)"
           />
         </div>
       </el-tab-pane>

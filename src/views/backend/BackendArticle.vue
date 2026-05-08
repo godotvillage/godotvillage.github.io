@@ -40,7 +40,7 @@
       <el-table :data="filteredArticles" style="width: 100%">
         <el-table-column prop="title" label="标题" min-width="200">
           <template #default="{ row }">
-            <router-link :to="`/article/${row.articleId}`" class="article-link">
+            <router-link :to="`/article/${row.id}`" class="article-link">
               {{ row.title }}
             </router-link>
           </template>
@@ -165,7 +165,7 @@ const formatTime = (time: string) => {
 }
 
 const handleView = (article: ArticleDto) => {
-  router.push(`/article/${article.articleId}`)
+  router.push(`/article/${article.id}`)
 }
 
 const handleApprove = async (article: ArticleDto) => {
@@ -175,7 +175,7 @@ const handleApprove = async (article: ArticleDto) => {
       cancelButtonText: '取消',
       type: 'info'
     })
-    await articleApi.approve(article.articleId)
+    await articleApi.approve(article.id)
     ElMessage.success('文章已通过')
     loadArticles()
   } catch (error) {
@@ -186,7 +186,7 @@ const handleApprove = async (article: ArticleDto) => {
 }
 
 const handleReject = (article: ArticleDto) => {
-  rejectForm.value.articleId = article.articleId
+  rejectForm.value.articleId = article.id
   rejectForm.value.reason = ''
   rejectDialogVisible.value = true
 }
@@ -213,7 +213,7 @@ const handleUnpublish = async (article: ArticleDto) => {
       cancelButtonText: '取消',
       type: 'warning'
     })
-    await articleApi.update(article.articleId, { allowGuestView: false } as any)
+    await articleApi.update(article.id, { allowGuestView: false } as any)
     ElMessage.success('已取消发布')
     loadArticles()
   } catch (error) {
