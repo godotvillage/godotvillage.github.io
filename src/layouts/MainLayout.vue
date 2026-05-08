@@ -16,6 +16,10 @@
           <el-icon><Document /></el-icon>
           <span>文章</span>
         </router-link>
+        <router-link to="/tutorial" class="nav-item" :class="{ active: $route.path.startsWith('/tutorial') }">
+          <el-icon><Reading /></el-icon>
+          <span>教程</span>
+        </router-link>
         <router-link to="/project" class="nav-item" :class="{ active: $route.path.startsWith('/project') }">
           <el-icon><FolderOpened /></el-icon>
           <span>项目</span>
@@ -121,7 +125,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { Search, House, Document, FolderOpened, User, ArrowDown, SwitchButton, Grid, Bell, Setting, Trophy, Link, Collection } from '@element-plus/icons-vue'
+import { Search, House, Document, Reading, FolderOpened, User, ArrowDown, SwitchButton, Grid, Bell, Setting, Trophy, Link, Collection } from '@element-plus/icons-vue'
 import { useAuthStore } from '@/stores/auth'
 import { messageApi } from '@/api/message'
 import { ElMessage } from 'element-plus'

@@ -19,10 +19,8 @@ tag:
 
 ### 获取项目代码
 
-::: info
-项目代码在文章末尾，请下载后导入 Godot 4.6 使用
-:::
-
+!!! note 项目代码在文章末尾，请下载后导入 Godot 4.6 使用
+!!!
 ### 环境
 
 教程使用 `Godot 4.6` 版本。
@@ -78,10 +76,9 @@ peer.create_client(server_ip, port)
 
 ### 第一章 创建项目与自动加载
 
-::: info
+!!! note
 请先创建 Godot 项目，并创建 `scenes` 和 `scripts` 目录
-:::
-
+!!!
 #### 配置自动加载
 
 在 `project.godot` 中添加自动加载脚本：
