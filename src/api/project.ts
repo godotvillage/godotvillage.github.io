@@ -14,6 +14,7 @@ export interface ProjectDto {
   projectId: string
   title: string
   author: string
+  createdBy?: string
   githubUser?: string
   contact?: string
   type: string

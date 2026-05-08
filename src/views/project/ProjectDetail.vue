@@ -198,9 +198,8 @@ const updateForm = reactive({
 const projectId = computed(() => route.params.id as string)
 
 const isOwner = computed(() => {
-  const user = authStore.userInfo
-  if (!user || !project.value) return false
-  return user.userName === project.value.author || user.nickname === project.value.author
+  if (!authStore.userInfo || !project.value) return false
+  return authStore.userInfo.id === project.value.createdBy
 })
 
 onMounted(() => {

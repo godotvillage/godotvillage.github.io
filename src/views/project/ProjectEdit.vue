@@ -149,7 +149,7 @@ const loadProject = async () => {
 
     // 校验归属：只有项目作者可以编辑
     const user = authStore.userInfo
-    if (!user || (user.userName !== project.author && user.nickname !== project.author)) {
+    if (!user || user.id !== project.createdBy) {
       ElMessage.error('无权编辑此项目')
       router.push(`/project/${projectId}`)
       return
