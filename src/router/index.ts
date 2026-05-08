@@ -111,6 +111,24 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '友链' }
       },
       {
+        path: 'tutorial',
+        name: 'tutorial-list',
+        component: () => import('@/views/tutorial/TutorialList.vue'),
+        meta: { title: '教程中心' }
+      },
+      {
+        path: 'tutorial/:category/:page',
+        name: 'tutorial-page-nested',
+        component: () => import('@/views/tutorial/TutorialPage.vue'),
+        meta: { title: '教程详情' }
+      },
+      {
+        path: 'tutorial/:page',
+        name: 'tutorial-page',
+        component: () => import('@/views/tutorial/TutorialPage.vue'),
+        meta: { title: '教程详情' }
+      },
+      {
         path: 'assetweb',
         name: 'assetweb',
         component: () => import('@/views/assetweb/AssetWeb.vue'),

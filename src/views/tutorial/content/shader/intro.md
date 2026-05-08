@@ -8,9 +8,9 @@ tag:
   - 着色器
 ---
 
-::: details 链接
+``` ::close 链接
 着色器相关文档：[Godot文档-着色器简介](https://docs.godotengine.org/zh-cn/4.x/tutorials/shaders/introduction_to_shaders.html)
-:::
+```
 
 ## 什么是 Shader
 
