@@ -78,7 +78,7 @@ export interface ProjectFormDto {
 // 项目更新记录
 export interface ProjectUpdateDto {
   id: string
-  updateId: string
+  // updateId removed — use Id instead
   projectId: string
   content: string
   progress?: number

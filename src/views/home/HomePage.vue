@@ -140,7 +140,7 @@
               v-for="project in projects.slice(0, 2)" 
               :key="project.id" 
               class="tutorial-item dynamic"
-              @click="$router.push(`/project/${project.projectId}`)"
+              @click="$router.push(`/project/${project.id}`)"
             >
               <div class="tutorial-tag tag-dynamic">推荐</div>
               <div class="tutorial-info">

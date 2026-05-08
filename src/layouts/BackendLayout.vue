@@ -17,6 +17,10 @@
           <el-icon><User /></el-icon>
           <span>用户管理</span>
         </router-link>
+        <router-link to="/backend/category" class="nav-item" :class="{ active: route.path.startsWith('/backend/category') }">
+          <el-icon><Collection /></el-icon>
+          <span>分类管理</span>
+        </router-link>
       </nav>
     </aside>
     <main class="backend-main">
@@ -27,7 +31,7 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { Document, FolderOpened, User } from '@element-plus/icons-vue'
+import { Document, FolderOpened, User, Collection } from '@element-plus/icons-vue'
 
 const route = useRoute()
 </script>

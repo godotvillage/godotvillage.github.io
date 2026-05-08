@@ -72,7 +72,7 @@
         v-for="project in filteredProjects"
         :key="project.id"
         :project="project"
-        @click="$router.push(`/project/${project.projectId}`)"
+        @click="$router.push(`/project/${project.id}`)"
       />
     </div>
   </div>

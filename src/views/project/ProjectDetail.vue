@@ -11,7 +11,7 @@
             <el-tag size="large" effect="plain">{{ project.type }}</el-tag>
           </div>
           <div class="header-actions" v-if="isOwner">
-            <el-button @click="$router.push(`/project/${project.projectId}/edit`)">
+            <el-button @click="$router.push(`/project/${project.id}/edit`)">
               <el-icon><Edit /></el-icon>
               编辑
             </el-button>
@@ -198,7 +198,9 @@ const updateForm = reactive({
 const projectId = computed(() => route.params.id as string)
 
 const isOwner = computed(() => {
-  return authStore.userInfo?.userName === project.value?.author
+  const user = authStore.userInfo
+  if (!user || !project.value) return false
+  return user.userName === project.value.author || user.nickname === project.value.author
 })
 
 onMounted(() => {

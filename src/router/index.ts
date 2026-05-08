@@ -156,6 +156,12 @@ const routes: RouteRecordRaw[] = [
             name: 'backend-user',
             component: () => import('@/views/backend/BackendUser.vue'),
             meta: { title: '用户管理', requiresAdmin: true }
+          },
+          {
+            path: 'category',
+            name: 'backend-category',
+            component: () => import('@/views/backend/BackendCategory.vue'),
+            meta: { title: '分类管理', requiresAdmin: true }
           }
         ]
       }

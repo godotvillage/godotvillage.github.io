@@ -101,11 +101,13 @@ import { ref, reactive, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { FormInstance, FormRules } from 'element-plus'
 import { projectApi } from '@/api/project'
+import { useAuthStore } from '@/stores/auth'
 import { ElMessage } from 'element-plus'
 import { Loading } from '@element-plus/icons-vue'
 
 const route = useRoute()
 const router = useRouter()
+const authStore = useAuthStore()
 
 const formRef = ref<FormInstance>()
 const loading = ref(true)
@@ -144,6 +146,15 @@ const loadProject = async () => {
   try {
     const res = await projectApi.getById(projectId)
     const project = res.data
+
+    // 校验归属：只有项目作者可以编辑
+    const user = authStore.userInfo
+    if (!user || (user.userName !== project.author && user.nickname !== project.author)) {
+      ElMessage.error('无权编辑此项目')
+      router.push(`/project/${projectId}`)
+      return
+    }
+
     form.title = project.title
     form.contact = project.contact || ''
     form.type = project.type

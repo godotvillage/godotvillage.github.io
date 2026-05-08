@@ -35,7 +35,7 @@
         <el-form-item prop="email">
           <el-input
             v-model="form.email"
-            placeholder="邮箱 (可选)"
+            placeholder="邮箱"
             size="large"
             :prefix-icon="Message"
           />

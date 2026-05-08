@@ -48,7 +48,7 @@
       <el-table :data="filteredProjects" style="width: 100%">
         <el-table-column prop="title" label="标题" min-width="200">
           <template #default="{ row }">
-            <router-link :to="`/project/${row.projectId}`" class="project-link">
+            <router-link :to="`/project/${row.id}`" class="project-link">
               {{ row.title }}
             </router-link>
           </template>
@@ -140,7 +140,7 @@ const getStatusType = (status: string): 'success' | 'primary' | 'warning' | 'inf
 }
 
 const handleView = (project: ProjectDto) => {
-  router.push(`/project/${project.projectId}`)
+  router.push(`/project/${project.id}`)
 }
 
 const handleDelete = async (project: ProjectDto) => {
@@ -150,7 +150,7 @@ const handleDelete = async (project: ProjectDto) => {
       cancelButtonText: '取消',
       type: 'warning'
     })
-    await projectApi.delete(project.projectId)
+    await projectApi.delete(project.id)
     ElMessage.success('项目已删除')
     loadProjects()
   } catch (error) {

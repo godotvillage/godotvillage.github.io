@@ -53,7 +53,7 @@
             v-for="project in projects"
             :key="project.id"
             :project="project"
-            @click="$router.push(`/project/${project.projectId}`)"
+            @click="$router.push(`/project/${project.id}`)"
           />
         </div>
       </el-tab-pane>
