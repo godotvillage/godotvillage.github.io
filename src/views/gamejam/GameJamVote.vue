@@ -22,7 +22,7 @@
         <header class="vote-header">
           <h1>作品打分</h1>
           <p class="vote-hint">
-            请依次为每件作品给出 1～10 分。全部完成后提交；同一账号可多次提交，以<strong>最后一次</strong>为准。
+            请依次为每件作品给出 1～10 分，或勾选「没有玩过？跳过」（跳过记为空分，<strong>不计入</strong>该作品均分）。全部条目处理完后提交；同一账号可多次提交，以<strong>最后一次</strong>为准。
           </p>
         </header>
 
@@ -43,7 +43,7 @@
                 <template #error>
                   <div class="cover-fallback">
                     <el-icon :size="48"><Picture /></el-icon>
-                    <span>暂无截图（可将图片放到 public/gamejam5/covers/{{ currentEntry.entryId }}.png）</span>
+                    <span>暂无截图（可将图片放到 public/gamejam5/covers/{{ currentEntry.entryId }}.webp）</span>
                   </div>
                 </template>
               </el-image>
@@ -59,10 +59,17 @@
 
           <div class="score-block">
             <div class="score-label">为作品打分（1～10）</div>
-            <div class="score-row">
-              <span class="score-num">{{ currentScore }}</span>
+            <el-checkbox v-model="currentSkipped" class="skip-check">
+              没有玩过？跳过
+            </el-checkbox>
+            <div class="score-row" :class="{ 'score-row--disabled': currentSkipped }">
+              <span
+                class="score-num"
+                :class="{ 'score-num--skipped': currentSkipped }"
+              >{{ currentSkipped ? '—' : currentScore }}</span>
               <el-slider
                 v-model="currentScore"
+                :disabled="currentSkipped"
                 :min="1"
                 :max="10"
                 :step="1"
@@ -70,6 +77,7 @@
                 class="score-slider"
               />
             </div>
+            <p v-if="currentSkipped" class="skip-hint">已跳过，提交后该条不参与作品得分统计。</p>
           </div>
 
           <div class="nav-actions">
@@ -107,8 +115,20 @@ const supported = computed(() => edition.value === gameJam5Edition)
 const total = gameJam5Entries.length
 const currentIndex = ref(0)
 const scores = ref<Record<string, number>>({})
+const skipped = ref<Record<string, boolean>>({})
 const loading = ref(true)
 const submitting = ref(false)
+
+function initVoteMaps() {
+  const s: Record<string, number> = {}
+  const k: Record<string, boolean> = {}
+  for (const e of gameJam5Entries) {
+    s[e.entryId] = 5
+    k[e.entryId] = false
+  }
+  scores.value = s
+  skipped.value = k
+}
 
 const currentEntry = computed(() => gameJam5Entries[currentIndex.value] ?? null)
 const coverSrc = computed(() =>
@@ -125,7 +145,20 @@ const currentScore = computed({
   set(v: number) {
     const id = currentEntry.value?.entryId
     if (!id) return
+    skipped.value = { ...skipped.value, [id]: false }
     scores.value = { ...scores.value, [id]: v }
+  }
+})
+
+const currentSkipped = computed({
+  get() {
+    const id = currentEntry.value?.entryId
+    return id ? !!skipped.value[id] : false
+  },
+  set(v: boolean) {
+    const id = currentEntry.value?.entryId
+    if (!id) return
+    skipped.value = { ...skipped.value, [id]: v }
   }
 })
 
@@ -133,20 +166,18 @@ async function loadSaved() {
   loading.value = true
   try {
     const list = await getMyGameJamRatings(gameJam5Edition)
-    const map: Record<string, number> = {}
-    for (const e of gameJam5Entries) {
-      map[e.entryId] = 5
-    }
+    initVoteMaps()
     for (const r of list) {
-      map[r.entryId] = r.score
+      const id = r.entryId.toLowerCase()
+      if (r.score === null || r.score === undefined) {
+        skipped.value = { ...skipped.value, [id]: true }
+      } else {
+        skipped.value = { ...skipped.value, [id]: false }
+        scores.value = { ...scores.value, [id]: r.score }
+      }
     }
-    scores.value = map
   } catch {
-    const map: Record<string, number> = {}
-    for (const e of gameJam5Entries) {
-      map[e.entryId] = 5
-    }
-    scores.value = map
+    initVoteMaps()
   } finally {
     loading.value = false
   }
@@ -172,9 +203,10 @@ watch(
 
 async function onSubmit() {
   for (const e of gameJam5Entries) {
+    if (skipped.value[e.entryId]) continue
     const s = scores.value[e.entryId]
     if (s === undefined || s === null || s < 1 || s > 10) {
-      ElMessage.warning('请为所有作品完成 1～10 分评分')
+      ElMessage.warning('请为每件作品打分（1～10）或对未玩过的作品选择跳过')
       return
     }
   }
@@ -185,7 +217,7 @@ async function onSubmit() {
       edition: gameJam5Edition,
       items: gameJam5Entries.map((e) => ({
         entryId: e.entryId,
-        score: scores.value[e.entryId]!
+        score: skipped.value[e.entryId] ? null : scores.value[e.entryId]!
       }))
     })
     ElMessage.success('提交成功，如需修改可再次提交覆盖')
@@ -361,10 +393,29 @@ async function onSubmit() {
     margin-bottom: 12px;
   }
 
+  .skip-check {
+    display: flex;
+    align-items: center;
+    margin-bottom: 14px;
+    color: #e2e8f0;
+  }
+
+  .skip-hint {
+    margin: 10px 0 0;
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.5;
+  }
+
   .score-row {
     display: flex;
     align-items: center;
     gap: 16px;
+
+    &--disabled {
+      opacity: 0.45;
+      pointer-events: none;
+    }
   }
 
   .score-num {
@@ -374,6 +425,12 @@ async function onSubmit() {
     font-family: var(--font-heading);
     min-width: 40px;
     text-align: center;
+
+    &--skipped {
+      font-size: 28px;
+      color: #64748b;
+      font-weight: 600;
+    }
   }
 
   .score-slider {
