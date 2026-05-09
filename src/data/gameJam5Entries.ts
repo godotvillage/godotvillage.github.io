@@ -34,5 +34,5 @@ export const gameJam5Entries: GameJam5Entry[] = [
 ]
 
 export function gameJam5CoverUrl(entryId: string): string {
-  return `/gamejam5/covers/${entryId}.webp`
+  return `/gamejam5/covers/${entryId}.png`
 }

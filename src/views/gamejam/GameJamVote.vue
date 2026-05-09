@@ -43,7 +43,7 @@
                 <template #error>
                   <div class="cover-fallback">
                     <el-icon :size="48"><Picture /></el-icon>
-                    <span>暂无截图（可将图片放到 public/gamejam5/covers/{{ currentEntry.entryId }}.webp）</span>
+                    <span>暂无截图（可将图片放到 public/gamejam5/covers/{{ currentEntry.entryId }}.png）</span>
                   </div>
                 </template>
               </el-image>
