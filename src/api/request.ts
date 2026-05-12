@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
 import router from '@/router'
+import { useAuthStore } from '@/stores/auth'
 
 const baseURL = import.meta.env.VITE_API_BASE_URL || '/api'
 
@@ -54,8 +55,8 @@ request.interceptors.response.use(
         case 401:
           ElMessage.error(serverMsg || '登录已过期，请重新登录')
           if (!isLoginPage) {
-            localStorage.removeItem('accessToken')
-            localStorage.removeItem('userInfo')
+            const authStore = useAuthStore()
+            authStore.logout()
             router.push('/login')
           }
           break
