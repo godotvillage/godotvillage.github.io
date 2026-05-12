@@ -26,7 +26,7 @@
         </div>
 
         <router-link to="/mascot" class="hero-mascot">
-          <img src="/godotvillagegirl.png" alt="Godot新手村看板娘" />
+          <img src="/godotvillagegirl.png" alt="Godot新手村看板娘" data-no-zoom />
         </router-link>
       </div>
     </section>

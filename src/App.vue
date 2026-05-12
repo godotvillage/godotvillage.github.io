@@ -2,15 +2,18 @@
   <el-config-provider :locale="zhCn">
     <router-view />
   </el-config-provider>
+  <ImageViewer :visible="viewer.visible.value" :src="viewer.src.value" :alt="viewer.alt.value" @close="viewer.close" />
 </template>
 
 <script setup lang="ts">
 import { ElConfigProvider } from 'element-plus'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import { useThemeStore } from '@/stores/theme'
+import { useImageViewer } from '@/composables/useImageViewer'
+import ImageViewer from '@/components/ImageViewer.vue'
 
-// 初始化主题（读取 localStorage 并应用 data-theme 属性）
 useThemeStore()
+const viewer = useImageViewer()
 </script>
 
 <style>
