@@ -159,7 +159,7 @@ const handleJoin = () => {
 .section-title {
   font-size: 20px;
   font-weight: 700;
-  color: #F8FAFC;
+  color: var(--text-primary);
   font-family: var(--font-heading);
   display: flex;
   align-items: center;
@@ -209,13 +209,13 @@ const handleJoin = () => {
     font-family: var(--font-heading);
     font-size: 40px;
     font-weight: 700;
-    color: #F8FAFC;
+    color: var(--text-primary);
     margin-bottom: 16px;
   }
 
   .hero-desc {
     font-size: 15px;
-    color: #94A3B8;
+    color: var(--text-regular);
     max-width: 560px;
     margin: 0 auto;
     line-height: 1.7;
@@ -233,8 +233,8 @@ const handleJoin = () => {
   }
 
   .link-card {
-    background: #1E293B;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 20px;
     display: flex;
@@ -245,7 +245,7 @@ const handleJoin = () => {
     cursor: pointer;
 
     &:hover {
-      background: #273549;
+      background: var(--color-secondary);
       transform: translateY(-2px);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 
@@ -285,7 +285,7 @@ const handleJoin = () => {
       h3 {
         font-size: 16px;
         font-weight: 600;
-        color: #F8FAFC;
+        color: var(--text-primary);
         margin-bottom: 4px;
       }
 
@@ -294,18 +294,18 @@ const handleJoin = () => {
         align-items: center;
         gap: 4px;
         font-size: 12px;
-        color: #64748B;
+        color: var(--text-secondary);
         margin-bottom: 4px;
       }
 
       .link-note {
         font-size: 13px;
-        color: #94A3B8;
+        color: var(--text-regular);
       }
     }
 
     .link-arrow {
-      color: #475569;
+      color: var(--text-regular);
       opacity: 0;
       transform: translateX(-8px);
       transition: all 0.3s ease;
@@ -316,8 +316,8 @@ const handleJoin = () => {
 /* Join section */
 .join-section {
   .join-card {
-    background: linear-gradient(135deg, #1E293B, #273549);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
     border-radius: 16px;
     padding: 40px;
     display: flex;
@@ -329,13 +329,13 @@ const handleJoin = () => {
       h2 {
         font-size: 22px;
         font-weight: 700;
-        color: #F8FAFC;
+        color: var(--text-primary);
         margin-bottom: 8px;
       }
 
       p {
         font-size: 14px;
-        color: #94A3B8;
+        color: var(--text-regular);
         line-height: 1.6;
       }
     }

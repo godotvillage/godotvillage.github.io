@@ -43,6 +43,38 @@
 
   --header-height: 60px;
   --sidebar-width: 220px;
+
+  // Element Plus 品牌色
+  --el-color-primary: #22C55E;
+  --el-color-primary-light-3: #4ADE80;
+  --el-color-primary-light-5: #86EFAC;
+  --el-color-primary-light-7: #BBF7D0;
+  --el-color-primary-light-8: #DCFCE7;
+  --el-color-primary-light-9: #F0FDF4;
+  --el-color-primary-dark-2: #16A34A;
+}
+
+// 亮色主题
+[data-theme="light"] {
+  --color-background: #F8FAFC;
+  --color-primary: #FFFFFF;
+  --color-secondary: #E2E8F0;
+  --color-text: #0F172A;
+  --color-cta: #16A34A;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  --text-regular: #475569;
+  --text-secondary: #64748B;
+  --border-light: #CBD5E1;
+
+  --bg-color: var(--color-background);
+  --card-bg: var(--color-primary);
+  --text-primary: var(--color-text);
+  --border-color: var(--color-secondary);
 }
 
 // 全局样式

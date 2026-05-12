@@ -241,13 +241,13 @@ const groups: Group[] = [
     font-family: var(--font-heading);
     font-size: 40px;
     font-weight: 700;
-    color: #F8FAFC;
+    color: var(--text-primary);
     margin-bottom: 16px;
   }
 
   .hero-desc {
     font-size: 15px;
-    color: #94A3B8;
+    color: var(--text-regular);
     max-width: 680px;
     margin: 0 auto 16px;
     line-height: 1.7;
@@ -255,7 +255,7 @@ const groups: Group[] = [
 
   .hero-note {
     font-size: 13px;
-    color: #64748B;
+    color: var(--text-secondary);
   }
 }
 
@@ -268,14 +268,14 @@ const groups: Group[] = [
   .category-title {
     font-size: 18px;
     font-weight: 700;
-    color: #F8FAFC;
+    color: var(--text-primary);
     font-family: var(--font-heading);
     display: flex;
     align-items: center;
     gap: 10px;
     margin-bottom: 16px;
     padding-bottom: 8px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid var(--border-color);
   }
 
   .link-list {
@@ -285,15 +285,15 @@ const groups: Group[] = [
   }
 
   .link-item {
-    background: #1E293B;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
     border-radius: 10px;
     padding: 14px 16px;
     text-decoration: none;
     transition: all 0.2s;
 
     &:hover {
-      background: #273549;
+      background: var(--color-secondary);
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
@@ -321,7 +321,7 @@ const groups: Group[] = [
 
   .link-desc {
     font-size: 12px;
-    color: #64748B;
+    color: var(--text-secondary);
     line-height: 1.5;
   }
 }

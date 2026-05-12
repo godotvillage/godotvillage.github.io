@@ -38,7 +38,7 @@
       <!-- Markdown 内容 -->
       <div class="tutorial-content card">
         <MdPreview
-          theme="dark"
+          :theme="themeStore.theme"
           :modelValue="processedContent"
           previewTheme="smart-blue"
         />
@@ -62,8 +62,10 @@ import { MdPreview } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 import { User, Calendar, ArrowLeft } from '@element-plus/icons-vue'
 import { parseFrontmatter, preprocessContent, type TutorialMetadata } from './utils'
+import { useThemeStore } from '@/stores/theme'
 
 const route = useRoute()
+const themeStore = useThemeStore()
 
 // ── 预加载所有 MD 文件 ──
 const mdModules = import.meta.glob('./content/**/*.md', {
@@ -130,9 +132,10 @@ const processedContent = computed(() => {
 
 <style scoped lang="scss">
 .tutorial-page {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 32px 24px 64px;
+  width: 90%;
 }
 
 .tutorial-header {
@@ -153,7 +156,7 @@ const processedContent = computed(() => {
     flex-wrap: wrap;
     gap: 20px;
     font-size: 14px;
-    color: #94A3B8;
+    color: var(--text-regular);
 
     .meta-item {
       display: flex;
@@ -190,8 +193,8 @@ const processedContent = computed(() => {
 
 // 卡片样式（与其他页面保持一致）
 .card {
-  background-color: var(--color-card-bg, #111827);
-  border: 1px solid var(--color-secondary, #1E293B);
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
 }
 </style>

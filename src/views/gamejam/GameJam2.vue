@@ -130,19 +130,19 @@ const winner = { work: '生或跳普通版.exe', author: '老爹叫你发工程'
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: #94A3B8;
+  color: var(--text-regular);
   text-decoration: none;
   font-size: 14px;
   padding: 16px 0;
   transition: color 0.2s;
 
-  &:hover { color: #F8FAFC; }
+  &:hover { color: var(--text-primary); }
 }
 
 .section-title {
   font-size: 22px;
   font-weight: 700;
-  color: #F8FAFC;
+  color: var(--text-primary);
   font-family: var(--font-heading);
   display: flex;
   align-items: center;
@@ -189,14 +189,14 @@ const winner = { work: '生或跳普通版.exe', author: '老爹叫你发工程'
     font-family: var(--font-heading);
     font-size: 48px;
     font-weight: 700;
-    color: #F8FAFC;
+    color: var(--text-primary);
     margin-bottom: 16px;
     line-height: 1.2;
   }
 
   .hero-desc {
     font-size: 16px;
-    color: #94A3B8;
+    color: var(--text-regular);
     max-width: 600px;
     margin: 0 auto 40px;
     line-height: 1.6;
@@ -216,7 +216,7 @@ const winner = { work: '生或跳普通版.exe', author: '老爹叫你发工程'
         color: #FBBF24;
         font-family: var(--font-heading);
       }
-      .stat-label { font-size: 14px; color: #64748B; }
+      .stat-label { font-size: 14px; color: var(--text-secondary); }
     }
   }
 }
@@ -226,8 +226,8 @@ const winner = { work: '生或跳普通版.exe', author: '老爹叫你发工程'
   margin-bottom: 56px;
 
   .entries-table {
-    background: #1E293B;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     overflow: hidden;
   }
@@ -235,23 +235,23 @@ const winner = { work: '生或跳普通版.exe', author: '老爹叫你发工程'
   .entries-header {
     display: flex;
     padding: 14px 20px;
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--color-secondary);
     font-size: 13px;
     font-weight: 600;
-    color: #94A3B8;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    color: var(--text-regular);
+    border-bottom: 1px solid var(--border-color);
   }
 
   .entries-row {
     display: flex;
     padding: 14px 20px;
     font-size: 14px;
-    color: #CBD5E1;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    color: var(--text-regular);
+    border-bottom: 1px solid var(--border-color);
     transition: background 0.2s;
 
     &:last-child { border-bottom: none; }
-    &:hover { background: rgba(255, 255, 255, 0.03); }
+    &:hover { background: var(--color-secondary); }
 
     &.winner {
       background: rgba(251, 191, 36, 0.06);
@@ -263,9 +263,9 @@ const winner = { work: '生或跳普通版.exe', author: '老爹叫你发工程'
     }
   }
 
-  .col-code { width: 80px; text-align: center; color: #64748B; flex-shrink: 0; }
+  .col-code { width: 80px; text-align: center; color: var(--text-secondary); flex-shrink: 0; }
   .col-work { flex: 1; display: flex; align-items: center; gap: 8px; }
-  .col-author { width: 180px; color: #94A3B8; flex-shrink: 0; }
+  .col-author { width: 180px; color: var(--text-regular); flex-shrink: 0; }
 
   .trophy-icon {
     color: #FBBF24;
@@ -281,7 +281,7 @@ const winner = { work: '生或跳普通版.exe', author: '老爹叫你发工程'
   }
 
   .winner-card {
-    background: #1E293B;
+    background: var(--card-bg);
     border: 1px solid rgba(251, 191, 36, 0.4);
     border-radius: 14px;
     padding: 36px 48px;
@@ -302,7 +302,7 @@ const winner = { work: '生或跳普通版.exe', author: '老爹叫你发工程'
     h3 {
       font-size: 24px;
       font-weight: 700;
-      color: #F8FAFC;
+      color: var(--text-primary);
       margin-bottom: 8px;
     }
 
@@ -312,7 +312,7 @@ const winner = { work: '生或跳普通版.exe', author: '老爹叫你发工程'
       justify-content: center;
       gap: 6px;
       font-size: 15px;
-      color: #94A3B8;
+      color: var(--text-regular);
     }
   }
 }

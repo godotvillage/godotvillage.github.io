@@ -160,14 +160,14 @@ const editions: Edition[] = [
     font-family: var(--font-heading);
     font-size: 48px;
     font-weight: 700;
-    color: #F8FAFC;
+    color: var(--text-primary);
     margin-bottom: 16px;
     line-height: 1.2;
   }
 
   .hero-desc {
     font-size: 16px;
-    color: #94A3B8;
+    color: var(--text-regular);
   }
 }
 
@@ -180,8 +180,8 @@ const editions: Edition[] = [
   }
 
   .edition-card {
-    background: #1E293B;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
     border-radius: 14px;
     padding: 28px 32px;
     text-decoration: none;
@@ -191,7 +191,7 @@ const editions: Edition[] = [
     gap: 24px;
 
     &.clickable:hover {
-      background: #273549;
+      background: var(--color-secondary);
       transform: translateY(-2px);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
       border-color: rgba(251, 191, 36, 0.3);
@@ -217,7 +217,7 @@ const editions: Edition[] = [
   .edition-title {
     font-size: 17px;
     font-weight: 600;
-    color: #F8FAFC;
+    color: var(--text-primary);
     flex: 1;
     min-width: 0;
   }
@@ -227,7 +227,7 @@ const editions: Edition[] = [
     align-items: center;
     gap: 6px;
     font-size: 13px;
-    color: #64748B;
+    color: var(--text-secondary);
     white-space: nowrap;
     flex-shrink: 0;
   }
@@ -239,7 +239,7 @@ const editions: Edition[] = [
 
     .stat-chip {
       font-size: 12px;
-      color: #94A3B8;
+      color: var(--text-regular);
       background: rgba(255, 255, 255, 0.05);
       padding: 3px 10px;
       border-radius: 6px;
@@ -264,7 +264,7 @@ const editions: Edition[] = [
 
   .edition-coming {
     font-size: 13px;
-    color: #64748B;
+    color: var(--text-secondary);
     white-space: nowrap;
     flex-shrink: 0;
   }

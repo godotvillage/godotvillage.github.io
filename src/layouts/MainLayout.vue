@@ -62,6 +62,12 @@
             </el-badge>
           </div>
 
+          <!-- 主题切换 -->
+          <div class="theme-toggle" @click="themeStore.toggleTheme()" :title="themeStore.theme === 'dark' ? '切换亮色主题' : '切换暗色主题'">
+            <el-icon :size="20" v-if="themeStore.theme === 'dark'"><Sunny /></el-icon>
+            <el-icon :size="20" v-else><Moon /></el-icon>
+          </div>
+
           <!-- 登录状态 -->
           <template v-if="authStore.isLoggedIn">
             <el-dropdown trigger="click" @command="handleUserCommand">
@@ -125,14 +131,16 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { Search, House, Document, Reading, FolderOpened, User, ArrowDown, SwitchButton, Grid, Bell, Setting, Trophy, Link, Collection } from '@element-plus/icons-vue'
+import { Search, House, Document, Reading, FolderOpened, User, ArrowDown, SwitchButton, Grid, Bell, Setting, Trophy, Link, Collection, Sunny, Moon } from '@element-plus/icons-vue'
 import { useAuthStore } from '@/stores/auth'
+import { useThemeStore } from '@/stores/theme'
 import { messageApi } from '@/api/message'
 import { ElMessage } from 'element-plus'
 import { getAvatarUrl } from '@/utils/avatar'
 
 const router = useRouter()
 const authStore = useAuthStore()
+const themeStore = useThemeStore()
 
 const searchQuery = ref('')
 const unreadCount = ref(0)
@@ -193,7 +201,7 @@ const handleUserCommand = (command: string) => {
 
 .sidebar {
   width: 240px;
-  background-color: #0B1120;
+  background-color: var(--color-background);
   border-right: 1px solid var(--color-secondary);
   display: flex;
   flex-direction: column;
@@ -231,14 +239,14 @@ const handleUserCommand = (command: string) => {
       padding: 12px 16px;
       border-radius: 8px;
       text-decoration: none;
-      color: #94A3B8;
+      color: var(--text-regular);
       font-size: 15px;
       font-weight: 500;
       transition: all 0.2s ease;
 
       &:hover {
         color: var(--color-text);
-        background-color: rgba(255, 255, 255, 0.05);
+        background-color: var(--color-secondary);
       }
 
       &.active {
@@ -294,7 +302,24 @@ const handleUserCommand = (command: string) => {
 
     .notification-icon {
       cursor: pointer;
-      color: #94A3B8;
+      color: var(--text-regular);
+      display: flex;
+      align-items: center;
+      transition: color 0.2s;
+
+      .badge {
+        display: flex;
+        align-items: center;
+      }
+
+      &:hover {
+        color: var(--color-text);
+      }
+    }
+
+    .theme-toggle {
+      cursor: pointer;
+      color: var(--text-regular);
       display: flex;
       align-items: center;
       transition: color 0.2s;
@@ -309,7 +334,7 @@ const handleUserCommand = (command: string) => {
       align-items: center;
       gap: 8px;
       cursor: pointer;
-      color: #94A3B8;
+      color: var(--text-regular);
       transition: color 0.2s;
 
       &:hover {
@@ -336,10 +361,10 @@ const handleUserCommand = (command: string) => {
     align-items: center;
     gap: 16px;
     font-size: 14px;
-    color: #64748B;
+    color: var(--text-secondary);
 
     a {
-      color: #64748B;
+      color: var(--text-secondary);
       text-decoration: none;
       transition: color 0.2s;
 

@@ -284,13 +284,13 @@ const loadStats = async () => {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background-color: rgba(30, 41, 59, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
     padding: 6px 16px;
     border-radius: 999px;
     font-size: 14px;
     font-weight: 500;
-    color: #94A3B8;
+    color: var(--text-regular);
     margin-bottom: 32px;
     backdrop-filter: blur(4px);
     
@@ -306,7 +306,7 @@ const loadStats = async () => {
     letter-spacing: -0.02em;
 
     .title-line-1 {
-      color: #F8FAFC;
+      color: var(--text-primary);
       font-weight: 700;
     }
 
@@ -321,7 +321,7 @@ const loadStats = async () => {
 
   .hero-subtitle {
     font-size: 18px;
-    color: #94A3B8;
+    color: var(--text-regular);
     max-width: 600px;
     margin-bottom: 40px;
     line-height: 1.6;
@@ -361,12 +361,12 @@ const loadStats = async () => {
     }
 
     .btn-secondary {
-      background-color: rgba(255, 255, 255, 0.05);
-      color: #F8FAFC;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      
+      background-color: var(--color-secondary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+
       &:hover {
-        background-color: rgba(255, 255, 255, 0.1);
+        background-color: var(--border-light);
         transform: translateY(-2px);
       }
     }
@@ -404,7 +404,7 @@ const loadStats = async () => {
         }
 
         .stat-label {
-          color: #94A3B8;
+          color: var(--text-regular);
         }
       }
     }
@@ -412,7 +412,7 @@ const loadStats = async () => {
     .stat-value {
       font-size: 32px;
       font-weight: 700;
-      color: #F8FAFC;
+      color: var(--text-primary);
       font-family: var(--font-heading);
       margin-bottom: 4px;
       transition: color 0.2s;
@@ -420,7 +420,7 @@ const loadStats = async () => {
 
     .stat-label {
       font-size: 14px;
-      color: #64748B;
+      color: var(--text-secondary);
       font-weight: 500;
       transition: color 0.2s;
     }
@@ -438,8 +438,8 @@ const loadStats = async () => {
   }
 
   .link-card {
-    background-color: #1E293B;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 24px;
     display: flex;
@@ -449,7 +449,7 @@ const loadStats = async () => {
     transition: all 0.3s ease;
 
     &:hover {
-      background-color: #273549;
+      background-color: var(--color-secondary);
       transform: translateY(-4px);
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     }
@@ -474,12 +474,12 @@ const loadStats = async () => {
       h3 {
         font-size: 16px;
         font-weight: 600;
-        color: #F8FAFC;
+        color: var(--text-primary);
         margin-bottom: 4px;
       }
       p {
         font-size: 13px;
-        color: #94A3B8;
+        color: var(--text-regular);
       }
     }
   }
@@ -515,7 +515,7 @@ const loadStats = async () => {
 
     .view-all {
       margin-left: auto;
-      color: #94A3B8;
+      color: var(--text-regular);
       font-size: 14px;
       text-decoration: none;
       transition: color 0.2s;
@@ -532,27 +532,27 @@ const loadStats = async () => {
     gap: 16px;
 
     .news-item {
-      background-color: #1E293B;
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
       border-radius: 12px;
       padding: 20px;
       cursor: pointer;
       transition: background-color 0.2s;
 
       &:hover {
-        background-color: #273549;
+        background-color: var(--color-secondary);
       }
 
       h3 {
         font-size: 18px;
         font-weight: 600;
         margin-bottom: 8px;
-        color: #F8FAFC;
+        color: var(--text-primary);
       }
 
       p {
         font-size: 14px;
-        color: #94A3B8;
+        color: var(--text-regular);
         line-height: 1.5;
       }
 
@@ -582,15 +582,15 @@ const loadStats = async () => {
     .tutorial-item {
       display: flex;
       gap: 16px;
-      background-color: #1E293B;
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
       border-radius: 12px;
       padding: 16px;
       cursor: pointer;
       transition: background-color 0.2s;
 
       &:hover {
-        background-color: #273549;
+        background-color: var(--color-secondary);
       }
 
       .tutorial-tag {
@@ -617,7 +617,7 @@ const loadStats = async () => {
         h3 {
           font-size: 15px;
           font-weight: 600;
-          color: #F8FAFC;
+          color: var(--text-primary);
           margin-bottom: 8px;
           line-height: 1.4;
         }
@@ -626,7 +626,7 @@ const loadStats = async () => {
           display: flex;
           gap: 16px;
           font-size: 13px;
-          color: #64748B;
+          color: var(--text-secondary);
 
           span {
             display: flex;

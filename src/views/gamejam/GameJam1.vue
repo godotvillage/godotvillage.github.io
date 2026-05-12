@@ -216,21 +216,21 @@ const sponsors: string[] = [
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: #94A3B8;
+  color: var(--text-regular);
   text-decoration: none;
   font-size: 14px;
   padding: 16px 0;
   transition: color 0.2s;
 
   &:hover {
-    color: #F8FAFC;
+    color: var(--text-primary);
   }
 }
 
 .section-title {
   font-size: 22px;
   font-weight: 700;
-  color: #F8FAFC;
+  color: var(--text-primary);
   font-family: var(--font-heading);
   display: flex;
   align-items: center;
@@ -277,14 +277,14 @@ const sponsors: string[] = [
     font-family: var(--font-heading);
     font-size: 48px;
     font-weight: 700;
-    color: #F8FAFC;
+    color: var(--text-primary);
     margin-bottom: 16px;
     line-height: 1.2;
   }
 
   .hero-desc {
     font-size: 16px;
-    color: #94A3B8;
+    color: var(--text-regular);
     max-width: 600px;
     margin: 0 auto 40px;
     line-height: 1.6;
@@ -304,7 +304,7 @@ const sponsors: string[] = [
         color: #FBBF24;
         font-family: var(--font-heading);
       }
-      .stat-label { font-size: 14px; color: #64748B; }
+      .stat-label { font-size: 14px; color: var(--text-secondary); }
     }
   }
 }
@@ -314,8 +314,8 @@ const sponsors: string[] = [
   margin-bottom: 56px;
 
   .desc-card {
-    background: #1E293B;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
     border-radius: 14px;
     padding: 28px;
   }
@@ -328,7 +328,7 @@ const sponsors: string[] = [
     h3 {
       font-size: 16px;
       font-weight: 600;
-      color: #F8FAFC;
+      color: var(--text-primary);
       margin-bottom: 12px;
     }
 
@@ -341,7 +341,7 @@ const sponsors: string[] = [
         position: relative;
         padding-left: 16px;
         font-size: 14px;
-        color: #CBD5E1;
+        color: var(--text-regular);
         line-height: 2;
 
         &::before {
@@ -359,7 +359,7 @@ const sponsors: string[] = [
 
     p {
       font-size: 14px;
-      color: #94A3B8;
+      color: var(--text-regular);
       line-height: 1.8;
     }
   }
@@ -370,8 +370,8 @@ const sponsors: string[] = [
   margin-bottom: 56px;
 
   .schedule-table {
-    background: #1E293B;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     overflow: hidden;
   }
@@ -379,28 +379,28 @@ const sponsors: string[] = [
   .schedule-header {
     display: flex;
     padding: 14px 20px;
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--color-secondary);
     font-size: 13px;
     font-weight: 600;
-    color: #94A3B8;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    color: var(--text-regular);
+    border-bottom: 1px solid var(--border-color);
   }
 
   .schedule-row {
     display: flex;
     padding: 14px 20px;
     font-size: 14px;
-    color: #CBD5E1;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    color: var(--text-regular);
+    border-bottom: 1px solid var(--border-color);
     transition: background 0.2s;
 
     &:last-child { border-bottom: none; }
-    &:hover { background: rgba(255, 255, 255, 0.03); }
+    &:hover { background: var(--color-secondary); }
   }
 
   .col-phase { flex: 1; }
-  .col-start { width: 200px; text-align: center; color: #94A3B8; }
-  .col-end { width: 200px; text-align: center; color: #94A3B8; }
+  .col-start { width: 200px; text-align: center; color: var(--text-regular); }
+  .col-end { width: 200px; text-align: center; color: var(--text-regular); }
 }
 
 /* 参赛作品表格 */
@@ -408,8 +408,8 @@ const sponsors: string[] = [
   margin-bottom: 56px;
 
   .entries-table {
-    background: #1E293B;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     overflow: hidden;
   }
@@ -417,28 +417,28 @@ const sponsors: string[] = [
   .entries-header {
     display: flex;
     padding: 14px 20px;
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--color-secondary);
     font-size: 13px;
     font-weight: 600;
-    color: #94A3B8;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    color: var(--text-regular);
+    border-bottom: 1px solid var(--border-color);
   }
 
   .entries-row {
     display: flex;
     padding: 14px 20px;
     font-size: 14px;
-    color: #CBD5E1;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    color: var(--text-regular);
+    border-bottom: 1px solid var(--border-color);
     transition: background 0.2s;
 
     &:last-child { border-bottom: none; }
-    &:hover { background: rgba(255, 255, 255, 0.03); }
+    &:hover { background: var(--color-secondary); }
   }
 
-  .col-code { width: 80px; text-align: center; color: #64748B; flex-shrink: 0; }
+  .col-code { width: 80px; text-align: center; color: var(--text-secondary); flex-shrink: 0; }
   .col-work { flex: 1; }
-  .col-author { width: 160px; color: #94A3B8; flex-shrink: 0; }
+  .col-author { width: 160px; color: var(--text-regular); flex-shrink: 0; }
 }
 
 /* 获奖者 */
@@ -451,7 +451,7 @@ const sponsors: string[] = [
   }
 
   .winner-card {
-    background: #1E293B;
+    background: var(--card-bg);
     border: 1px solid rgba(251, 191, 36, 0.4);
     border-radius: 14px;
     padding: 36px 48px;
@@ -472,7 +472,7 @@ const sponsors: string[] = [
     h3 {
       font-size: 24px;
       font-weight: 700;
-      color: #F8FAFC;
+      color: var(--text-primary);
       margin-bottom: 8px;
     }
 
@@ -482,7 +482,7 @@ const sponsors: string[] = [
       justify-content: center;
       gap: 6px;
       font-size: 15px;
-      color: #94A3B8;
+      color: var(--text-regular);
     }
   }
 }
@@ -491,7 +491,7 @@ const sponsors: string[] = [
 .sponsors-section {
   .sponsors-desc {
     font-size: 14px;
-    color: #94A3B8;
+    color: var(--text-regular);
     margin-bottom: 20px;
   }
 
@@ -502,18 +502,18 @@ const sponsors: string[] = [
   }
 
   .sponsor-card {
-    background: #1E293B;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
     border-radius: 10px;
     padding: 14px 16px;
     display: flex;
     align-items: center;
     gap: 10px;
     font-size: 14px;
-    color: #CBD5E1;
+    color: var(--text-regular);
     transition: all 0.2s;
 
-    &:hover { background: #273549; transform: translateY(-1px); }
+    &:hover { background: var(--color-secondary); transform: translateY(-1px); }
     .el-icon { color: #FBBF24; flex-shrink: 0; }
   }
 }

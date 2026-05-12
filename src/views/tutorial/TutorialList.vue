@@ -144,7 +144,7 @@ const categories = computed<CategoryGroup[]>(() => {
 
   .page-desc {
     font-size: 15px;
-    color: #94A3B8;
+    color: var(--text-regular);
     max-width: 560px;
     margin: 0 auto;
     line-height: 1.6;
@@ -179,15 +179,15 @@ const categories = computed<CategoryGroup[]>(() => {
 .tutorial-card {
   display: flex;
   align-items: center;
-  background-color: var(--color-card-bg, #111827);
-  border: 1px solid var(--color-secondary, #1E293B);
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
   border-radius: 10px;
   padding: 18px 24px;
   text-decoration: none;
   transition: border-color 0.2s, transform 0.2s;
 
   &:hover {
-    border-color: var(--color-primary, #667eea);
+    border-color: var(--primary-color);
     transform: translateY(-2px);
 
     .card-arrow {
@@ -216,7 +216,7 @@ const categories = computed<CategoryGroup[]>(() => {
 
     .card-desc {
       font-size: 13px;
-      color: #64748B;
+      color: var(--text-secondary);
       margin: 0 0 10px;
       line-height: 1.5;
       overflow: hidden;
@@ -229,7 +229,7 @@ const categories = computed<CategoryGroup[]>(() => {
       align-items: center;
       gap: 20px;
       font-size: 12px;
-      color: #94A3B8;
+      color: var(--text-regular);
 
       .meta-author,
       .meta-date {
@@ -241,7 +241,7 @@ const categories = computed<CategoryGroup[]>(() => {
   }
 
   .card-arrow {
-    color: #64748B;
+    color: var(--text-secondary);
     opacity: 0;
     transition: opacity 0.2s;
     flex-shrink: 0;

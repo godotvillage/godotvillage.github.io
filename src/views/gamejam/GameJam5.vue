@@ -170,19 +170,19 @@ const sponsors: string[] = [
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: #94A3B8;
+  color: var(--text-regular);
   text-decoration: none;
   font-size: 14px;
   padding: 16px 0;
   transition: color 0.2s;
 
-  &:hover { color: #F8FAFC; }
+  &:hover { color: var(--text-primary); }
 }
 
 .section-title {
   font-size: 22px;
   font-weight: 700;
-  color: #F8FAFC;
+  color: var(--text-primary);
   font-family: var(--font-heading);
   display: flex;
   align-items: center;
@@ -229,14 +229,14 @@ const sponsors: string[] = [
     font-family: var(--font-heading);
     font-size: 48px;
     font-weight: 700;
-    color: #F8FAFC;
+    color: var(--text-primary);
     margin-bottom: 16px;
     line-height: 1.2;
   }
 
   .hero-desc {
     font-size: 16px;
-    color: #94A3B8;
+    color: var(--text-regular);
     max-width: 600px;
     margin: 0 auto 20px;
     line-height: 1.6;
@@ -280,7 +280,7 @@ const sponsors: string[] = [
         color: #FBBF24;
         font-family: var(--font-heading);
       }
-      .stat-label { font-size: 14px; color: #64748B; }
+      .stat-label { font-size: 14px; color: var(--text-secondary); }
     }
   }
 }
@@ -290,8 +290,8 @@ const sponsors: string[] = [
   margin-bottom: 56px;
 
   .schedule-table {
-    background: #1E293B;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     overflow: hidden;
   }
@@ -299,35 +299,35 @@ const sponsors: string[] = [
   .schedule-header {
     display: flex;
     padding: 14px 20px;
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--color-secondary);
     font-size: 13px;
     font-weight: 600;
-    color: #94A3B8;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    color: var(--text-regular);
+    border-bottom: 1px solid var(--border-color);
   }
 
   .schedule-row {
     display: flex;
     padding: 14px 20px;
     font-size: 14px;
-    color: #CBD5E1;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    color: var(--text-regular);
+    border-bottom: 1px solid var(--border-color);
     transition: background 0.2s;
 
     &:last-child { border-bottom: none; }
-    &:hover { background: rgba(255, 255, 255, 0.03); }
+    &:hover { background: var(--color-secondary); }
   }
 
   .col-phase {
     width: 140px;
     flex-shrink: 0;
     font-weight: 600;
-    color: #F8FAFC;
+    color: var(--text-primary);
   }
 
   .col-desc {
     flex: 1;
-    color: #94A3B8;
+    color: var(--text-regular);
   }
 }
 
@@ -342,8 +342,8 @@ const sponsors: string[] = [
   }
 
   .entry-card {
-    background: #1E293B;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
     border-radius: 10px;
     padding: 16px;
     display: flex;
@@ -352,7 +352,7 @@ const sponsors: string[] = [
     transition: all 0.2s;
 
     &:hover {
-      background: #273549;
+      background: var(--color-secondary);
       transform: translateY(-1px);
     }
   }
@@ -381,7 +381,7 @@ const sponsors: string[] = [
     h4 {
       font-size: 14px;
       font-weight: 600;
-      color: #F8FAFC;
+      color: var(--text-primary);
       margin-bottom: 4px;
       word-break: break-word;
       line-height: 1.4;
@@ -392,7 +392,7 @@ const sponsors: string[] = [
       align-items: center;
       gap: 4px;
       font-size: 12px;
-      color: #64748B;
+      color: var(--text-secondary);
     }
   }
 }
@@ -402,12 +402,12 @@ const sponsors: string[] = [
   margin-bottom: 56px;
 
   .pending-card {
-    background: #1E293B;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
     border-radius: 14px;
     padding: 48px 24px;
     text-align: center;
-    color: #64748B;
+    color: var(--text-secondary);
 
     .el-icon {
       margin-bottom: 12px;
@@ -415,7 +415,7 @@ const sponsors: string[] = [
 
     p {
       font-size: 15px;
-      color: #94A3B8;
+      color: var(--text-regular);
     }
   }
 }
@@ -424,7 +424,7 @@ const sponsors: string[] = [
 .sponsors-section {
   .sponsors-desc {
     font-size: 14px;
-    color: #94A3B8;
+    color: var(--text-regular);
     margin-bottom: 20px;
   }
 
@@ -435,18 +435,18 @@ const sponsors: string[] = [
   }
 
   .sponsor-card {
-    background: #1E293B;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
     border-radius: 10px;
     padding: 14px 16px;
     display: flex;
     align-items: center;
     gap: 10px;
     font-size: 14px;
-    color: #CBD5E1;
+    color: var(--text-regular);
     transition: all 0.2s;
 
-    &:hover { background: #273549; transform: translateY(-1px); }
+    &:hover { background: var(--color-secondary); transform: translateY(-1px); }
     .el-icon { color: #FBBF24; flex-shrink: 0; }
   }
 }

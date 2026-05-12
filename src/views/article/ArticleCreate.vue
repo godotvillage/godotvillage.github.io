@@ -54,7 +54,7 @@
           <div class="editor-container">
             <MdEditor
               v-model="form.content"
-              theme="dark"
+              :theme="themeStore.theme"
               previewTheme="smart-blue"
               :preview="false"
               :toolbars="toolbars"
@@ -90,8 +90,10 @@ import request from '@/api/request'
 import { MdEditor, type ToolbarNames } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 import type { CategoryDto } from '@/api/category'
+import { useThemeStore } from '@/stores/theme'
 
 const router = useRouter()
+const themeStore = useThemeStore()
 
 // md-editor 配置
 const toolbars: ToolbarNames[] = [
