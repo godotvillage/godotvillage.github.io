@@ -47,7 +47,15 @@
           <el-progress :percentage="project.progress || 0" :stroke-width="10" />
         </div>
 
-        <p class="project-desc">{{ project.description || '暂无描述' }}</p>
+        <div class="project-desc">
+          <MdPreview
+            v-if="project.description"
+            :theme="themeStore.theme"
+            :modelValue="preprocessBvid(project.description)"
+            previewTheme="smart-blue"
+          />
+          <span v-else class="no-desc">暂无描述</span>
+        </div>
 
         <div class="project-tags" v-if="project.tags?.length">
           <el-tag
@@ -118,22 +126,35 @@
                   进度: {{ update.progress }}%
                 </span>
               </div>
-              <p class="update-text">{{ update.content }}</p>
+              <div class="update-text">
+                <MdPreview
+                  :theme="themeStore.theme"
+                  :modelValue="preprocessBvid(update.content)"
+                  previewTheme="smart-blue"
+                />
+              </div>
               <span class="update-time">{{ formatTime(update.createdTime) }}</span>
             </div>
           </div>
         </div>
 
         <!-- 添加更新表单 -->
-        <el-dialog v-model="showUpdateDialog" title="添加项目更新" width="500px" append-to-body>
+        <el-dialog v-model="showUpdateDialog" title="添加项目更新" width="700px" append-to-body>
           <el-form :model="updateForm" label-position="top">
             <el-form-item label="更新内容">
-              <el-input
+              <MdEditor
+                ref="updateEditorRef"
                 v-model="updateForm.content"
-                type="textarea"
-                :rows="4"
+                :theme="themeStore.theme"
+                previewTheme="smart-blue"
+                :preview="false"
+                :toolbars="updateToolbars"
                 placeholder="描述这次更新..."
-              />
+              >
+                <template #defToolbars>
+                  <BvidToolbar />
+                </template>
+              </MdEditor>
             </el-form-item>
             <el-form-item label="进度 (0-100)">
               <el-slider v-model="updateForm.progress" :min="0" :max="100" show-input />
@@ -172,7 +193,12 @@ import {
 import { projectApi } from '@/api/project'
 import type { ProjectDto, ProjectUpdateDto } from '@/api/project'
 import { useAuthStore } from '@/stores/auth'
+import { useThemeStore } from '@/stores/theme'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { MdPreview, MdEditor, type ToolbarNames } from 'md-editor-v3'
+import 'md-editor-v3/lib/style.css'
+import BvidToolbar from '@/components/BvidToolbar.vue'
+import { provideBvidInsert } from '@/composables/useBvidInsert'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import 'dayjs/locale/zh-cn'
@@ -183,12 +209,43 @@ dayjs.extend(relativeTime)
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
+const themeStore = useThemeStore()
+
+const updateToolbars: (ToolbarNames | number)[] = [
+  'bold', 'italic', 'strikeThrough', 'title',
+  'quote', 'unorderedList', 'orderedList',
+  'codeRow', 'code', 'link', 'image',
+  '-', 0,
+  'revoke', 'next', 'preview'
+]
+
+function preprocessBvid(content: string): string {
+  if (!content) return ''
+  return content.replace(
+    /\[\[bvid:(BV\w+)\]\]/g,
+    (_match, bvid) => {
+      return `<div class="bilibili-wrapper" style="max-width:750px;margin:16px 0;">
+  <iframe
+    src="//player.bilibili.com/player.html?bvid=${bvid}&page=1&autoplay=false"
+    scrolling="no"
+    border="0"
+    frameborder="no"
+    framespacing="0"
+    allowfullscreen="true"
+    style="width:100%;aspect-ratio:16/9;border-radius:8px;"
+  ></iframe>
+</div>`
+    }
+  )
+}
 
 const loading = ref(true)
 const project = ref<ProjectDto | null>(null)
 const updates = ref<ProjectUpdateDto[]>([])
 const showUpdateDialog = ref(false)
 const updateLoading = ref(false)
+const updateEditorRef = ref(null)
+provideBvidInsert(updateEditorRef)
 
 const updateForm = reactive({
   content: '',
@@ -360,10 +417,15 @@ const formatTime = (time: string) => {
   }
 
   .project-desc {
-    color: var(--text-primary);
-    line-height: 1.6;
     margin-bottom: 16px;
-    white-space: pre-wrap;
+
+    .no-desc {
+      color: var(--text-secondary);
+    }
+
+    :deep(.md-editor) {
+      background: transparent;
+    }
   }
 
   .project-tags {
@@ -496,10 +558,11 @@ const formatTime = (time: string) => {
         }
 
         .update-text {
-          color: var(--text-primary);
-          line-height: 1.6;
           margin-bottom: 8px;
-          white-space: pre-wrap;
+
+          :deep(.md-editor) {
+            background: transparent;
+          }
         }
 
         .update-time {
@@ -530,4 +593,11 @@ const formatTime = (time: string) => {
   background: var(--card-bg);
   border-radius: 12px;
 }
+
+:deep(.bilibili-wrapper) {
+  iframe {
+    border: none;
+  }
+}
+
 </style>

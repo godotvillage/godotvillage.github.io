@@ -61,7 +61,7 @@
 
       <!-- 文章内容 -->
       <div class="article-content card">
-        <MdPreview :theme="themeStore.theme" :modelValue="article.content" previewTheme="smart-blue" />
+        <MdPreview :theme="themeStore.theme" :modelValue="preprocessBvid(article.content)" previewTheme="smart-blue" />
       </div>
 
       <!-- 表情反应 -->
@@ -243,6 +243,26 @@ const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
 const themeStore = useThemeStore()
+
+function preprocessBvid(content: string): string {
+  if (!content) return ''
+  return content.replace(
+    /\[\[bvid:(BV\w+)\]\]/g,
+    (_match, bvid) => {
+      return `<div class="bilibili-wrapper" style="max-width:750px;margin:16px 0;">
+  <iframe
+    src="//player.bilibili.com/player.html?bvid=${bvid}&page=1&autoplay=false"
+    scrolling="no"
+    border="0"
+    frameborder="no"
+    framespacing="0"
+    allowfullscreen="true"
+    style="width:100%;aspect-ratio:16/9;border-radius:8px;"
+  ></iframe>
+</div>`
+    }
+  )
+}
 
 const loading = ref(true)
 const article = ref<ArticleDto | null>(null)
@@ -765,5 +785,11 @@ const formatTime = (time: string) => {
   padding: 80px 20px;
   background: var(--card-bg);
   border-radius: 12px;
+}
+
+:deep(.bilibili-wrapper) {
+  iframe {
+    border: none;
+  }
 }
 </style>

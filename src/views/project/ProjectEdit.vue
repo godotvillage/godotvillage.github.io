@@ -39,7 +39,21 @@
         </el-form-item>
 
         <el-form-item label="项目描述">
-          <el-input v-model="form.description" type="textarea" :rows="4" placeholder="描述你的项目..." />
+          <div class="editor-wrap">
+            <MdEditor
+              ref="editorRef"
+              v-model="form.description"
+              :theme="themeStore.theme"
+              previewTheme="smart-blue"
+              :preview="false"
+              :toolbars="descToolbars"
+              placeholder="描述你的项目..."
+            >
+              <template #defToolbars>
+                <BvidToolbar />
+              </template>
+            </MdEditor>
+          </div>
         </el-form-item>
 
         <el-form-item label="进度">
@@ -102,15 +116,31 @@ import { useRoute, useRouter } from 'vue-router'
 import type { FormInstance, FormRules } from 'element-plus'
 import { projectApi } from '@/api/project'
 import { useAuthStore } from '@/stores/auth'
+import { useThemeStore } from '@/stores/theme'
 import { ElMessage } from 'element-plus'
 import { Loading } from '@element-plus/icons-vue'
+import { MdEditor, type ToolbarNames } from 'md-editor-v3'
+import 'md-editor-v3/lib/style.css'
+import BvidToolbar from '@/components/BvidToolbar.vue'
+import { provideBvidInsert } from '@/composables/useBvidInsert'
 
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
+const themeStore = useThemeStore()
+
+const descToolbars: (ToolbarNames | number)[] = [
+  'bold', 'italic', 'strikeThrough', 'title',
+  'quote', 'unorderedList', 'orderedList',
+  'codeRow', 'code', 'link', 'image', 'table',
+  '-', 0,
+  'revoke', 'next', 'preview'
+]
 
 const formRef = ref<FormInstance>()
+const editorRef = ref(null)
 const loading = ref(true)
+provideBvidInsert(editorRef)
 
 const form = reactive({
   title: '',
@@ -232,6 +262,14 @@ const handleSave = async () => {
 
 .project-form {
   padding: 32px;
+}
+
+.editor-wrap {
+  width: 100%;
+
+  :deep(.md-editor) {
+    background: var(--card-bg);
+  }
 }
 
 .loading-container {

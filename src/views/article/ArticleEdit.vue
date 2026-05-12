@@ -54,6 +54,7 @@
           啊实打实的
           <div class="editor-container">
             <MdEditor
+              ref="editorRef"
               v-model="form.content"
               :theme="themeStore.theme"
               previewTheme="smart-blue"
@@ -61,7 +62,11 @@
               :toolbars="toolbars"
               placeholder="输入文章内容..."
               @onUploadImg="handleUploadImg"
-            />
+            >
+              <template #defToolbars>
+                <BvidToolbar />
+              </template>
+            </MdEditor>
           </div>
         </el-form-item>
 
@@ -119,22 +124,27 @@ import { MdEditor, type ToolbarNames } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 import type { CategoryDto } from '@/api/category'
 import { useThemeStore } from '@/stores/theme'
+import BvidToolbar from '@/components/BvidToolbar.vue'
+import { provideBvidInsert } from '@/composables/useBvidInsert'
 
 const route = useRoute()
 const router = useRouter()
 const themeStore = useThemeStore()
 
 // md-editor 配置
-const toolbars: ToolbarNames[] = [
+const toolbars: (ToolbarNames | number)[] = [
   'bold', 'underline', 'italic', 'strikeThrough', 'title',
   'sub', 'sup', 'quote', 'unorderedList', 'orderedList',
   'codeRow', 'code', 'link', 'image', 'table',
+  '-', 0,
   'revoke', 'next', 'save', 'pageFullscreen', 'fullscreen',
   'preview', 'htmlPreview', 'github'
 ]
 
 const formRef = ref<FormInstance>()
+const editorRef = ref(null)
 const loading = ref(true)
+provideBvidInsert(editorRef)
 const publishing = ref(false)
 const categories = ref<CategoryDto[]>([])
 const articleStatus = ref('')
