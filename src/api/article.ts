@@ -23,7 +23,7 @@ export interface ArticleDto {
   authorId: string
   authorName: string
   authorAvatar?: string
-  tags?: string
+  tags?: string[]
   isTop: boolean
   isFeatured: boolean
   status: string

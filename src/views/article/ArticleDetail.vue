@@ -47,21 +47,21 @@
           </div>
         </div>
 
-        <div class="article-tags" v-if="article.tags">
+        <div class="article-tags" v-if="tagList.length > 0">
           <el-tag
-            v-for="tag in article.tags.split(',')"
+            v-for="tag in tagList"
             :key="tag"
             size="small"
             effect="plain"
           >
-            {{ tag.trim() }}
+            {{ tag }}
           </el-tag>
         </div>
       </header>
 
       <!-- 文章内容 -->
       <div class="article-content card">
-        <MdPreview theme="dark" :modelValue="article.content" previewTheme="smart-blue" />
+        <MdPreview :theme="themeStore.theme" :modelValue="article.content" previewTheme="smart-blue" />
       </div>
 
       <!-- 表情反应 -->
@@ -232,6 +232,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { MdPreview } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 import dayjs from 'dayjs'
+import { useThemeStore } from '@/stores/theme'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import 'dayjs/locale/zh-cn'
 
@@ -241,6 +242,7 @@ dayjs.extend(relativeTime)
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
+const themeStore = useThemeStore()
 
 const loading = ref(true)
 const article = ref<ArticleDto | null>(null)
@@ -262,6 +264,10 @@ const isAuthor = computed(() => {
 
 const isPublished = computed(() => {
   return article.value?.status === 'Published'
+})
+
+const tagList = computed(() => {
+  return article.value?.tags ?? []
 })
 
 const rejectDialogVisible = ref(false)
