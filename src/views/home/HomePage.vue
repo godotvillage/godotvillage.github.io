@@ -3,31 +3,31 @@
     <!-- Hero 区域 -->
     <section class="hero-section">
       <div class="hero-glow"></div>
-      <div class="hero-content">
-        <!-- <div class="hero-badge">
-          <span class="icon-sparkle">✨</span>
-          Godot 4.3 现已发布
-          <span class="icon-lightning">⚡</span>
-        </div> -->
+      <div class="hero-inner">
+        <div class="hero-content">
+          <h1 class="hero-title">
+            <div class="title-line-1">Godot中文</div>
+            <div class="title-line-2">开发者社群</div>
+          </h1>
 
-        <h1 class="hero-title">
-          <div class="title-line-1">Godot中文</div>
-          <div class="title-line-2">开发者社群</div>
-        </h1>
+          <p class="hero-subtitle">
+            连接每一位Godot开发者，分享知识、展示作品、共同成长
+          </p>
 
-        <p class="hero-subtitle">
-          连接每一位Godot开发者，分享知识、展示作品、共同成长
-        </p>
-
-        <div class="hero-actions">
-          <button class="btn-primary" @click="$router.push('/article')">
-            <el-icon class="btn-icon"><Monitor /></el-icon>
-            开始学习
-          </button>
-          <button class="btn-secondary" @click="$router.push('/project')">
-            加入讨论
-          </button>
+          <div class="hero-actions">
+            <button class="btn-primary" @click="$router.push('/article')">
+              <el-icon class="btn-icon"><Monitor /></el-icon>
+              开始学习
+            </button>
+            <button class="btn-secondary" @click="$router.push('/project')">
+              加入讨论
+            </button>
+          </div>
         </div>
+
+        <router-link to="/mascot" class="hero-mascot">
+          <img src="/godotvillagegirl.png" alt="Godot新手村看板娘" />
+        </router-link>
       </div>
     </section>
 
@@ -256,10 +256,11 @@ const loadStats = async () => {
 /* Hero Section */
 .hero-section {
   position: relative;
-  padding: 100px 24px 80px;
-  text-align: center;
+  padding: 80px 24px 60px;
   overflow: hidden;
-  
+  max-width: 1200px;
+  margin: 0 auto;
+
   .hero-glow {
     position: absolute;
     top: 50%;
@@ -272,12 +273,46 @@ const loadStats = async () => {
     pointer-events: none;
   }
 
-  .hero-content {
+  .hero-inner {
     position: relative;
     z-index: 1;
     display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 48px;
+  }
+
+  .hero-content {
+    display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .hero-mascot {
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: transform 0.3s;
+    text-decoration: none;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+
+    img {
+      display: block;
+      height: auto;
+      width: 320px;
+      max-width: 100%;
+      filter: drop-shadow(0 0 20px rgba(96, 165, 250, 0.15));
+      transition: filter 0.3s;
+    }
+
+    &:hover img {
+      filter: drop-shadow(0 0 30px rgba(96, 165, 250, 0.3));
+    }
   }
 
   .hero-badge {
@@ -646,6 +681,15 @@ const loadStats = async () => {
 /* 响应式调整 */
 @media (max-width: 1024px) {
   .hero-section {
+    .hero-inner {
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .hero-mascot img {
+      width: 240px;
+    }
+
     .hero-title {
       font-size: 56px;
     }
@@ -663,7 +707,11 @@ const loadStats = async () => {
 @media (max-width: 640px) {
   .hero-section {
     padding: 60px 20px 40px;
-    
+
+    .hero-mascot img {
+      width: 180px;
+    }
+
     .hero-title {
       font-size: 40px;
     }

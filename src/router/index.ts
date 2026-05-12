@@ -135,6 +135,12 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '教程详情' }
       },
       {
+        path: 'mascot',
+        name: 'mascot',
+        component: () => import('@/views/mascot/MascotPage.vue'),
+        meta: { title: '看板娘' }
+      },
+      {
         path: 'assetweb',
         name: 'assetweb',
         component: () => import('@/views/assetweb/AssetWeb.vue'),

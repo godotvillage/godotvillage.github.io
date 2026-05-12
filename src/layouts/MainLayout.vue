@@ -12,6 +12,10 @@
           <el-icon><House /></el-icon>
           <span>首页</span>
         </router-link>
+        <router-link to="/mascot" class="nav-item" :class="{ active: $route.path.startsWith('/mascot') }">
+          <el-icon><MagicStick /></el-icon>
+          <span>看板娘</span>
+        </router-link>
         <router-link to="/article" class="nav-item" :class="{ active: $route.path.startsWith('/article') }">
           <el-icon><Document /></el-icon>
           <span>文章</span>
@@ -131,7 +135,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { Search, House, Document, Reading, FolderOpened, User, ArrowDown, SwitchButton, Grid, Bell, Setting, Trophy, Link, Collection, Sunny, Moon } from '@element-plus/icons-vue'
+import { Search, House, Document, Reading, FolderOpened, User, ArrowDown, SwitchButton, Grid, Bell, Setting, Trophy, Link, Collection, Sunny, Moon, MagicStick } from '@element-plus/icons-vue'
 import { useAuthStore } from '@/stores/auth'
 import { useThemeStore } from '@/stores/theme'
 import { messageApi } from '@/api/message'
