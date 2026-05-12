@@ -167,9 +167,13 @@ const categories = computed<CategoryGroup[]>(() => {
 }
 
 .tutorial-grid {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 12px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .tutorial-card {
@@ -184,7 +188,7 @@ const categories = computed<CategoryGroup[]>(() => {
 
   &:hover {
     border-color: var(--color-primary, #667eea);
-    transform: translateX(4px);
+    transform: translateY(-2px);
 
     .card-arrow {
       opacity: 1;

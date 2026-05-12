@@ -38,13 +38,17 @@
           <div class="stat-value">{{ siteStats.userCount ? siteStats.userCount.toLocaleString() : '0' }}</div>
           <div class="stat-label">活跃成员</div>
         </div>
-        <div class="stat-item">
+        <div class="stat-item clickable" @click="$router.push('/article')">
           <div class="stat-value">{{ siteStats.articleCount ? siteStats.articleCount.toLocaleString() : '0' }}</div>
           <div class="stat-label">文章数量</div>
         </div>
-        <div class="stat-item">
+        <div class="stat-item clickable" @click="$router.push('/project')">
           <div class="stat-value">{{ siteStats.projectCount ? siteStats.projectCount.toLocaleString() : '0' }}</div>
           <div class="stat-label">项目跟踪</div>
+        </div>
+        <div class="stat-item clickable" @click="$router.push('/tutorial')">
+          <div class="stat-value">{{ tutorialCount.toLocaleString() }}</div>
+          <div class="stat-label">教程数量</div>
         </div>
         <!-- <div class="stat-item">
           <div class="stat-value">{{ ((siteStats.articleCount || 0) + (siteStats.projectCount || 0)) || '3,421' }}</div>
@@ -160,8 +164,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { 
-  Monitor, Reading, ChatLineRound, Calendar, 
+import {
+  Monitor, Reading, ChatLineRound, Calendar,
   Loading
 } from '@element-plus/icons-vue'
 import { articleApi } from '@/api/article'
@@ -170,6 +174,17 @@ import { statsApi } from '@/api/stats'
 import type { ArticleDto } from '@/api/article'
 import type { ProjectDto } from '@/api/project'
 import type { SiteStatsDto } from '@/api/stats'
+
+// 统计本地教程数量
+const tutorialModules = import.meta.glob('../tutorial/content/**/*.md', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+}) as Record<string, string>
+
+const tutorialCount = Object.keys(tutorialModules).filter(
+  key => !key.replace('../tutorial/content/', '').toLowerCase().startsWith('readme')
+).length
 
 const loading = ref(true)
 const articles = ref<ArticleDto[]>([])
@@ -374,19 +389,40 @@ const loadStats = async () => {
 
   .stat-item {
     text-align: center;
-    
+
+    &.clickable {
+      cursor: pointer;
+      transition: transform 0.2s, color 0.2s;
+      border-radius: 8px;
+      padding: 8px 16px;
+
+      &:hover {
+        transform: translateY(-2px);
+
+        .stat-value {
+          color: #60A5FA;
+        }
+
+        .stat-label {
+          color: #94A3B8;
+        }
+      }
+    }
+
     .stat-value {
       font-size: 32px;
       font-weight: 700;
       color: #F8FAFC;
       font-family: var(--font-heading);
       margin-bottom: 4px;
+      transition: color 0.2s;
     }
-    
+
     .stat-label {
       font-size: 14px;
       color: #64748B;
       font-weight: 500;
+      transition: color 0.2s;
     }
   }
 }

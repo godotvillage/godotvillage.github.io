@@ -51,6 +51,9 @@
       <div class="login-footer">
         <span>还没有账号？</span>
         <router-link to="/register">立即注册</router-link>
+        <div class="back-home">
+          <router-link to="/">← 返回首页</router-link>
+        </div>
       </div>
     </div>
   </div>
@@ -164,6 +167,17 @@ const handleLogin = async () => {
 
     &:hover {
       text-decoration: underline;
+    }
+  }
+
+  .back-home {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--color-secondary);
+
+    a {
+      color: var(--text-secondary);
+      font-weight: 400;
     }
   }
 }
