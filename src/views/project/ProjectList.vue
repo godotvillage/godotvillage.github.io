@@ -41,6 +41,23 @@
         <el-option label="已取消" value="已取消" />
       </el-select>
 
+      <el-select
+        v-model="filters.tags"
+        placeholder="项目标签"
+        multiple
+        clearable
+        collapse-tags
+        collapse-tags-tooltip
+        @change="handleFilter"
+      >
+        <el-option
+          v-for="tag in allTags"
+          :key="tag"
+          :label="tag"
+          :value="tag"
+        />
+      </el-select>
+
       <el-input
         v-model="filters.search"
         placeholder="搜索项目..."
@@ -95,17 +112,34 @@ const stats = ref<ProjectStatsDto>({ total: 0, active: 0, completed: 0 })
 const filters = reactive({
   type: '',
   status: '',
+  tags: [] as string[],
   search: ''
+})
+
+const allTags = computed(() => {
+  const tagSet = new Set<string>()
+  projects.value.forEach(p => {
+    p.tags?.forEach(t => {
+      if (t) tagSet.add(t)
+    })
+  })
+  return [...tagSet].sort()
 })
 
 const filteredProjects = computed(() => {
   return projects.value.filter(p => {
     if (filters.type && p.type !== filters.type) return false
     if (filters.status && p.status !== filters.status) return false
+    if (filters.tags.length > 0) {
+      if (!p.tags || !filters.tags.some(t => p.tags!.includes(t))) return false
+    }
     if (filters.search) {
       const search = filters.search.toLowerCase()
       if (!p.title.toLowerCase().includes(search) &&
-          !p.description?.toLowerCase().includes(search)) {
+          !p.description?.toLowerCase().includes(search) &&
+          !p.author?.toLowerCase().includes(search) &&
+          !p.contact?.toLowerCase().includes(search) &&
+          !p.githubUser?.toLowerCase().includes(search)) {
         return false
       }
     }
@@ -198,6 +232,10 @@ const handleFilter = () => {
 
   .el-select {
     width: 140px;
+
+    &:has(.el-select__tags) {
+      width: 200px;
+    }
   }
 
   .el-input {

@@ -182,7 +182,7 @@ const handleUserCommand = (command: string) => {
       router.push({ path: '/article', query: { authorId: authStore.userInfo?.id } })
       break
     case 'my-projects':
-      router.push({ path: '/project', query: { author: authStore.userInfo?.userName } })
+      router.push({ path: '/project', query: { author: authStore.userInfo?.nickname || authStore.userInfo?.userName } })
       break
     case 'backend':
       router.push('/backend/article')

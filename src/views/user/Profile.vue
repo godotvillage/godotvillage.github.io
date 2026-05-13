@@ -134,7 +134,7 @@ const loadMyProjects = async () => {
 
   projectsLoading.value = true
   try {
-    const res = await projectApi.getList({ author: authStore.userInfo.userName })
+    const res = await projectApi.getList({ author: authStore.userInfo.nickname || authStore.userInfo.userName })
     projects.value = res.data
   } catch (error) {
     console.error('加载项目失败:', error)
