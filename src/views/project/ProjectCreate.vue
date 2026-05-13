@@ -78,7 +78,27 @@
         </el-form-item>
 
         <el-form-item label="标签">
-          <el-input v-model="form.tagsInput" placeholder="多个标签用逗号分隔" />
+          <el-select
+            v-if="tagOptions.length > 0"
+            v-model="form.tags"
+            multiple
+            filterable
+            allow-create
+            placeholder="选择或输入标签"
+            style="width: 100%"
+          >
+            <el-option
+              v-for="tag in tagOptions"
+              :key="tag"
+              :label="tag"
+              :value="tag"
+            />
+          </el-select>
+          <el-input
+            v-else
+            v-model="form.tagsInput"
+            placeholder="多个标签用逗号分隔"
+          />
         </el-form-item>
 
         <el-form-item label="仓库地址">
@@ -115,7 +135,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import type { FormInstance, FormRules } from 'element-plus'
 import { projectApi } from '@/api/project'
@@ -126,6 +146,7 @@ import { MdEditor, type ToolbarNames } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 import BvidToolbar from '@/components/BvidToolbar.vue'
 import { provideBvidInsert } from '@/composables/useBvidInsert'
+import { getTagsByType } from '@/constants/tags'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -144,6 +165,8 @@ const editorRef = ref(null)
 const loading = ref(false)
 provideBvidInsert(editorRef)
 
+const tagOptions = computed(() => getTagsByType(form.type))
+
 const form = reactive({
   title: '',
   author: authStore.userInfo?.nickname || authStore.userInfo?.userName || '',
@@ -154,6 +177,7 @@ const form = reactive({
   description: '',
   progress: 0,
   expectedTime: '',
+  tags: [] as string[],
   tagsInput: '',
   repository: '',
   demoUrl: '',
@@ -179,9 +203,11 @@ const handleCreate = async () => {
 
     loading.value = true
     try {
-      const tags = form.tagsInput
-        ? form.tagsInput.split(',').map(t => t.trim()).filter(Boolean)
-        : undefined
+      const tags = tagOptions.value.length > 0
+        ? (form.tags.length > 0 ? form.tags : undefined)
+        : (form.tagsInput
+            ? form.tagsInput.split(',').map(t => t.trim()).filter(Boolean)
+            : undefined)
 
       await projectApi.create({
         title: form.title,
