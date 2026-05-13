@@ -14,8 +14,8 @@
 
         <div class="profile-info">
           <div class="name-block">
-            <div class="name-hidden">███</div>
-            <span class="name-label">名字暂不公开</span>
+            <div class="name-cn">诺蒂</div>
+            <div class="name-en">Nody</div>
           </div>
 
           <div class="info-list">
@@ -24,6 +24,13 @@
               <div class="info-body">
                 <h4>身份</h4>
                 <p>魔法学徒 · 见习研究者</p>
+              </div>
+            </div>
+            <div class="info-item">
+              <span class="info-icon">🧬</span>
+              <div class="info-body">
+                <h4>名字涵义</h4>
+                <p>"诺蒂" 音译自 Nody，而 Nody 来源于 Godot 引擎的基础类 Node——意为"节点"。每一位群友都是独立的节点，各有光彩；当我们汇聚相连，便构成了属于 Godot 新手村的完整游戏世界。</p>
               </div>
             </div>
             <div class="info-item">
@@ -168,24 +175,22 @@ function toChineseNum(n: number): string {
 
 .name-block {
   display: flex;
-  align-items: center;
-  gap: 16px;
+  align-items: baseline;
+  gap: 12px;
   margin-bottom: 32px;
 
-  .name-hidden {
-    background: #1a1a2e;
-    color: #1a1a2e;
-    font-size: 32px;
+  .name-cn {
+    font-size: 36px;
     font-weight: 700;
-    padding: 4px 24px;
-    border-radius: 8px;
-    letter-spacing: 8px;
-    user-select: none;
+    color: var(--text-primary);
+    font-family: var(--font-heading);
   }
 
-  .name-label {
-    font-size: 14px;
+  .name-en {
+    font-size: 18px;
+    font-weight: 400;
     color: var(--text-secondary);
+    letter-spacing: 2px;
   }
 }
 
