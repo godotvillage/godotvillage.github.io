@@ -138,7 +138,7 @@
                   type="danger"
                   size="small"
                   link
-                  @click="handleDeleteComment(comment.id)"
+                  @click="handleDeleteComment(comment.commentId)"
                 >
                   删除
                 </el-button>
@@ -192,7 +192,7 @@
                         type="danger"
                         size="small"
                         link
-                        @click="handleDeleteComment(item.comment.id)"
+                        @click="handleDeleteComment(item.comment.commentId)"
                       >
                         删除
                       </el-button>
