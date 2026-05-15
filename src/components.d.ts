@@ -36,6 +36,7 @@ declare module 'vue' {
     ElTabPane: typeof import('element-plus/es')['ElTabPane']
     ElTabs: typeof import('element-plus/es')['ElTabs']
     ElTag: typeof import('element-plus/es')['ElTag']
+    GameJam5JudgeWall: typeof import('./components/gamejam/GameJam5JudgeWall.vue')['default']
     ImageViewer: typeof import('./components/ImageViewer.vue')['default']
     ProjectCard: typeof import('./components/ProjectCard.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

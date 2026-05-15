@@ -84,6 +84,17 @@
       </div>
     </section>
 
+    <!-- 评委点评 -->
+    <section id="judge-reviews" class="judge-wall-section">
+      <div class="section-container">
+        <h2 class="section-title">
+          <el-icon><ChatDotRound /></el-icon>
+          评委点评
+        </h2>
+        <GameJam5JudgeWall />
+      </div>
+    </section>
+
     <!-- 获奖名单（待公布） -->
     <section class="winner-section">
       <div class="section-container">
@@ -118,8 +129,9 @@
 </template>
 
 <script setup lang="ts">
-import { Trophy, Calendar, Star, UserFilled, ArrowLeft, List, User, Clock } from '@element-plus/icons-vue'
+import { Trophy, Calendar, Star, UserFilled, ArrowLeft, List, User, Clock, ChatDotRound } from '@element-plus/icons-vue'
 import { gameJam5Entries } from '@/data/gameJam5Entries'
+import GameJam5JudgeWall from '@/components/gamejam/GameJam5JudgeWall.vue'
 
 interface ScheduleItem {
   phase: string
@@ -395,6 +407,11 @@ const sponsors: string[] = [
       color: var(--text-secondary);
     }
   }
+}
+
+/* 评委点评 */
+.judge-wall-section {
+  margin-bottom: 56px;
 }
 
 /* 获奖名单（待公布） */
