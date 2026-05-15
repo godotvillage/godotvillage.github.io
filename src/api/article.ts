@@ -66,6 +66,7 @@ export interface ArticleRejectDto {
 // 评论 DTO
 export interface CommentDto {
   id: string
+  commentId: string
   articleId: string
   authorId: string
   authorName: string

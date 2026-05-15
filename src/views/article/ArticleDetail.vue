@@ -122,7 +122,7 @@
         <!-- 评论列表 -->
         <div class="comment-list">
           <div
-            v-for="comment in comments"
+            v-for="comment in topLevelComments"
             :key="comment.id"
             class="comment-item"
           >
@@ -173,19 +173,56 @@
               </div>
 
               <!-- 子评论 -->
-              <div v-if="comment.replyCount > 0" class="sub-comments">
+              <div v-if="getOrderedSubComments(comment.id).length > 0" class="sub-comments">
                 <div
-                  v-for="reply in getSubComments(comment.id)"
-                  :key="reply.id"
+                  v-for="item in getOrderedSubComments(comment.id)"
+                  :key="item.comment.id"
                   class="sub-comment-item"
                 >
                   <el-avatar :size="28">
-                    {{ reply.authorName?.charAt(0) }}
+                    {{ item.comment.authorName?.charAt(0) }}
                   </el-avatar>
                   <div class="sub-comment-body">
-                    <span class="comment-author">{{ reply.authorName }}</span>
-                    <span class="comment-content">{{ reply.content }}</span>
-                    <span class="comment-time">{{ formatTime(reply.createdTime) }}</span>
+                    <div class="sub-comment-header">
+                      <span class="comment-author">{{ item.comment.authorName }}</span>
+                      <span v-if="item.parentAuthorName" class="reply-hint">@{{ item.parentAuthorName }}</span>
+                      <span class="comment-time">{{ formatTime(item.comment.createdTime) }}</span>
+                      <el-button
+                        v-if="item.comment.authorId === authStore.userInfo?.id"
+                        type="danger"
+                        size="small"
+                        link
+                        @click="handleDeleteComment(item.comment.id)"
+                      >
+                        删除
+                      </el-button>
+                    </div>
+                    <div class="comment-content">{{ item.comment.content }}</div>
+
+                    <div class="comment-actions">
+                      <el-button
+                        size="small"
+                        link
+                        @click="showReplyInput(item.comment.id)"
+                      >
+                        回复
+                      </el-button>
+                    </div>
+
+                    <div v-if="replyingTo === item.comment.id" class="reply-input">
+                      <el-input
+                        v-model="replyContent"
+                        type="textarea"
+                        :rows="2"
+                        :placeholder="`回复 @${item.comment.authorName}...`"
+                      />
+                      <el-button size="small" type="primary" @click="handleReply(item.comment.id)">
+                        回复
+                      </el-button>
+                      <el-button size="small" @click="replyingTo = ''">
+                        取消
+                      </el-button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -284,6 +321,10 @@ const isAuthor = computed(() => {
 
 const isPublished = computed(() => {
   return article.value?.status === 'Published'
+})
+
+const topLevelComments = computed(() => {
+  return comments.value.filter(c => !c.parentCommentId)
 })
 
 const tagList = computed(() => {
@@ -458,8 +499,22 @@ const confirmReject = async () => {
   }
 }
 
-const getSubComments = (parentId: string) => {
-  return comments.value.filter(c => c.parentCommentId === parentId)
+const getOrderedSubComments = (rootId: string) => {
+  const result: { comment: CommentDto; parentAuthorName?: string }[] = []
+
+  function collectChildren(parentId: string, depth: number) {
+    const children = comments.value.filter(c => c.parentCommentId === parentId)
+    for (const child of children) {
+      const parentAuthorName = depth >= 1
+        ? comments.value.find(c => c.id === child.parentCommentId)?.authorName
+        : undefined
+      result.push({ comment: child, parentAuthorName })
+      collectChildren(child.id, depth + 1)
+    }
+  }
+
+  collectChildren(rootId, 0)
+  return result
 }
 
 const formatTime = (time: string) => {
@@ -746,10 +801,21 @@ const formatTime = (time: string) => {
           .sub-comment-body {
             flex: 1;
 
+            .sub-comment-header {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              margin-bottom: 4px;
+            }
+
             .comment-author {
               font-weight: 600;
               color: var(--text-primary);
-              margin-right: 8px;
+            }
+
+            .reply-hint {
+              color: var(--primary-color);
+              font-size: 13px;
             }
 
             .comment-content {
