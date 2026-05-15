@@ -30,6 +30,11 @@ request.interceptors.request.use(
 // 响应拦截器 - 处理错误
 request.interceptors.response.use(
   (response) => {
+    // 204 No Content — 无响应体，直接返回成功
+    if (response.status === 204) {
+      return { success: true, data: null }
+    }
+
     const res = response.data
 
     // 如果是标准ApiResponse格式
