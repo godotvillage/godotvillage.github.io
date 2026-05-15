@@ -39,9 +39,10 @@
                 </div>
                 <div class="entry-judge-summaries">
                   <div
-                    v-for="review in entry.reviews"
+                    v-for="review in sortedCardReviews(entry.reviews)"
                     :key="review.judgeId"
                     class="entry-judge-summary"
+                    :class="{ 'entry-judge-summary--empty': !hasJudgeSummary(review) }"
                   >
                     <span class="entry-judge-name">{{ review.judgeName }}</span>
                     <p class="entry-judge-text">{{ judgeSummaryText(review) }}</p>
@@ -216,9 +217,24 @@ function starCount(total: number): number {
   return Math.max(0, Math.min(5, Math.round((total / 60) * 5)))
 }
 
+function hasJudgeSummary(review: GameJam5JudgeReview): boolean {
+  return Boolean(review.summary?.trim())
+}
+
 function judgeSummaryText(review: GameJam5JudgeReview): string {
   const text = review.summary?.trim()
   return text || '暂无总评'
+}
+
+/** 有总评的评委靠前，无总评的沉底展示 */
+function sortedCardReviews(reviews: GameJam5JudgeReview[]): GameJam5JudgeReview[] {
+  const withSummary: GameJam5JudgeReview[] = []
+  const withoutSummary: GameJam5JudgeReview[] = []
+  for (const review of reviews) {
+    if (hasJudgeSummary(review)) withSummary.push(review)
+    else withoutSummary.push(review)
+  }
+  return [...withSummary, ...withoutSummary]
 }
 
 onMounted(async () => {
@@ -504,6 +520,24 @@ function dimensions(review: GameJam5JudgeReview): DimensionRow[] {
 
 .entry-judge-summary {
   margin: 0;
+
+  &:not(.entry-judge-summary--empty) + .entry-judge-summary--empty {
+    margin-top: auto;
+    padding-top: 8px;
+    border-top: 1px dashed var(--border-color);
+  }
+
+  &--empty {
+
+    .entry-judge-name {
+      color: var(--text-secondary);
+    }
+
+    .entry-judge-text {
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+  }
 }
 
 .entry-judge-name {
