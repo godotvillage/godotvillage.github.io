@@ -1,7 +1,14 @@
 <template>
   <div class="app-layout">
+    <!-- 移动端遮罩 -->
+    <div
+      v-if="sidebarOpen"
+      class="sidebar-overlay"
+      @click="sidebarOpen = false"
+    ></div>
+
     <!-- 左侧导航栏 -->
-    <aside class="sidebar">
+    <aside class="sidebar" :class="{ open: sidebarOpen }">
       <router-link to="/" class="logo">
         <el-icon :size="24" color="#667eea"><Grid /></el-icon>
         <span class="logo-text">Godot新手村</span>
@@ -47,7 +54,11 @@
     <div class="main-wrapper">
       <!-- 顶部操作栏 -->
       <header class="top-header">
-        <div class="header-left"></div>
+        <div class="header-left">
+          <div class="hamburger" @click="sidebarOpen = !sidebarOpen">
+            <el-icon :size="22"><Expand /></el-icon>
+          </div>
+        </div>
         <div class="header-right">
           <!-- 搜索 -->
           <el-input
@@ -133,9 +144,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { Search, House, Document, Reading, FolderOpened, User, ArrowDown, SwitchButton, Grid, Bell, Setting, Trophy, Link, Collection, Sunny, Moon, MagicStick } from '@element-plus/icons-vue'
+import { Search, House, Document, Reading, FolderOpened, User, ArrowDown, SwitchButton, Grid, Bell, Setting, Trophy, Link, Collection, Sunny, Moon, MagicStick, Expand } from '@element-plus/icons-vue'
 import { useAuthStore } from '@/stores/auth'
 import { useThemeStore } from '@/stores/theme'
 import { messageApi } from '@/api/message'
@@ -146,8 +157,17 @@ const router = useRouter()
 const authStore = useAuthStore()
 const themeStore = useThemeStore()
 
+const sidebarOpen = ref(false)
 const searchQuery = ref('')
 const unreadCount = ref(0)
+
+// 移动端切换页面后自动关闭侧边栏
+watch(
+  () => router.currentRoute.value,
+  () => {
+    sidebarOpen.value = false
+  }
+)
 
 const loadUnreadCount = async () => {
   if (!authStore.isLoggedIn) return
@@ -383,15 +403,65 @@ const handleUserCommand = (command: string) => {
   }
 }
 
+.hamburger {
+  display: none;
+  cursor: pointer;
+  color: var(--text-regular);
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  transition: all 0.2s;
+
+  &:hover {
+    color: var(--color-text);
+    background-color: var(--color-secondary);
+  }
+}
+
+.sidebar-overlay {
+  display: none;
+}
+
 /* 响应式处理 */
 @media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 999;
+  }
+
   .sidebar {
     transform: translateX(-100%);
     transition: transform 0.3s ease;
+
+    &.open {
+      transform: translateX(0);
+    }
   }
-  
+
   .main-wrapper {
     margin-left: 0;
+    overflow-x: hidden;
+  }
+
+  .top-header {
+    padding: 0 16px;
+
+    .header-right {
+      gap: 12px;
+
+      .search-input {
+        width: 140px;
+      }
+    }
   }
 }
 </style>
