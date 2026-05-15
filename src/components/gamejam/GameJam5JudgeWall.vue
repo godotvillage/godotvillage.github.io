@@ -37,7 +37,16 @@
                   </p>
                   <span class="entry-score">{{ entry.finalScore.toFixed(1) }}</span>
                 </div>
-                <p class="entry-excerpt">{{ entryExcerpt(entry) }}</p>
+                <div class="entry-judge-summaries">
+                  <div
+                    v-for="review in entry.reviews"
+                    :key="review.judgeId"
+                    class="entry-judge-summary"
+                  >
+                    <span class="entry-judge-name">{{ review.judgeName }}</span>
+                    <p class="entry-judge-text">{{ judgeSummaryText(review) }}</p>
+                  </div>
+                </div>
                 <span class="entry-hint">点击查看详细点评</span>
               </div>
             </article>
@@ -207,13 +216,9 @@ function starCount(total: number): number {
   return Math.max(0, Math.min(5, Math.round((total / 60) * 5)))
 }
 
-function excerpt(review: GameJam5JudgeReview): string {
-  const text =
-    review.summary ||
-    [review.themeNote, review.playNote, review.completeNote, review.polishNote]
-      .filter(Boolean)
-      .join(' ')
-  return text || ''
+function judgeSummaryText(review: GameJam5JudgeReview): string {
+  const text = review.summary?.trim()
+  return text || '暂无总评'
 }
 
 onMounted(async () => {
@@ -242,16 +247,6 @@ function dialogScoreHint(entry: GameJam5DisplayEntry): string {
   }
   const audience = entry.audienceAverage.toFixed(1)
   return `满分 100 · 评委 ${judge} + 观众 ${audience}×4（${entry.audienceVoteCount} 票）`
-}
-
-function entryExcerpt(entry: GameJam5DisplayEntry): string {
-  const parts = entry.reviews
-    .map((r) => excerpt(r))
-    .filter(Boolean)
-  const text = parts.join(' ')
-  if (!text) return '暂无文字点评'
-  if (text.length <= 100) return text
-  return `${text.slice(0, 100)}…`
 }
 
 function openEntryDetail(entry: GameJam5DisplayEntry) {
@@ -499,16 +494,35 @@ function dimensions(review: GameJam5JudgeReview): DimensionRow[] {
   line-height: 1;
 }
 
-.entry-excerpt {
-  font-size: 13px;
-  line-height: 1.6;
+.entry-judge-summaries {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+  min-height: 0;
+}
+
+.entry-judge-summary {
+  margin: 0;
+}
+
+.entry-judge-name {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fbbf24;
+  margin-bottom: 4px;
+}
+
+.entry-judge-text {
+  font-size: 12px;
+  line-height: 1.55;
   color: var(--text-regular);
   margin: 0;
   display: -webkit-box;
-  -webkit-line-clamp: 4;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  flex: 1;
 }
 
 .entry-hint {
