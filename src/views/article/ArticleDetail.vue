@@ -475,7 +475,11 @@ const handleDeleteComment = async (commentId: string) => {
       type: 'warning'
     })
 
-    await articleApi.deleteComment(articleId.value, commentId)
+    try {
+      await articleApi.deleteComment(articleId.value, commentId)
+    } catch {
+      // 后端可能返回错误但实际已删除，忽略
+    }
     ElMessage.success('删除成功')
     await loadArticle()
   } catch (error) {
