@@ -125,16 +125,17 @@
             v-for="comment in topLevelComments"
             :key="comment.id"
             class="comment-item"
+            :class="{ 'comment-item--synthetic': !comment.commentId }"
           >
             <el-avatar :size="36">
-              {{ comment.authorName?.charAt(0) }}
+              {{ !comment.commentId ? '?' : comment.authorName?.charAt(0) }}
             </el-avatar>
             <div class="comment-body">
               <div class="comment-header">
                 <span class="comment-author">{{ comment.authorName }}</span>
-                <span class="comment-time">{{ formatTime(comment.createdTime) }}</span>
+                <span v-if="comment.commentId" class="comment-time">{{ formatTime(comment.createdTime) }}</span>
                 <el-button
-                  v-if="comment.authorId === authStore.userInfo?.id"
+                  v-if="comment.commentId && comment.authorId === authStore.userInfo?.id"
                   type="danger"
                   size="small"
                   link
@@ -146,7 +147,7 @@
               <div class="comment-content">{{ comment.content }}</div>
 
               <!-- 回复按钮 -->
-              <div class="comment-actions">
+              <div v-if="comment.commentId" class="comment-actions">
                 <el-button
                   size="small"
                   link
@@ -157,7 +158,7 @@
               </div>
 
               <!-- 回复输入框 -->
-              <div v-if="replyingTo === comment.id" class="reply-input">
+              <div v-if="comment.commentId && replyingTo === comment.id" class="reply-input">
                 <el-input
                   v-model="replyContent"
                   type="textarea"
@@ -323,8 +324,48 @@ const isPublished = computed(() => {
   return article.value?.status === 'Published'
 })
 
+const existingIds = computed(() => new Set(comments.value.map(c => c.id)))
+const commentMap = computed(() => new Map(comments.value.map(c => [c.id, c])))
+
+function getRootOrphanId(comment: CommentDto): string {
+  let current = comment
+  while (current.parentCommentId && existingIds.value.has(current.parentCommentId)) {
+    const parent = commentMap.value.get(current.parentCommentId)
+    if (!parent) break
+    current = parent
+  }
+  return current.parentCommentId || current.id
+}
+
+const syntheticTopLevel = computed(() => {
+  const seenRoots = new Set<string>()
+  const result: CommentDto[] = []
+
+  for (const c of comments.value) {
+    if (!c.parentCommentId) continue
+    if (existingIds.value.has(c.parentCommentId)) continue
+
+    const rootId = getRootOrphanId(c)
+    if (seenRoots.has(rootId)) continue
+    seenRoots.add(rootId)
+
+    result.push({
+      id: rootId,
+      commentId: '',
+      articleId: '',
+      authorId: '',
+      authorName: '未知用户',
+      content: '评论已经删除',
+      parentCommentId: undefined,
+      replyCount: 0,
+      createdTime: '',
+    } as CommentDto)
+  }
+  return result
+})
+
 const topLevelComments = computed(() => {
-  return comments.value.filter(c => !c.parentCommentId)
+  return [...comments.value.filter(c => !c.parentCommentId), ...syntheticTopLevel.value]
 })
 
 const tagList = computed(() => {
@@ -506,7 +547,9 @@ const getOrderedSubComments = (rootId: string) => {
     const children = comments.value.filter(c => c.parentCommentId === parentId)
     for (const child of children) {
       const parentAuthorName = depth >= 1
-        ? comments.value.find(c => c.id === child.parentCommentId)?.authorName
+        ? (existingIds.value.has(child.parentCommentId!)
+            ? commentMap.value.get(child.parentCommentId!)?.authorName
+            : '已删除评论')
         : undefined
       result.push({ comment: child, parentAuthorName })
       collectChildren(child.id, depth + 1)
@@ -743,6 +786,10 @@ const formatTime = (time: string) => {
   .comment-item {
     display: flex;
     gap: 12px;
+
+    &.comment-item--synthetic {
+      opacity: 0.6;
+    }
 
     .comment-body {
       flex: 1;
