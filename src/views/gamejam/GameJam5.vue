@@ -16,13 +16,7 @@
           第五届
         </div>
         <h1 class="hero-title">Godot新手村游戏制作大赛</h1>
-        <p class="hero-desc">49人报名参赛，比赛火热进行中。</p>
-        <div class="hero-actions">
-          <router-link to="/gamejam/5/vote" class="vote-cta">
-            <el-icon><Star /></el-icon>
-            作品打分
-          </router-link>
-        </div>
+        <p class="hero-desc">49人报名参赛，19件作品提交，获奖名单已公布。</p>
         <div class="hero-stats">
           <div class="hero-stat">
             <span class="stat-num">49</span>
@@ -37,6 +31,28 @@
             <span class="stat-label">赞助者</span>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- 获奖名单 -->
+    <section class="winner-section">
+      <div class="section-container">
+        <h2 class="section-title">
+          <el-icon><Trophy /></el-icon>
+          获奖名单
+        </h2>
+        <GameJam5Awards />
+      </div>
+    </section>
+
+    <!-- 评委点评 -->
+    <section id="judge-reviews" class="judge-wall-section">
+      <div class="section-container">
+        <h2 class="section-title">
+          <el-icon><ChatDotRound /></el-icon>
+          评委点评
+        </h2>
+        <GameJam5JudgeWall />
       </div>
     </section>
 
@@ -84,31 +100,6 @@
       </div>
     </section>
 
-    <!-- 评委点评 -->
-    <section id="judge-reviews" class="judge-wall-section">
-      <div class="section-container">
-        <h2 class="section-title">
-          <el-icon><ChatDotRound /></el-icon>
-          评委点评
-        </h2>
-        <GameJam5JudgeWall />
-      </div>
-    </section>
-
-    <!-- 获奖名单（待公布） -->
-    <section class="winner-section">
-      <div class="section-container">
-        <h2 class="section-title">
-          <el-icon><Trophy /></el-icon>
-          获奖名单
-        </h2>
-        <div class="pending-card">
-          <el-icon :size="32"><Clock /></el-icon>
-          <p>投票结束后公布最终排名与点评，敬请期待</p>
-        </div>
-      </div>
-    </section>
-
     <!-- 赞助信息 -->
     <section class="sponsors-section">
       <div class="section-container">
@@ -125,13 +116,42 @@
         </div>
       </div>
     </section>
+
+    <GameJam5EntryReviewDialog
+      v-model:visible="dialogVisible"
+      :title="dialogTitle"
+      :entry="dialogEntry"
+      :score-hint="dialogScoreHintText"
+      :star-count="starCount"
+      :dimensions="dimensions"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { Trophy, Calendar, Star, UserFilled, ArrowLeft, List, User, Clock, ChatDotRound } from '@element-plus/icons-vue'
+import { computed, provide } from 'vue'
+import { Trophy, Calendar, Star, UserFilled, ArrowLeft, List, User, ChatDotRound } from '@element-plus/icons-vue'
 import { gameJam5Entries } from '@/data/gameJam5Entries'
+import GameJam5Awards from '@/components/gamejam/GameJam5Awards.vue'
+import GameJam5EntryReviewDialog from '@/components/gamejam/GameJam5EntryReviewDialog.vue'
 import GameJam5JudgeWall from '@/components/gamejam/GameJam5JudgeWall.vue'
+import {
+  gameJam5DisplayEntriesKey,
+  useGameJam5DisplayEntries
+} from '@/composables/useGameJam5DisplayEntries'
+
+const displayEntries = useGameJam5DisplayEntries()
+provide(gameJam5DisplayEntriesKey, displayEntries)
+
+const dialogVisible = displayEntries.dialogVisible
+const dialogEntry = displayEntries.dialogEntry
+const dialogTitle = displayEntries.dialogTitle
+const starCount = displayEntries.starCount
+const dimensions = displayEntries.dimensions
+
+const dialogScoreHintText = computed(() =>
+  dialogEntry.value ? displayEntries.dialogScoreHint(dialogEntry.value) : ''
+)
 
 interface ScheduleItem {
   phase: string
@@ -145,7 +165,7 @@ const schedule: ScheduleItem[] = [
   { phase: '制作阶段', desc: '2026年4月29日 10:00 开始，共 7 天，参赛者自由安排开发时间' },
   { phase: '提交截止', desc: '2026年5月6日 10:00（中国标准时间），逾期将不予受理' },
   { phase: '投票阶段', desc: '提交截止后开放，具体时间由主办方公布' },
-  { phase: '结果公布', desc: '投票结束后公布最终排名与点评' }
+  { phase: '结果公布', desc: '已公布获奖名单与评委点评' }
 ]
 
 const sponsors: string[] = [
@@ -252,30 +272,6 @@ const sponsors: string[] = [
     max-width: 600px;
     margin: 0 auto 20px;
     line-height: 1.6;
-  }
-
-  .hero-actions {
-    margin-bottom: 32px;
-  }
-
-  .vote-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 28px;
-    border-radius: 999px;
-    font-size: 15px;
-    font-weight: 600;
-    color: #0f172a;
-    background: linear-gradient(135deg, #fbbf24, #f59e0b);
-    text-decoration: none;
-    box-shadow: 0 4px 24px rgba(251, 191, 36, 0.35);
-    transition: transform 0.15s, box-shadow 0.15s;
-
-    &:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 28px rgba(251, 191, 36, 0.45);
-    }
   }
 
   .hero-stats {
@@ -414,27 +410,9 @@ const sponsors: string[] = [
   margin-bottom: 56px;
 }
 
-/* 获奖名单（待公布） */
+/* 获奖名单 */
 .winner-section {
   margin-bottom: 56px;
-
-  .pending-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 14px;
-    padding: 48px 24px;
-    text-align: center;
-    color: var(--text-secondary);
-
-    .el-icon {
-      margin-bottom: 12px;
-    }
-
-    p {
-      font-size: 15px;
-      color: var(--text-regular);
-    }
-  }
 }
 
 /* 赞助者 */
