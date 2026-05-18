@@ -71,112 +71,22 @@
       <span class="entry-page">（{{ currentPage + 1 }} / {{ totalPages }} 页）</span>
     </p>
 
-    <el-dialog
-      v-model="dialogVisible"
-      :title="dialogTitle"
-      width="min(600px, 92vw)"
-      class="entry-dialog"
-      destroy-on-close
-    >
-      <template v-if="dialogEntry">
-        <div class="dialog-header">
-          <el-image :src="coverUrl(dialogEntry.entryId)" fit="cover" class="dialog-cover">
-            <template #error>
-              <div class="dialog-cover-fallback">{{ dialogEntry.author.charAt(0) }}</div>
-            </template>
-          </el-image>
-          <div class="dialog-header-text">
-            <p class="dialog-author">
-              <el-icon><User /></el-icon>
-              {{ dialogEntry.author }}
-            </p>
-            <div class="dialog-score-badge">
-              <el-icon class="dialog-score-icon"><Lightning /></el-icon>
-              <span class="dialog-score-num">{{ dialogEntry.finalScore.toFixed(1) }}</span>
-              <span class="dialog-score-hint">{{ dialogScoreHint(dialogEntry) }}</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="dialog-reviews">
-          <section
-            v-for="review in dialogEntry.reviews"
-            :key="review.judgeId"
-            class="dialog-review-block"
-          >
-            <header class="review-header">
-              <div class="review-judge">
-                <div class="judge-avatar">{{ review.judgeName.charAt(0) }}</div>
-                <span class="judge-name">{{ review.judgeName }}</span>
-              </div>
-              <div class="review-stars">
-                <el-icon
-                  v-for="i in 5"
-                  :key="i"
-                  class="star"
-                  :class="{ filled: i <= starCount(review.total) }"
-                >
-                  <StarFilled v-if="i <= starCount(review.total)" />
-                  <Star v-else />
-                </el-icon>
-              </div>
-              <span class="review-total">{{ review.total }} / 60</span>
-            </header>
-            <div class="dimension-list">
-              <div
-                v-for="dim in dimensions(review)"
-                :key="dim.key"
-                class="dimension-row"
-              >
-                <div class="dimension-label">
-                  <span>{{ dim.label }}</span>
-                  <span class="dimension-score">{{ dim.score }} / {{ dim.max }}</span>
-                </div>
-                <el-progress
-                  :percentage="Math.round((dim.score / dim.max) * 100)"
-                  :stroke-width="8"
-                  color="#fbbf24"
-                  :show-text="false"
-                />
-                <p v-if="dim.note" class="dimension-note">{{ dim.note }}</p>
-              </div>
-            </div>
-            <p v-if="review.summary" class="dialog-summary">{{ review.summary }}</p>
-          </section>
-        </div>
-      </template>
-    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import { ArrowLeft, ArrowRight, Lightning, Star, StarFilled, User } from '@element-plus/icons-vue'
-import { getGameJamAudienceAggregates } from '@/api/gameJamVote'
-import { gameJam5CoverUrl, gameJam5Edition } from '@/data/gameJam5Entries'
-import {
-  gameJam5JudgeScores,
-  type GameJam5JudgeReview
-} from '@/data/gameJam5JudgeScores'
-import {
-  buildGameJam5DisplayEntries,
-  type GameJam5AudienceAggregate,
-  type GameJam5DisplayEntry
-} from '@/utils/gameJam5Score'
+import { computed, inject, ref } from 'vue'
+import { ArrowLeft, ArrowRight, User } from '@element-plus/icons-vue'
+import { gameJam5CoverUrl } from '@/data/gameJam5Entries'
+import { gameJam5DisplayEntriesKey } from '@/composables/useGameJam5DisplayEntries'
+import type { GameJam5JudgeReview } from '@/data/gameJam5JudgeScores'
 
 const PAGE_SIZE = 3
 
-const audienceByEntryId = ref<Map<string, GameJam5AudienceAggregate>>(new Map())
-const audienceLoading = ref(true)
+const { audienceLoading, scores, openEntryDetail } = inject(gameJam5DisplayEntriesKey)!
 
-const scores = computed(() =>
-  buildGameJam5DisplayEntries(gameJam5JudgeScores, audienceByEntryId.value)
-)
 const currentPage = ref(0)
 const slideDirection = ref<'next' | 'prev'>('next')
-const dialogVisible = ref(false)
-const dialogEntry = ref<GameJam5DisplayEntry | null>(null)
-const dialogTitle = ref('')
 
 const totalPages = computed(() => Math.ceil(scores.value.length / PAGE_SIZE))
 
@@ -213,10 +123,6 @@ function coverUrl(entryId: string) {
   return gameJam5CoverUrl(entryId)
 }
 
-function starCount(total: number): number {
-  return Math.max(0, Math.min(5, Math.round((total / 60) * 5)))
-}
-
 function hasJudgeSummary(review: GameJam5JudgeReview): boolean {
   return Boolean(review.summary?.trim())
 }
@@ -237,62 +143,6 @@ function sortedCardReviews(reviews: GameJam5JudgeReview[]): GameJam5JudgeReview[
   return [...withSummary, ...withoutSummary]
 }
 
-onMounted(async () => {
-  try {
-    const list = await getGameJamAudienceAggregates(gameJam5Edition)
-    const map = new Map<string, GameJam5AudienceAggregate>()
-    for (const row of list) {
-      map.set(row.entryId.toLowerCase(), {
-        entryId: row.entryId,
-        averageScore: row.averageScore,
-        voteCount: row.voteCount
-      })
-    }
-    audienceByEntryId.value = map
-  } catch {
-    audienceByEntryId.value = new Map()
-  } finally {
-    audienceLoading.value = false
-  }
-})
-
-function dialogScoreHint(entry: GameJam5DisplayEntry): string {
-  const judge = entry.averageTotal.toFixed(1)
-  if (entry.audienceAverage == null || entry.audienceVoteCount === 0) {
-    return `满分 100 · 评委 ${judge} + 观众暂无`
-  }
-  const audience = entry.audienceAverage.toFixed(1)
-  return `满分 100 · 评委 ${judge} + 观众 ${audience}×4（${entry.audienceVoteCount} 票）`
-}
-
-function openEntryDetail(entry: GameJam5DisplayEntry) {
-  dialogEntry.value = entry
-  dialogTitle.value = `${entry.work} · 评委点评`
-  dialogVisible.value = true
-}
-
-interface DimensionRow {
-  key: string
-  label: string
-  score: number
-  max: number
-  note: string
-}
-
-function dimensions(review: GameJam5JudgeReview): DimensionRow[] {
-  return [
-    { key: 'theme', label: '创意诠释', score: review.theme, max: 20, note: review.themeNote },
-    { key: 'play', label: '可玩性', score: review.play, max: 20, note: review.playNote },
-    {
-      key: 'complete',
-      label: '主题契合',
-      score: review.complete,
-      max: 14,
-      note: review.completeNote
-    },
-    { key: 'polish', label: '完整度', score: review.polish, max: 6, note: review.polishNote }
-  ]
-}
 </script>
 
 <style scoped lang="scss">
