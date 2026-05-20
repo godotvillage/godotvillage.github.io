@@ -141,6 +141,24 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '看板娘' }
       },
       {
+        path: 'talent',
+        name: 'talent-list',
+        component: () => import('@/views/talent/TalentList.vue'),
+        meta: { title: '人才库' }
+      },
+      {
+        path: 'talent/my',
+        name: 'talent-my',
+        component: () => import('@/views/talent/TalentMy.vue'),
+        meta: { title: '我的档案', requiresAuth: true }
+      },
+      {
+        path: 'talent/:id',
+        name: 'talent-detail',
+        component: () => import('@/views/talent/TalentDetail.vue'),
+        meta: { title: '人才详情' }
+      },
+      {
         path: 'assetweb',
         name: 'assetweb',
         component: () => import('@/views/assetweb/AssetWeb.vue'),

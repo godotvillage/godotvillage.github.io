@@ -39,6 +39,10 @@
           <el-icon><Collection /></el-icon>
           <span>资源网站</span>
         </router-link>
+        <router-link to="/talent" class="nav-item" :class="{ active: $route.path.startsWith('/talent') }">
+          <el-icon><UserFilled /></el-icon>
+          <span>人才库</span>
+        </router-link>
         <router-link to="/gamejam" class="nav-item" :class="{ active: $route.path.startsWith('/gamejam') }">
           <el-icon><Trophy /></el-icon>
           <span>GameJam</span>
@@ -146,7 +150,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { Search, House, Document, Reading, FolderOpened, User, ArrowDown, SwitchButton, Grid, Bell, Setting, Trophy, Link, Collection, Sunny, Moon, MagicStick, Expand } from '@element-plus/icons-vue'
+import { Search, House, Document, Reading, FolderOpened, User, UserFilled, ArrowDown, SwitchButton, Grid, Bell, Setting, Trophy, Link, Collection, Sunny, Moon, MagicStick, Expand } from '@element-plus/icons-vue'
 import { useAuthStore } from '@/stores/auth'
 import { useThemeStore } from '@/stores/theme'
 import { messageApi } from '@/api/message'

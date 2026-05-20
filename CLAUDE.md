@@ -73,3 +73,24 @@ src/
 | `src/main.ts` | 应用入口，Element Plus 图标注册 |
 | `vite.config.ts` | Vite 配置、路径别名、API 代理 |
 | `.env` | 环境变量 (API 基础路径) |
+
+## 人才库功能
+
+- 路由: `/talent` (列表), `/talent/my` (我的档案), `/talent/:id` (详情)
+- 六维能力自评: 策划/程序/美术/音乐/组织/资金，0-10 步长 0.5
+- 雷达图组件 `TalentRadarChart` 基于 ECharts，支持 `size` 属性控制尺寸
+- 评分标准参考表可展开查看完整 0-10 级描述
+- 档案页支持查看/编辑双模式切换
+- 标签按六维分类，支持多选和自定义输入
+- API 端点: `GET/POST/DELETE /api/talent`, `GET /api/talent/my`, `GET /api/talent/:id`
+
+| 文件 | 用途 |
+|------|------|
+| `src/api/talent.ts` | 人才库 API 模块 |
+| `src/data/talentTags.ts` | 六维分类、预设标签、等级描述、评分标准 |
+| `src/components/TalentCard.vue` | 人才卡片（迷你雷达图 + 标签） |
+| `src/components/TalentRadarChart.vue` | ECharts 雷达图组件 |
+| `src/views/talent/TalentList.vue` | 人才列表（多维筛选） |
+| `src/views/talent/TalentMy.vue` | 我的档案（查看/编辑双模式） |
+| `src/views/talent/TalentDetail.vue` | 人才详情 |
+| `docs/talent-marketplace.md` | 功能设计文档 |
