@@ -206,7 +206,7 @@ const sponsors: string[] = [
 }
 
 .section-container {
-  max-width: 900px;
+  // uses .page-container max-width
   margin: 0 auto;
   padding: 0 24px;
   width: 90%;

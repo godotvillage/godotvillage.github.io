@@ -202,8 +202,9 @@ a, button, .btn, .btn-primary, .btn-secondary,
 // 页面容器
 .page-container {
   max-width: 1200px;
+  width: 90%;
   margin: 0 auto;
-  padding: var(--space-lg); // updated to use space token
+  padding: var(--space-lg);
 }
 
 // 标题样式

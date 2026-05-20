@@ -110,7 +110,7 @@ const loadProjects = async () => {
 
 <style scoped lang="scss">
 .user-detail-page {
-  max-width: 1000px;
+  // uses .page-container max-width
   margin: 0 auto;
 }
 

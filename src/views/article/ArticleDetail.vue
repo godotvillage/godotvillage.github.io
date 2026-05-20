@@ -571,7 +571,7 @@ const formatTime = (time: string) => {
 
 <style scoped lang="scss">
 .article-detail-page {
-  max-width: 1000px;
+  // uses .page-container max-width
   margin: 0 auto;
   padding: 0 24px;
   width: 90%;

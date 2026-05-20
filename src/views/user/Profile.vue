@@ -152,7 +152,7 @@ const handleSaveSettings = async () => {
 
 <style scoped lang="scss">
 .profile-page {
-  max-width: 1000px;
+  // uses .page-container max-width
   margin: 0 auto;
   width: 90%;
 }
@@ -221,7 +221,7 @@ const handleSaveSettings = async () => {
 }
 
 .settings-form {
-  max-width: 500px;
+  // uses .page-container max-width
   padding: 24px;
 
   h3 {

@@ -238,7 +238,7 @@ const loadStats = async () => {
 
 /* 共有容器样式 */
 .section-container {
-  max-width: 1200px;
+  // uses .page-container max-width
   margin: 0 auto;
   padding: 0 24px;
 }
@@ -258,7 +258,7 @@ const loadStats = async () => {
   position: relative;
   padding: 80px 24px 60px;
   overflow: hidden;
-  max-width: 1200px;
+  // uses .page-container max-width
   margin: 0 auto;
 
   .hero-glow {

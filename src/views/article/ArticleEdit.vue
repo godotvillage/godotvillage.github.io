@@ -286,7 +286,7 @@ const handlePublish = async () => {
 
 <style scoped lang="scss">
 .article-edit-page {
-  max-width: 900px;
+  // uses .page-container max-width
   margin: 0 auto;
 }
 

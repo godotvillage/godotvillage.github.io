@@ -107,7 +107,7 @@ function toChineseNum(n: number): string {
 
 <style scoped lang="scss">
 .mascot-page {
-  max-width: 1000px;
+  // uses .page-container max-width
   margin: 0 auto;
   padding: 40px 24px 80px;
   width: 90%;

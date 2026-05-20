@@ -120,7 +120,7 @@ const winner = { work: '生或跳普通版.exe', author: '老爹叫你发工程'
 }
 
 .section-container {
-  max-width: 900px;
+  // uses .page-container max-width
   margin: 0 auto;
   padding: 0 24px;
   width: 90%;

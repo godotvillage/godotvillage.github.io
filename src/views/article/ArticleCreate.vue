@@ -205,7 +205,7 @@ const handlePublish = async () => {
 
 <style scoped lang="scss">
 .article-create-page {
-  max-width: 900px;
+  // uses .page-container max-width
   margin: 0 auto;
 }
 

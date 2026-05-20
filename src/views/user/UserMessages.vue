@@ -138,7 +138,7 @@ const goToRelated = (message: MessageDto) => {
 
 <style scoped lang="scss">
 .user-messages-page {
-  max-width: 900px;
+  // uses .page-container max-width
   margin: 0 auto;
 }
 

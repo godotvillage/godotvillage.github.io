@@ -117,7 +117,6 @@ onMounted(async () => {
 <style scoped lang="scss">
 .talent-detail-page {
   padding: 24px 32px;
-  max-width: 900px;
 }
 
 .detail-header {

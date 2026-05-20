@@ -132,7 +132,7 @@ const processedContent = computed(() => {
 
 <style scoped lang="scss">
 .tutorial-page {
-  max-width: 1000px;
+  // uses .page-container max-width
   margin: 0 auto;
   padding: 32px 24px 64px;
   width: 90%;

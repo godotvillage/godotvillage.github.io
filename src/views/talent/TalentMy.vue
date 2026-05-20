@@ -388,7 +388,6 @@ onMounted(() => {
 <style scoped lang="scss">
 .talent-my-page {
   padding: 24px 32px;
-  max-width: 900px;
 }
 
 .page-header {

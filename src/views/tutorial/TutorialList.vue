@@ -126,7 +126,7 @@ const categories = computed<CategoryGroup[]>(() => {
 
 <style scoped lang="scss">
 .tutorial-list-page {
-  max-width: 900px;
+  // uses .page-container max-width
   margin: 0 auto;
   padding: 32px 24px 64px;
 }
