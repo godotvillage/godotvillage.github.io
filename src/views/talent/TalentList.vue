@@ -22,7 +22,7 @@
           <div v-for="dim in DIMENSION_KEYS" :key="dim.key" class="filter-dim">
             <label class="filter-label">{{ dim.label }}</label>
             <el-slider
-              v-model="filters[dim.key as keyof ScoreFilters]"
+              v-model="(filters as Record<string, any>)[dim.key]"
               range
               :min="0"
               :max="10"
@@ -123,7 +123,6 @@ const showFilters = ref(false)
 const profiles = ref<TalentDto[]>([])
 const totalCount = ref(0)
 
-type ScoreFilters = Record<string, [number, number]>
 const filters = reactive({
   designScore: [0, 10] as [number, number],
   programmingScore: [0, 10] as [number, number],
@@ -131,6 +130,7 @@ const filters = reactive({
   musicScore: [0, 10] as [number, number],
   organizationScore: [0, 10] as [number, number],
   fundingScore: [0, 10] as [number, number],
+  marketingScore: [0, 10] as [number, number],
   tags: [] as string[],
   keyword: '',
 })
@@ -148,6 +148,7 @@ const buildQuery = () => {
     musicScore: 'Music',
     organizationScore: 'Organization',
     fundingScore: 'Funding',
+    marketingScore: 'Marketing',
   }
   const params: Record<string, any> = {
     page: pagination.page,
@@ -166,8 +167,9 @@ const buildQuery = () => {
       }
     } else {
       const prefix = dimMap[key]
-      if (prefix && range[0] > 0) params[`min${prefix}`] = range[0]
-      if (prefix && range[1] < 10) params[`max${prefix}`] = range[1]
+      const [min, max] = range as [number, number]
+      if (prefix && min > 0) params[`min${prefix}`] = min
+      if (prefix && max < 10) params[`max${prefix}`] = max
     }
   }
   return params

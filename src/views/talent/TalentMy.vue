@@ -91,7 +91,7 @@
           未找到您的档案数据，请在下方填写并保存。
         </el-alert>
         <div class="section-header">
-          <h3 class="section-title">六维能力自评</h3>
+          <h3 class="section-title">七维能力自评</h3>
           <el-button text type="primary" @click="showLevelTable = !showLevelTable">
             <el-icon><InfoFilled /></el-icon>
             {{ showLevelTable ? '收起' : '查看' }}评分标准
@@ -107,12 +107,7 @@
               <thead>
                 <tr>
                   <th>等级</th>
-                  <th>策划</th>
-                  <th>程序</th>
-                  <th>美术</th>
-                  <th>音乐</th>
-                  <th>组织</th>
-                  <th>资金</th>
+                  <th v-for="dim in DIMENSION_KEYS" :key="dim.key">{{ dim.label }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -331,6 +326,7 @@ const handleSave = async () => {
       musicScore: scores.musicScore,
       organizationScore: scores.organizationScore,
       fundingScore: scores.fundingScore,
+      marketingScore: scores.marketingScore,
       description: description.value,
       tags: buildTags(),
     })
@@ -474,7 +470,7 @@ onMounted(() => {
   .score-label {
     font-size: 14px;
     color: var(--text-secondary);
-    width: 36px;
+    width: 56px;
     flex-shrink: 0;
   }
 

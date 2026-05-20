@@ -17,6 +17,7 @@ export interface TalentDto {
   musicScore: number
   organizationScore: number
   fundingScore: number
+  marketingScore: number
   description: string
   tags: TalentTagDto[]
   createdTime: string
@@ -30,6 +31,7 @@ export interface TalentCreateUpdateDto {
   musicScore: number
   organizationScore: number
   fundingScore: number
+  marketingScore: number
   description: string
   tags: TalentTagDto[]
 }
@@ -51,6 +53,8 @@ export interface TalentQueryDto {
   maxOrganization?: number
   minFunding?: number
   maxFunding?: number
+  minMarketing?: number
+  maxMarketing?: number
   tags?: string
   keyword?: string
 }

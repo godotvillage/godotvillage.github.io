@@ -17,7 +17,7 @@
       <!-- 雷达图 + 分数 -->
       <div class="detail-body">
         <div class="card chart-card">
-          <h3 class="card-title">六维能力图</h3>
+          <h3 class="card-title">七维能力图</h3>
           <TalentRadarChart :scores="radarScores" />
         </div>
 
@@ -179,7 +179,7 @@ onMounted(async () => {
   .score-label {
     font-size: 14px;
     color: var(--text-secondary);
-    width: 36px;
+    width: 56px;
     flex-shrink: 0;
   }
 
