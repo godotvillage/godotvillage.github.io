@@ -1,0 +1,1 @@
+import{u as a}from"./index-CnCP1swo.js";const s="https://124.221.144.148",i=t=>{var e;const r=a();return(e=r.userInfo)!=null&&e.avatarUrl?s+r.userInfo.avatarUrl:t?`https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(t)}`:"https://api.dicebear.com/7.x/initials/svg?seed=User"};export{i as g};
