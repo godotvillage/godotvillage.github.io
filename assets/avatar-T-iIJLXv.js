@@ -1,1 +1,0 @@
-const i="https://villagebackend.moshangzhu.com.cn",n=(e,t)=>t?i+t:e?`https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(e)}`:"https://api.dicebear.com/7.x/initials/svg?seed=User";export{n as g};

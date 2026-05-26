@@ -1,1 +1,0 @@
-import{r as t}from"./request-BuTavjJX.js";const a={getAll(){return t.get("/category")},getById(e){return t.get(`/category/${e}`)},create(e){return t.post("/category",e)},update(e,r){return t.put(`/category/${e}`,r)},delete(e){return t.delete(`/category/${e}`)}};export{a as c};
