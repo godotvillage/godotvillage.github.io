@@ -1,1 +1,0 @@
-const i="https://godotvillage.moshangzhu.com.cn",n=(t,e)=>e?i+e:t?`https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(t)}`:"https://api.dicebear.com/7.x/initials/svg?seed=User";export{n as g};
