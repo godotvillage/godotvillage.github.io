@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rm -rf assets index.html 404.html favicon.ico favicon.svg)",
+      "Bash(cp -rf /e/workspace/GithubCloneProject/godotvillage-frontend/dist/* .)",
+      "Bash(rm -f .git/index.lock)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
+    ]
+  }
+}
