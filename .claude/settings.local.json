@@ -5,7 +5,9 @@
       "Bash(cp -rf /e/workspace/GithubCloneProject/godotvillage-frontend/dist/* .)",
       "Bash(rm -f .git/index.lock)",
       "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(rm -f \"E:/workspace/GithubCloneProject/godotvillage.github.io/.git/index.lock\")",
+      "Bash(git push *)"
     ]
   }
 }
