@@ -1,0 +1,1 @@
+const t=["tutorial","article","project","gamejam","friendlink","mascot","talent","skill","login","register","backend"];function r(e){const n=new RegExp(`href="/(${t.join("|")})([/"?]|$)`,"g");return e.replace(n,'href="/#/$1$2')}export{r as f};
