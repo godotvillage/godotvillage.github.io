@@ -1,0 +1,37 @@
+[
+  {
+    "id": "meowdness",
+    "title": "喵德行 Meowdness",
+    "author": "时速五厘米",
+    "cover": "/images/showcase/projects/Meowdness/cover.jpg",
+    "date": "2026-07-10",
+    "brief": "《喵德行》是一款融合轻度肉鸽策略玩法的类幸存者游戏。在游戏中，你将扮演一只猫咪，通过击败虫族获得金币购买武器，成功击败boss为目的。",
+    "description": "欢迎各位玩家加入官方QQ讨论群：688044973\n\n关注B站账号：@时速五厘米_开发版\n\n---\n\n午后的阳光慵懒地洒在后花园里，你刚关上院门去上班，草坪上就炸开了锅。\n\n一只独眼狸花猫正趴在围墙上瞭望，尾巴轻轻一甩，发出信号。瞬间，玫瑰花丛后、石凳底下、假山缝隙里，一群猫咪迅速就位——有的架起迷你机枪，有的扛着橡皮筋榴弹炮，军容整齐，眼神专注。\n\n草坪那头，向日葵的阴影下，泥土正一块块隆起。闪着金属光泽的甲虫先锋率先破土，紧随其后是黑压压的昆虫步兵、嗡嗡作响的飞虫侦察兵，如同潮水般涌来。阳光照在虫壳上，折射出刺眼的光芒。\n\n领头的狸花猫抬起前爪，狠狠一挥。刹那间，子弹呼啸，炮火轰鸣，弹壳在石板路上叮当作响。猫咪们闪转腾挪，利用水缸和花盆作掩护，打得虫群节节败退。\n\n这是午后的秘密战争。而你家的主子们，正在为守护领地和小鱼干库存，拼尽全力...\n\n---\n\n《喵德行》是一款融合轻度肉鸽策略玩法的类幸存者游戏。在游戏中，你将扮演一只猫咪，通过击败虫族获得金币购买武器，成功击败boss为目的。通过肉鸽类游戏机制掌握战略性，并在激烈的战斗中灵活应对各种敌人，体验到极致爽快的割草爽感的过程，希望能让您获得30分钟短暂的快乐时光.\n\n解锁新猫咪。\n\n## 游戏实录\n\n[[bvid:BV13sN76mE5J]]\n\n---\n\n游戏的体量不大，根据个人操作通关需要0.5-5小时不等，在通关后，可以再次挑战来打破自己的记录或者解锁新的角色，也可以研究新的搭.同时，如果您是个平台Up主/主播，又或是非常想把这款游戏推荐给朋友的人，欢迎联系我们来获得一些免费的兑换码来进行抽奖等.【第一次尝试做游戏也谢谢大家的批评和鼓励】",
+    "screenshots": [
+      "/images/showcase/projects/Meowdness/snapshot1.jpg",
+      "/images/showcase/projects/Meowdness/snapshot2.jpg",
+      "/images/showcase/projects/Meowdness/snapshot3.jpg",
+      "/images/showcase/projects/Meowdness/snapshot4.jpg",
+      "/images/showcase/projects/Meowdness/snapshot5.jpg",
+      "/images/showcase/projects/Meowdness/snapshot6.jpg",
+      "/images/showcase/projects/Meowdness/snapshot7.jpg"
+    ],
+    "links": [
+      {
+        "name": "Steam",
+        "icon": "/images/showcase/icons/steam.svg",
+        "url": "https://store.steampowered.com/app/4822000/_Meowdness/"
+      },
+      {
+        "name": "小黑盒",
+        "icon": "/images/showcase/icons/xiaoheihe.svg",
+        "url": "https://www.xiaoheihe.cn/app/topic/game/pc/2b2769cc498e?h_camp=game&title=%E5%96%B5%E5%BE%B7%E8%A1%8C+Meowdness&game_type=pc&h_src=YXBwX3NoYXJl&appid=2b2769cc498e"
+      },
+      {
+        "name": "B站",
+        "icon": "/images/showcase/icons/bilibili.svg",
+        "url": "https://www.bilibili.com/video/BV13sN76mE5J/"
+      }
+    ]
+  }
+]
