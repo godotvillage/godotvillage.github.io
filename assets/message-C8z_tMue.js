@@ -1,1 +1,0 @@
-import{r as s}from"./request-wvh9u_6y.js";const t={getList(e){return s.get("/message",{params:e})},getById(e){return s.get(`/message/${e}`)},getUnreadCount(){return s.get("/message/unread-count")},markAsRead(e){return s.post(`/message/${e}/read`)},markAllAsRead(){return s.post("/message/read-all")},send(e){return s.post("/message/send",e)}};export{t as m};
